@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 import time
 from pathlib import Path
@@ -341,6 +342,71 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 }
 
 hr { border-color: rgba(255,255,255,0.06) !important; }
+
+/* ===== NÂNG CẤP GIAO DIỆN: nền động · glass · chuyển động ===== */
+.stApp { background-size: 400% 400% !important; animation: bgShift 22s ease infinite; }
+@keyframes bgShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+.chat-user, .chat-bot { animation: fadeUp .45s ease both; }
+.citation-card { animation: fadeUp .5s ease both; }
+
+/* Glass + hover cho thẻ trích dẫn */
+.citation-card {
+    background: rgba(255,255,255,0.045) !important;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.10) !important;
+    border-radius: 14px !important;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.citation-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(139,92,246,0.5) !important;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+}
+
+/* Bìa sách (tạo bằng gradient) */
+.cit-head { display:flex; gap:10px; align-items:flex-start; }
+.cit-cover {
+    width:42px; height:58px; border-radius:6px; flex:0 0 auto;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.25rem; color:#fff; box-shadow:0 4px 10px rgba(0,0,0,.35);
+}
+.cit-info { flex:1 1 auto; min-width:0; }
+.cit-chips { margin-top:6px; display:flex; gap:6px; flex-wrap:wrap; }
+.genre-chip {
+    background:rgba(168,85,247,0.18); color:#d8b4fe;
+    border:1px solid rgba(168,85,247,0.35);
+    border-radius:999px; padding:1px 9px; font-size:0.7rem; font-weight:600;
+}
+.year-chip {
+    background:rgba(99,102,241,0.15); color:#a5b4fc;
+    border:1px solid rgba(99,102,241,0.30);
+    border-radius:999px; padding:1px 9px; font-size:0.7rem;
+}
+
+/* Thanh độ liên quan */
+.cit-bar { height:5px; background:rgba(255,255,255,0.07); border-radius:999px; margin:8px 0 4px; overflow:hidden; }
+.cit-bar-fill { height:100%; border-radius:999px; background:linear-gradient(90deg,#6366f1,#a855f7); }
+
+/* Loading (Lottie + chấm nhấp nháy) */
+.loading-text { text-align:center; color:#c4b5fd; font-size:0.95rem; margin-top:-4px; }
+.dots span {
+    display:inline-block; width:6px; height:6px; margin-left:3px; border-radius:50%;
+    background:#a855f7; animation: blink 1.2s infinite both;
+}
+.dots span:nth-child(2){ animation-delay:.2s; }
+.dots span:nth-child(3){ animation-delay:.4s; }
+@keyframes blink { 0%,80%,100%{ opacity:.2; } 40%{ opacity:1; } }
+
+/* Thanh cuộn */
+::-webkit-scrollbar { width:9px; height:9px; }
+::-webkit-scrollbar-thumb { background:rgba(139,92,246,0.35); border-radius:999px; }
+::-webkit-scrollbar-track { background:transparent; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -550,30 +616,115 @@ def mode_tag_html(mode: str, rerank: bool) -> str:
     return f'<span class="mode-tag">{mode_icons.get(mode,"")} {label}</span>'
 
 
+# Bảng màu cho "bìa sách" tạo bằng gradient (chọn theo tên tác phẩm)
+COVER_PALETTE = [
+    ("#6366f1", "#8b5cf6"), ("#ec4899", "#f43f5e"), ("#0ea5e9", "#6366f1"),
+    ("#10b981", "#0ea5e9"), ("#f59e0b", "#ef4444"), ("#8b5cf6", "#ec4899"),
+    ("#14b8a6", "#6366f1"), ("#f43f5e", "#f59e0b"),
+]
+
+# URL animation Lottie cho màn hình chờ (có thể thay bằng link khác trên lottiefiles)
+LOTTIE_LOADING_URL = "https://assets2.lottiefiles.com/packages/lf20_1a8dx7zj.json"
+
+
+@st.cache_data(show_spinner=False, ttl=86400)
+def _load_lottie(url: str):
+    """Tải JSON animation Lottie từ URL; trả None nếu thất bại."""
+    try:
+        import requests
+        r = requests.get(url, timeout=8)
+        if r.status_code == 200:
+            return r.json()
+    except Exception:
+        pass
+    return None
+
+
+def show_loading(placeholder):
+    """Hiển thị animation Lottie + dòng chữ chờ trong lúc xử lý."""
+    with placeholder.container():
+        anim = _load_lottie(LOTTIE_LOADING_URL)
+        if anim:
+            try:
+                from streamlit_lottie import st_lottie
+                st_lottie(anim, height=140, loop=True, quality="high", key="loading_anim")
+            except Exception:
+                pass
+        st.markdown(
+            '<div class="loading-text">🔍 Đang tìm kiếm &amp; tổng hợp câu trả lời'
+            '<span class="dots"><span></span><span></span><span></span></span></div>',
+            unsafe_allow_html=True,
+        )
+
+
+def _clean_snippet(text: str, limit: int = 150) -> str:
+    """Bỏ phần metadata đã chèn, lấy đoạn nội dung sạch để hiển thị."""
+    body = text or ""
+    if "Nội dung chi tiết:" in body:
+        body = body.split("Nội dung chi tiết:", 1)[1]
+    elif "\n\n" in body:
+        body = body.split("\n\n", 1)[1]
+    body = body.strip()
+    return (body[:limit] + "…") if len(body) > limit else body
+
+
 def render_citations(contexts: list, show_snip: bool):
-    """Hiển thị citation cards bằng Streamlit native components."""
+    """Hiển thị thẻ trích dẫn: bìa sách gradient + chip thể loại + thanh liên quan."""
     if not contexts:
         return
+
+    scores = [c.get("score", 0) or 0 for c in contexts]
+    smin, smax = (min(scores), max(scores)) if scores else (0, 1)
+
+    def bar_pct(s):
+        if smax == smin:
+            return 100
+        return int(12 + 88 * (s - smin) / (smax - smin))
+
     with st.expander(f"📚 Nguồn tài liệu ({len(contexts)})", expanded=True):
-        cols_per_row = 2
-        for i in range(0, len(contexts), cols_per_row):
-            row = contexts[i:i + cols_per_row]
+        for i in range(0, len(contexts), 2):
+            row = contexts[i:i + 2]
             cols = st.columns(len(row))
             for col, ctx in zip(cols, row):
                 with col:
                     idx    = ctx.get("source_idx", "?")
                     title  = ctx.get("title", "Không rõ")
                     author = ctx.get("author", "Không rõ")
-                    score  = ctx.get("score", 0)
-                    snippet = ctx.get("text", "")[:150] + "…" if ctx.get("text") else ""
+                    score  = ctx.get("score", 0) or 0
+                    text   = ctx.get("text", "") or ""
+
+                    gm = re.search(r"\[Thể loại:\s*([^\]]+)\]", text)
+                    ym = re.search(r"\[Năm xuất bản:\s*([^\]]+)\]", text)
+                    genre = gm.group(1).strip() if gm else ""
+                    year  = ym.group(1).strip() if ym else ""
+
+                    c1, c2 = COVER_PALETTE[abs(hash(title)) % len(COVER_PALETTE)]
+                    chips = ""
+                    if genre:
+                        chips += f'<span class="genre-chip">{genre}</span>'
+                    if year:
+                        chips += f'<span class="year-chip">📅 {year}</span>'
+
+                    snippet = _clean_snippet(text)
+                    snip_html = (
+                        f'<div class="citation-snippet">{snippet}</div>'
+                        if show_snip and snippet else ''
+                    )
+
                     st.markdown(
                         f"""
                         <div class="citation-card">
-                            <span class="citation-num">[{idx}]</span>
-                            <span class="citation-title">{title}</span>
-                            <div class="citation-author">✍️ {author}</div>
+                            <div class="cit-head">
+                                <div class="cit-cover" style="background:linear-gradient(135deg,{c1},{c2})">📖</div>
+                                <div class="cit-info">
+                                    <div><span class="citation-num">[{idx}]</span> <span class="citation-title">{title}</span></div>
+                                    <div class="citation-author">✍️ {author}</div>
+                                    <div class="cit-chips">{chips}</div>
+                                </div>
+                            </div>
+                            <div class="cit-bar"><div class="cit-bar-fill" style="width:{bar_pct(score)}%"></div></div>
                             <div class="citation-score">Score: {score:.4f}</div>
-                            {'<div class="citation-snippet">' + snippet + '</div>' if show_snip and snippet else ''}
+                            {snip_html}
                         </div>
                         """,
                         unsafe_allow_html=True,
@@ -691,23 +842,26 @@ elif user_input:
 if query:
     st.session_state.messages.append({"role": "user", "content": query})
 
-    with st.spinner("🔍 Đang tìm kiếm và tổng hợp câu trả lời..."):
-        try:
-            engine = get_engine()
-            engine.top_k = top_k  # Apply top_k TRƯỚC khi search
+    loading_ph = st.empty()
+    show_loading(loading_ph)
+    try:
+        engine = get_engine()
+        engine.top_k = top_k  # Apply top_k TRƯỚC khi search
 
-            result = engine.ask(
-                query,
-                mode=search_mode,
-                use_reranker=use_reranker if search_mode == "hybrid" else None,
-            )
-            answer   = result["answer"]
-            contexts = result["contexts"]
-            latency  = result["latency"]
-        except Exception as e:
-            answer   = f"❌ Có lỗi xảy ra: {str(e)}"
-            contexts = []
-            latency  = {}
+        result = engine.ask(
+            query,
+            mode=search_mode,
+            use_reranker=use_reranker if search_mode == "hybrid" else None,
+        )
+        answer   = result["answer"]
+        contexts = result["contexts"]
+        latency  = result["latency"]
+    except Exception as e:
+        answer   = f"❌ Có lỗi xảy ra: {str(e)}"
+        contexts = []
+        latency  = {}
+    finally:
+        loading_ph.empty()
 
     # Sinh câu hỏi gợi ý
     suggestions = []
