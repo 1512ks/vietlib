@@ -1,0 +1,82 @@
+﻿============================================================
+NGUON: Wikipedia (work)
+Cac truong co trong file:
+  [id]: 1520401
+  [title]: Chuyß╗çn ngã░ß╗Øi con g├íi Nam Xã░ãíng
+  [url]: https://vi.wikipedia.org/wiki/Chuy%E1%BB%87n_ng%C6%B0%E1%BB%9Di_con_g%C3%A1i_Nam
+  [type]: work
+  [category]: T├íc phß║®m v─ân hß╗ìc Viß╗çt Nam
+  [categories]: ['Truyß╗ün thuyß║┐t Viß╗çt Nam', 'T├íc phß║®m v─ân hß╗ìc Viß╗çt Nam']
+  [summary]: Nam Xã░ãíng nß╗» tß╗¡ truyß╗çn (chß╗» H├ín: ÕìùµÿîÕÑ│Õ¡ÉÕé│), ─æã░ß╗úc diß╗àn N├┤m th├ánh Chuyß╗çn ngã░ß╗Øi con g├í
+  [content]: Nam Xã░ãíng nß╗» tß╗¡ truyß╗çn (chß╗» H├ín: ÕìùµÿîÕÑ│Õ¡ÉÕé│), ─æã░ß╗úc diß╗àn N├┤m th├ánh Chuyß╗çn ngã░ß╗Øi con g├í
+  [word_count]: 888
+  [char_count]: 4008
+  [language]: vi
+  [crawled_at]: 2026-03-29T23:37:39.676868
+  [last_modified]: 2026-03-23T10:34:57Z
+  [processed_at]: 2026-04-26T23:19:05.014361
+
+============================================================
+NGUON: Wikipedia (author)
+Cac truong co trong file:
+  [id]: 19777073
+  [title]: Dã░ãíng Ngß╗ìc Trinh
+  [url]: https://vi.wikipedia.org/wiki/D%C6%B0%C6%A1ng_Ng%E1%BB%8Dc_Trinh
+  [type]: author
+  [category]: Nh├á v─ân Viß╗çt Nam
+  [categories]: ['Bi├¬n tß║¡p vi├¬n truyß╗ün h├¼nh Viß╗çt Nam', 'Ngã░ß╗Øi dß║½n chã░ãíng tr├¼nh truyß╗ün h├¼nh Viß╗çt 
+  [summary]: Dã░ãíng Ngß╗ìc Trinh (sinh ng├áy 20 th├íng 1 n─âm 1986), l├á mß╗Öt nh├á b├ío, bi├¬n tß║¡p vi├¬n 
+  [content]: Dã░ãíng Ngß╗ìc Trinh (sinh ng├áy 20 th├íng 1 n─âm 1986), l├á mß╗Öt nh├á b├ío, bi├¬n tß║¡p vi├¬n 
+  [word_count]: 611
+  [char_count]: 2906
+  [language]: vi
+  [crawled_at]: 2026-03-30T01:07:53.668367
+  [last_modified]: 2026-03-23T12:18:34Z
+  [processed_at]: 2026-04-26T23:19:03.462778
+
+============================================================
+NGUON: Wikipedia (concept)
+Cac truong co trong file:
+  [id]: 446953
+  [title]: Hß╗ìc viß╗çn Quß╗æc gia H├ánh ch├ính
+  [url]: https://vi.wikipedia.org/wiki/H%E1%BB%8Dc_vi%E1%BB%87n_Qu%E1%BB%91c_gia_H%C3%A0n
+  [type]: concept
+  [category]: Lß╗ïch sß╗¡ Viß╗çt Nam
+  [categories]: ['B├ái c├│ li├¬n kß║┐t hß╗Ång', 'Chß║Ñm dß╗®t n─âm 1975 ß╗ƒ Viß╗çt Nam', 'Cãí sß╗ƒ gi├ío dß╗Ñc thß╗Øi Vi
+  [summary]: Hß╗ìc viß╗çn Quß╗æc gia H├ánh ch├ính l├á cãí sß╗ƒ gi├ío dß╗Ñc cß╗ºa Viß╗çt Nam Cß╗Öng h├▓a, tiß╗ün th├ón 
+  [content]: Hß╗ìc viß╗çn Quß╗æc gia H├ánh ch├ính l├á cãí sß╗ƒ gi├ío dß╗Ñc cß╗ºa Viß╗çt Nam Cß╗Öng h├▓a, tiß╗ün th├ón 
+  [word_count]: 852
+  [char_count]: 3950
+  [language]: vi
+  [crawled_at]: 2026-03-30T03:44:08.362901
+  [last_modified]: 2026-03-23T10:20:21Z
+  [processed_at]: 2026-04-26T23:18:59.217084
+
+============================================================
+NGUON: Google Books
+Cac truong co trong file:
+  [id]: gbooks_Fm6w0AEACAAJ
+  [title]: Xa x├│m m┼®i
+  [url]: http://books.google.com.vn/books?id=Fm6w0AEACAAJ&dq=Nguy%E1%BB%85n+Ng%E1%BB%8Dc+
+  [source]: google_books
+  [wikidata_id]: (trong)
+  [author]: Ngß╗ìc Tã░ Nguyß╗àn
+  [authors]: ['Ngß╗ìc Tã░ Nguyß╗àn']
+  [publication_year]: 2023
+  [genre]: Truyß╗çn ngß║»n
+  [genres]: ['Truyß╗çn ngß║»n']
+  [publisher]: (trong)
+  [page_count]: (trong)
+  [isbn]: (trong)
+  [isbn_list]: (trong)
+  [cover_url]: (trong)
+  [summary]: ÔÇ£Xa x├│m M┼®iÔÇØ l├á tß║¡p truyß╗çn gß╗ôm 11 truyß╗çn ngß║»n viß║┐t cho thiß║┐u nhi cß╗ºa nh├á v─ân Ngu
+  [content]: ÔÇ£Xa x├│m M┼®iÔÇØ l├á tß║¡p truyß╗çn gß╗ôm 11 truyß╗çn ngß║»n viß║┐t cho thiß║┐u nhi cß╗ºa nh├á v─ân Ngu
+  [categories]: ['Short stories, Vietnamese']
+  [crawl_category]: Nguyß╗àn Ngß╗ìc Tã░
+  [language]: vi
+  [word_count]: 161
+  [char_count]: 754
+  [crawled_at]: 2026-04-06T01:58:08.922908
+  [processed_at]: 2026-04-26T23:17:45.545223
+

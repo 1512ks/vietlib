@@ -1,0 +1,28 @@
+# ============================================================
+#  docker-compose.yml — RAG Chatbot Thư viện Văn học Việt Nam
+#  Tác giả: Cao Thị Khánh Chi — ĐATN 2025-2026
+#
+#  Cách chạy:
+#    docker compose up --build        # Build và chạy lần đầu
+#    docker compose up                # Chạy lại (đã build)
+#    docker compose down              # Dừng container
+# ============================================================
+
+services:
+  chatbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vn-literature-chatbot
+    ports:
+      - "8501:8501"
+    # Đọc API keys và cấu hình từ file .env
+    # KHÔNG commit file .env lên GitHub
+    env_file:
+      - .env
+    restart: unless-stopped
+    # Giới hạn tài nguyên để tránh quá tải máy chủ
+    deploy:
+      resources:
+        limits:
+          memory: 2G

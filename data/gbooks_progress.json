@@ -1,0 +1,1177 @@
+{
+  "started_at": "2026-04-06T01:41:02.497084",
+  "completed_queries": {
+    "tiểu thuyết Việt Nam": {
+      "count": 0,
+      "finished_at": "2026-04-06T01:41:19.367078"
+    },
+    "truyện ngắn Việt Nam": {
+      "count": 0,
+      "finished_at": "2026-04-06T01:41:40.332336"
+    },
+    "thơ Việt Nam": {
+      "count": 1,
+      "finished_at": "2026-04-06T01:41:59.685307"
+    },
+    "văn học Việt Nam": {
+      "count": 18,
+      "finished_at": "2026-04-06T01:42:19.028644"
+    },
+    "tuyển tập truyện ngắn Việt Nam": {
+      "count": 15,
+      "finished_at": "2026-04-06T01:42:41.184447"
+    },
+    "tuyển tập thơ Việt Nam": {
+      "count": 26,
+      "finished_at": "2026-04-06T01:43:01.740032"
+    },
+    "hồi ký Việt Nam": {
+      "count": 46,
+      "finished_at": "2026-04-06T01:43:22.518854"
+    },
+    "bút ký Việt Nam": {
+      "count": 24,
+      "finished_at": "2026-04-06T01:43:39.274013"
+    },
+    "tản văn Việt Nam": {
+      "count": 34,
+      "finished_at": "2026-04-06T01:44:00.358453"
+    },
+    "ký sự Việt Nam": {
+      "count": 32,
+      "finished_at": "2026-04-06T01:44:21.605430"
+    },
+    "truyện dài Việt Nam": {
+      "count": 14,
+      "finished_at": "2026-04-06T01:44:40.882749"
+    },
+    "truyện cổ tích Việt Nam": {
+      "count": 14,
+      "finished_at": "2026-04-06T01:45:00.281447"
+    },
+    "văn học dân gian Việt Nam": {
+      "count": 22,
+      "finished_at": "2026-04-06T01:45:20.199645"
+    },
+    "văn học thiếu nhi Việt Nam": {
+      "count": 43,
+      "finished_at": "2026-04-06T01:45:39.805955"
+    },
+    "truyện tranh Việt Nam": {
+      "count": 19,
+      "finished_at": "2026-04-06T01:45:58.514246"
+    },
+    "kịch Việt Nam": {
+      "count": 20,
+      "finished_at": "2026-04-06T01:46:16.112639"
+    },
+    "tiểu thuyết lịch sử Việt Nam": {
+      "count": 12,
+      "finished_at": "2026-04-06T01:46:36.528762"
+    },
+    "tiểu thuyết tình cảm Việt Nam": {
+      "count": 10,
+      "finished_at": "2026-04-06T01:46:55.619889"
+    },
+    "tiểu thuyết chiến tranh Việt Nam": {
+      "count": 32,
+      "finished_at": "2026-04-06T01:47:13.211021"
+    },
+    "tiểu thuyết trinh thám Việt Nam": {
+      "count": 14,
+      "finished_at": "2026-04-06T01:47:31.387438"
+    },
+    "tiểu thuyết kinh điển thế giới tiếng Việt": {
+      "count": 16,
+      "finished_at": "2026-04-06T01:47:42.688104"
+    },
+    "sách dịch văn học nước ngoài": {
+      "count": 31,
+      "finished_at": "2026-04-06T01:47:58.050681"
+    },
+    "Nguyễn Du thơ": {
+      "count": 7,
+      "finished_at": "2026-04-06T01:48:17.447527"
+    },
+    "Nguyễn Đình Chiểu truyện": {
+      "count": 10,
+      "finished_at": "2026-04-06T01:48:31.844842"
+    },
+    "Hồ Xuân Hương thơ": {
+      "count": 15,
+      "finished_at": "2026-04-06T01:48:50.231317"
+    },
+    "Đoàn Thị Điểm": {
+      "count": 12,
+      "finished_at": "2026-04-06T01:49:06.622407"
+    },
+    "Nguyễn Bỉnh Khiêm": {
+      "count": 14,
+      "finished_at": "2026-04-06T01:49:23.623001"
+    },
+    "Nam Cao truyện": {
+      "count": 6,
+      "finished_at": "2026-04-06T01:49:42.310704"
+    },
+    "Ngô Tất Tố": {
+      "count": 14,
+      "finished_at": "2026-04-06T01:49:59.487764"
+    },
+    "Vũ Trọng Phụng tiểu thuyết": {
+      "count": 11,
+      "finished_at": "2026-04-06T01:50:13.752205"
+    },
+    "Thạch Lam truyện ngắn": {
+      "count": 8,
+      "finished_at": "2026-04-06T01:50:26.179716"
+    },
+    "Nguyễn Công Hoan": {
+      "count": 3,
+      "finished_at": "2026-04-06T01:50:44.965927"
+    },
+    "Xuân Diệu thơ": {
+      "count": 8,
+      "finished_at": "2026-04-06T01:51:03.293563"
+    },
+    "Huy Cận thơ": {
+      "count": 6,
+      "finished_at": "2026-04-06T01:51:19.426102"
+    },
+    "Tố Hữu thơ": {
+      "count": 6,
+      "finished_at": "2026-04-06T01:51:35.911052"
+    },
+    "Chế Lan Viên": {
+      "count": 1,
+      "finished_at": "2026-04-06T01:51:52.492440"
+    },
+    "Hàn Mặc Tử": {
+      "count": 9,
+      "finished_at": "2026-04-06T01:52:11.122705"
+    },
+    "Nguyễn Tuân tùy bút": {
+      "count": 2,
+      "finished_at": "2026-04-06T01:52:21.868890"
+    },
+    "Tô Hoài": {
+      "count": 12,
+      "finished_at": "2026-04-06T01:52:40.295125"
+    },
+    "Kim Lân": {
+      "count": 8,
+      "finished_at": "2026-04-06T01:52:58.553480"
+    },
+    "Văn Cao": {
+      "count": 15,
+      "finished_at": "2026-04-06T01:53:17.361166"
+    },
+    "Quang Dũng": {
+      "count": 29,
+      "finished_at": "2026-04-06T01:53:35.395810"
+    },
+    "Nguyễn Thi": {
+      "count": 21,
+      "finished_at": "2026-04-06T01:53:54.490208"
+    },
+    "Anh Đức": {
+      "count": 27,
+      "finished_at": "2026-04-06T01:54:13.705510"
+    },
+    "Nguyễn Quang Sáng": {
+      "count": 9,
+      "finished_at": "2026-04-06T01:54:28.719595"
+    },
+    "Lê Anh Xuân": {
+      "count": 15,
+      "finished_at": "2026-04-06T01:54:45.038025"
+    },
+    "Nguyễn Minh Châu": {
+      "count": 9,
+      "finished_at": "2026-04-06T01:55:03.979596"
+    },
+    "Nguyễn Khải": {
+      "count": 17,
+      "finished_at": "2026-04-06T01:55:22.478380"
+    },
+    "Ma Văn Kháng": {
+      "count": 6,
+      "finished_at": "2026-04-06T01:55:37.170901"
+    },
+    "Lê Lựu": {
+      "count": 8,
+      "finished_at": "2026-04-06T01:55:55.181981"
+    },
+    "Bảo Ninh": {
+      "count": 25,
+      "finished_at": "2026-04-06T01:56:14.183457"
+    },
+    "Nguyễn Huy Thiệp": {
+      "count": 12,
+      "finished_at": "2026-04-06T01:56:27.858141"
+    },
+    "Phạm Thị Hoài": {
+      "count": 15,
+      "finished_at": "2026-04-06T01:56:40.717259"
+    },
+    "Dương Thu Hương": {
+      "count": 26,
+      "finished_at": "2026-04-06T01:56:59.843260"
+    },
+    "Chu Lai": {
+      "count": 35,
+      "finished_at": "2026-04-06T01:57:18.665497"
+    },
+    "Trung Trung Đỉnh": {
+      "count": 8,
+      "finished_at": "2026-04-06T01:57:33.295544"
+    },
+    "Nguyễn Nhật Ánh": {
+      "count": 25,
+      "finished_at": "2026-04-06T01:57:49.951361"
+    },
+    "Phan Thị Vàng Anh": {
+      "count": 4,
+      "finished_at": "2026-04-06T01:58:00.327551"
+    },
+    "Nguyễn Ngọc Tư": {
+      "count": 29,
+      "finished_at": "2026-04-06T01:58:18.118948"
+    },
+    "Tạ Duy Anh": {
+      "count": 9,
+      "finished_at": "2026-04-06T01:58:30.263346"
+    },
+    "Hồ Anh Thái": {
+      "count": 16,
+      "finished_at": "2026-04-06T01:58:48.424912"
+    },
+    "Thuận": {
+      "count": 17,
+      "finished_at": "2026-04-06T01:59:07.965371"
+    },
+    "Đỗ Bích Thúy": {
+      "count": 8,
+      "finished_at": "2026-04-06T01:59:18.155522"
+    },
+    "Di Li": {
+      "count": 14,
+      "finished_at": "2026-04-06T01:59:38.675000"
+    },
+    "Uông Triều": {
+      "count": 8,
+      "finished_at": "2026-04-06T01:59:51.289138"
+    },
+    "Nguyễn Du": {
+      "count": 8,
+      "finished_at": "2026-04-06T02:02:30.717253"
+    },
+    "Nguyễn Đình Chiểu": {
+      "count": 20,
+      "finished_at": "2026-04-06T02:02:51.540863"
+    },
+    "Hồ Xuân Hương": {
+      "count": 5,
+      "finished_at": "2026-04-06T02:03:13.937256"
+    },
+    "Nam Cao": {
+      "count": 14,
+      "finished_at": "2026-04-06T02:03:35.036864"
+    },
+    "Vũ Trọng Phụng": {
+      "count": 11,
+      "finished_at": "2026-04-06T02:03:56.306885"
+    },
+    "Thạch Lam": {
+      "count": 7,
+      "finished_at": "2026-04-06T02:04:17.775095"
+    },
+    "Nhất Linh": {
+      "count": 5,
+      "finished_at": "2026-04-06T02:04:39.179666"
+    },
+    "Khái Hưng": {
+      "count": 9,
+      "finished_at": "2026-04-06T02:04:59.155883"
+    },
+    "Hoàng Đạo": {
+      "count": 17,
+      "finished_at": "2026-04-06T02:05:19.269113"
+    },
+    "Nguyễn Tuân": {
+      "count": 9,
+      "finished_at": "2026-04-06T02:05:38.339409"
+    },
+    "Bùi Hiển": {
+      "count": 6,
+      "finished_at": "2026-04-06T02:05:54.107794"
+    },
+    "Nguyên Hồng": {
+      "count": 9,
+      "finished_at": "2026-04-06T02:06:14.017546"
+    },
+    "Lan Khai": {
+      "count": 11,
+      "finished_at": "2026-04-06T02:06:32.926502"
+    },
+    "Nguyễn Tường Tam": {
+      "count": 3,
+      "finished_at": "2026-04-06T02:06:51.992178"
+    },
+    "Đỗ Đức Thu": {
+      "count": 12,
+      "finished_at": "2026-04-06T02:07:08.705831"
+    },
+    "Vũ Bằng": {
+      "count": 10,
+      "finished_at": "2026-04-06T02:07:27.528140"
+    },
+    "Xuân Diệu": {
+      "count": 2,
+      "finished_at": "2026-04-06T02:07:48.356995"
+    },
+    "Huy Cận": {
+      "count": 5,
+      "finished_at": "2026-04-06T02:08:06.789383"
+    },
+    "Nguyễn Bính": {
+      "count": 8,
+      "finished_at": "2026-04-06T02:08:25.997584"
+    },
+    "Tế Hanh": {
+      "count": 21,
+      "finished_at": "2026-04-06T02:08:43.736104"
+    },
+    "Tố Hữu": {
+      "count": 4,
+      "finished_at": "2026-04-06T02:09:01.990106"
+    },
+    "Lưu Trọng Lư": {
+      "count": 1,
+      "finished_at": "2026-04-06T02:09:16.998115"
+    },
+    "Thế Lữ": {
+      "count": 6,
+      "finished_at": "2026-04-06T02:09:36.755290"
+    },
+    "Vũ Đình Liên": {
+      "count": 1,
+      "finished_at": "2026-04-06T02:09:50.329113"
+    },
+    "Nguyễn Đình Thi": {
+      "count": 11,
+      "finished_at": "2026-04-06T02:10:10.479557"
+    },
+    "Nguyễn Huy Tưởng": {
+      "count": 10,
+      "finished_at": "2026-04-06T02:10:29.100679"
+    },
+    "Nguyễn Thành Long": {
+      "count": 26,
+      "finished_at": "2026-04-06T02:10:48.722068"
+    },
+    "Hoàng Cầm": {
+      "count": 2,
+      "finished_at": "2026-04-06T02:11:07.104842"
+    },
+    "Xuân Quỳnh": {
+      "count": 12,
+      "finished_at": "2026-04-06T02:11:25.669375"
+    },
+    "Lưu Quang Vũ": {
+      "count": 2,
+      "finished_at": "2026-04-06T02:11:38.202935"
+    },
+    "Phạm Tiến Duật": {
+      "count": 2,
+      "finished_at": "2026-04-06T02:11:48.317192"
+    },
+    "Nguyễn Duy": {
+      "count": 16,
+      "finished_at": "2026-04-06T02:12:07.514507"
+    },
+    "Thanh Thảo": {
+      "count": 19,
+      "finished_at": "2026-04-06T02:12:27.004242"
+    },
+    "Nguyễn Khoa Điềm": {
+      "count": 5,
+      "finished_at": "2026-04-06T02:12:37.839268"
+    },
+    "Hữu Thỉnh": {
+      "count": 5,
+      "finished_at": "2026-04-06T02:12:50.540360"
+    },
+    "Trần Đăng Khoa": {
+      "count": 24,
+      "finished_at": "2026-04-06T02:13:06.917987"
+    },
+    "Ý Nhi": {
+      "count": 16,
+      "finished_at": "2026-04-06T02:13:25.654247"
+    },
+    "Trần Dần": {
+      "count": 17,
+      "finished_at": "2026-04-06T02:13:42.013062"
+    },
+    "Lê Đạt": {
+      "count": 34,
+      "finished_at": "2026-04-06T02:14:00.912884"
+    },
+    "Võ Phiến": {
+      "count": 13,
+      "finished_at": "2026-04-06T02:14:19.630465"
+    },
+    "Duyên Anh": {
+      "count": 11,
+      "finished_at": "2026-04-06T02:14:38.401844"
+    },
+    "Doãn Quốc Sỹ": {
+      "count": 20,
+      "finished_at": "2026-04-06T02:14:53.445824"
+    },
+    "Nguyễn Mộng Giác": {
+      "count": 14,
+      "finished_at": "2026-04-06T02:15:06.831164"
+    },
+    "Nguyễn Thị Hoàng": {
+      "count": 19,
+      "finished_at": "2026-04-06T02:15:26.032802"
+    },
+    "Sơn Nam": {
+      "count": 12,
+      "finished_at": "2026-04-06T02:15:44.864448"
+    },
+    "Bình Nguyên Lộc": {
+      "count": 7,
+      "finished_at": "2026-04-06T02:16:01.471659"
+    },
+    "Nguyễn Khắc Trường": {
+      "count": 12,
+      "finished_at": "2026-04-06T02:16:16.243427"
+    },
+    "Nguyễn Quang Lập": {
+      "count": 11,
+      "finished_at": "2026-04-06T02:16:34.135266"
+    },
+    "Lê Minh Khuê": {
+      "count": 12,
+      "finished_at": "2026-04-06T02:16:48.438353"
+    },
+    "Nguyễn Bình Phương": {
+      "count": 16,
+      "finished_at": "2026-04-06T02:17:06.721675"
+    },
+    "Nguyễn Xuân Khánh": {
+      "count": 20,
+      "finished_at": "2026-04-06T02:17:21.876483"
+    },
+    "Nguyễn Quang Thiều": {
+      "count": 3,
+      "finished_at": "2026-04-06T02:17:35.094848"
+    },
+    "Nguyễn Việt Hà": {
+      "count": 29,
+      "finished_at": "2026-04-06T02:17:54.646226"
+    },
+    "Đoàn Minh Phượng": {
+      "count": 4,
+      "finished_at": "2026-04-06T02:18:03.189364"
+    },
+    "Trần Nhã Thụy": {
+      "count": 16,
+      "finished_at": "2026-04-06T02:24:36.087608"
+    },
+    "Nguyễn Một": {
+      "count": 0,
+      "finished_at": "2026-04-06T09:15:02.469815"
+    },
+    "Trần Thùy Mai": {
+      "count": 0,
+      "finished_at": "2026-04-06T09:19:14.674148"
+    },
+    "Nguyễn Thị Thu Huệ": {
+      "count": 0,
+      "finished_at": "2026-04-06T09:23:27.158433"
+    },
+    "Nguyễn Quang Thân": {
+      "count": 0,
+      "finished_at": "2026-04-06T09:27:38.816162"
+    },
+    "Nguyễn Đình Tú": {
+      "count": 0,
+      "finished_at": "2026-04-06T09:31:51.278614"
+    },
+    "Nguyễn Trí": {
+      "count": 0,
+      "finished_at": "2026-04-06T09:36:02.969077"
+    },
+    "Phạm Duy Nghĩa": {
+      "count": 0,
+      "finished_at": "2026-04-06T09:40:14.709201"
+    },
+    "Nguyễn Đông Thức": {
+      "count": 47,
+      "finished_at": "2026-04-11T15:40:31.156437"
+    },
+    "Nguyễn Thị Minh Ngọc": {
+      "count": 4,
+      "finished_at": "2026-04-11T15:40:35.829826"
+    },
+    "Phạm Ngọc Tiến": {
+      "count": 20,
+      "finished_at": "2026-04-11T15:40:51.776880"
+    },
+    "Phan Hồn Nhiên": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:41:06.913488"
+    },
+    "Nguyễn Vĩnh Nguyên": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:41:26.178115"
+    },
+    "Trang Hạ": {
+      "count": 1,
+      "finished_at": "2026-04-11T15:41:42.888143"
+    },
+    "Nguyễn Phong Việt": {
+      "count": 26,
+      "finished_at": "2026-04-11T15:42:04.009836"
+    },
+    "Anh Khang": {
+      "count": 19,
+      "finished_at": "2026-04-11T15:42:22.971325"
+    },
+    "Nguyễn Ngọc Thạch": {
+      "count": 18,
+      "finished_at": "2026-04-11T15:42:41.076400"
+    },
+    "Hamlet Trương": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:42:47.480194"
+    },
+    "Iris Cao": {
+      "count": 8,
+      "finished_at": "2026-04-11T15:42:53.936879"
+    },
+    "Rosie Nguyễn": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:43:04.902902"
+    },
+    "Tuệ Nghi": {
+      "count": 1,
+      "finished_at": "2026-04-11T15:43:14.935526"
+    },
+    "Gào": {
+      "count": 3,
+      "finished_at": "2026-04-11T15:43:31.490401"
+    },
+    "Nguyễn Phan Quế Mai": {
+      "count": 18,
+      "finished_at": "2026-04-11T15:43:42.171854"
+    },
+    "Đặng Hoàng Giang": {
+      "count": 15,
+      "finished_at": "2026-04-11T15:43:53.378814"
+    },
+    "Trần Thu Trang": {
+      "count": 20,
+      "finished_at": "2026-04-11T15:44:06.479987"
+    },
+    "Phan Ý Yên": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:44:16.762670"
+    },
+    "Nguyễn Quỳnh Trang": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:44:28.100297"
+    },
+    "Phạm Hải Anh": {
+      "count": 6,
+      "finished_at": "2026-04-11T15:44:41.960008"
+    },
+    "Nguyễn Thế Hoàng Linh": {
+      "count": 1,
+      "finished_at": "2026-04-11T15:44:52.088021"
+    },
+    "Nguyễn Thị Kim Hòa": {
+      "count": 1,
+      "finished_at": "2026-04-11T15:45:05.661740"
+    },
+    "Nguyễn Ngọc Tiến": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:45:19.890257"
+    },
+    "Nguyễn Thị Thu Hà": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:45:28.647671"
+    },
+    "Nguyễn Thị Hậu": {
+      "count": 26,
+      "finished_at": "2026-04-11T15:45:48.924301"
+    },
+    "Nguyễn Ngọc Tấn": {
+      "count": 11,
+      "finished_at": "2026-04-11T15:46:07.525441"
+    },
+    "Phan Bội Châu": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:46:25.354937"
+    },
+    "Phan Chu Trinh": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:46:29.931603"
+    },
+    "Huỳnh Thúc Kháng": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:46:43.449817"
+    },
+    "Trần Trọng Kim": {
+      "count": 11,
+      "finished_at": "2026-04-11T15:47:03.233435"
+    },
+    "Nguyễn Văn Vĩnh": {
+      "count": 10,
+      "finished_at": "2026-04-11T15:47:22.338570"
+    },
+    "Trương Vĩnh Ký": {
+      "count": 1,
+      "finished_at": "2026-04-11T15:47:40.850561"
+    },
+    "Paulus Huỳnh Tịnh Của": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:47:53.324050"
+    },
+    "Lương Văn Can": {
+      "count": 2,
+      "finished_at": "2026-04-11T15:48:05.589882"
+    },
+    "Nguyễn Thượng Hiền": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:48:13.584218"
+    },
+    "Đào Duy Anh": {
+      "count": 4,
+      "finished_at": "2026-04-11T15:48:29.781527"
+    },
+    "Mặc Đỗ": {
+      "count": 1,
+      "finished_at": "2026-04-11T15:48:40.419385"
+    },
+    "Nguyễn Thị Vinh": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:48:58.366743"
+    },
+    "Nhất Hạnh": {
+      "count": 13,
+      "finished_at": "2026-04-11T15:49:16.886445"
+    },
+    "Võ Hồng": {
+      "count": 1,
+      "finished_at": "2026-04-11T15:49:31.741966"
+    },
+    "Sơn Khanh": {
+      "count": 4,
+      "finished_at": "2026-04-11T15:49:49.763454"
+    },
+    "Kiên Giang": {
+      "count": 1,
+      "finished_at": "2026-04-11T15:50:08.845168"
+    },
+    "Lê Văn Siêu": {
+      "count": 3,
+      "finished_at": "2026-04-11T15:50:28.378218"
+    },
+    "Nguyễn Đình Toàn": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:50:42.336190"
+    },
+    "Nguyễn Tà Cúc": {
+      "count": 6,
+      "finished_at": "2026-04-11T15:50:53.288640"
+    },
+    "Nguyễn Xuân Hoàng": {
+      "count": 7,
+      "finished_at": "2026-04-11T15:51:12.570439"
+    },
+    "Trần Vũ": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:51:30.620117"
+    },
+    "Lê Thị Huệ": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:51:36.847515"
+    },
+    "Nguyễn Thị Hoàng Bắc": {
+      "count": 8,
+      "finished_at": "2026-04-11T15:51:55.578118"
+    },
+    "Lê Minh Hà": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:52:14.331296"
+    },
+    "Phan Việt": {
+      "count": 3,
+      "finished_at": "2026-04-11T15:52:20.710440"
+    },
+    "Nguyễn Văn Thọ": {
+      "count": 12,
+      "finished_at": "2026-04-11T15:52:38.871296"
+    },
+    "Nguyễn Thanh Việt": {
+      "count": 11,
+      "finished_at": "2026-04-11T15:52:55.379289"
+    },
+    "Khuất Quang Thụy": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:53:05.680354"
+    },
+    "Nguyễn Bảo Sinh": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:53:17.192337"
+    },
+    "Nguyễn Bắc Sơn": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:53:38.956090"
+    },
+    "Nguyễn Hữu Quý": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:53:50.117079"
+    },
+    "Nguyễn Thị Mai": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:54:03.757780"
+    },
+    "Hồ Thủy Giang": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:54:15.974458"
+    },
+    "Nguyễn Thị Ngọc Tú": {
+      "count": 5,
+      "finished_at": "2026-04-11T15:54:28.371100"
+    },
+    "Vũ Tú Nam": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:54:40.752344"
+    },
+    "Phạm Ngọc Dương": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:54:53.247067"
+    },
+    "Nguyễn Thị Phương Trâm": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:55:04.028513"
+    },
+    "Lê Anh Hoài": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:55:20.782126"
+    },
+    "Nguyễn Ngọc Thuần": {
+      "count": 6,
+      "finished_at": "2026-04-11T15:55:33.449238"
+    },
+    "Phong Điệp": {
+      "count": 1,
+      "finished_at": "2026-04-11T15:55:42.859765"
+    },
+    "Nguyễn Danh Lam": {
+      "count": 1,
+      "finished_at": "2026-04-11T15:56:01.599890"
+    },
+    "Nguyễn Thị Thu Trà": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:56:07.728216"
+    },
+    "Nguyễn Xuân Thủy": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:56:21.484433"
+    },
+    "Phạm Thanh Hà": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:56:36.210772"
+    },
+    "Đỗ Tiến Thụy": {
+      "count": 1,
+      "finished_at": "2026-04-11T15:56:46.293168"
+    },
+    "June Phạm": {
+      "count": 1,
+      "finished_at": "2026-04-11T15:56:52.470782"
+    },
+    "Huỳnh Trọng Khang": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:57:00.593451"
+    },
+    "Lê Nguyễn Phương Liên": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:57:13.035703"
+    },
+    "Keng": {
+      "count": 13,
+      "finished_at": "2026-04-11T15:57:31.344498"
+    },
+    "Bích Lan": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:57:47.647295"
+    },
+    "Võ Quảng": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:57:59.409681"
+    },
+    "Tô Ngọc Hiến": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:58:07.908437"
+    },
+    "Nguyễn Kiên": {
+      "count": 7,
+      "finished_at": "2026-04-11T15:58:26.586093"
+    },
+    "Vũ Hùng": {
+      "count": 0,
+      "finished_at": "2026-04-11T15:58:45.826317"
+    },
+    "Nguyễn Huy Thắng": {
+      "count": 1,
+      "finished_at": "2026-04-11T16:00:01.825491"
+    },
+    "Phạm Hổ": {
+      "count": 9,
+      "finished_at": "2026-04-11T16:13:50.695685"
+    },
+    "Lê Phương Liên": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:28:14.369052"
+    },
+    "Trần Đình Sử": {
+      "count": 1,
+      "finished_at": "2026-04-12T18:28:21.042316"
+    },
+    "Phương Lựu": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:28:23.649249"
+    },
+    "Lại Nguyên Ân": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:28:28.733544"
+    },
+    "Nguyễn Đăng Mạnh": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:28:32.152903"
+    },
+    "Hà Minh Đức": {
+      "count": 1,
+      "finished_at": "2026-04-12T18:28:58.075801"
+    },
+    "Đỗ Lai Thúy": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:29:00.759167"
+    },
+    "Chu Văn Sơn": {
+      "count": 3,
+      "finished_at": "2026-04-12T18:29:11.270870"
+    },
+    "Trịnh Bá Đĩnh": {
+      "count": 7,
+      "finished_at": "2026-04-12T18:29:28.806719"
+    },
+    "Đặng Anh Đào": {
+      "count": 8,
+      "finished_at": "2026-04-12T18:29:44.484639"
+    },
+    "Đặng Nguyệt Anh": {
+      "count": 2,
+      "finished_at": "2026-04-12T18:29:58.745839"
+    },
+    "Trương Nam Hương": {
+      "count": 8,
+      "finished_at": "2026-04-12T18:30:11.652346"
+    },
+    "Bích Ngân": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:30:14.443341"
+    },
+    "Trầm Hương": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:30:17.048864"
+    },
+    "Ngô Thị Ý Nhi": {
+      "count": 2,
+      "finished_at": "2026-04-12T18:30:31.777182"
+    },
+    "Lê Thiếu Nhơn": {
+      "count": 4,
+      "finished_at": "2026-04-12T18:30:42.091674"
+    },
+    "Nguyễn Bính Hồng Cầu": {
+      "count": 1,
+      "finished_at": "2026-04-12T18:30:53.593643"
+    },
+    "Hoàng Đình Quang": {
+      "count": 3,
+      "finished_at": "2026-04-12T18:30:58.640559"
+    },
+    "Phạm Sĩ Sáu": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:31:03.450660"
+    },
+    "Phan Trung Thành": {
+      "count": 7,
+      "finished_at": "2026-04-12T18:31:27.530835"
+    },
+    "Nguyễn Thị Ngọc Hải": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:31:32.509769"
+    },
+    "Nguyễn Thu Trân": {
+      "count": 2,
+      "finished_at": "2026-04-12T18:31:43.729280"
+    },
+    "Cao Xuân Sơn": {
+      "count": 2,
+      "finished_at": "2026-04-12T18:31:48.418850"
+    },
+    "Phan Ngọc Thường Đoan": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:31:51.826984"
+    },
+    "Lê Thị Kim": {
+      "count": 3,
+      "finished_at": "2026-04-12T18:32:02.999462"
+    },
+    "Phan Hoàng": {
+      "count": 1,
+      "finished_at": "2026-04-12T18:32:16.644950"
+    },
+    "Nguyễn Thu Phương": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:32:19.230552"
+    },
+    "Lê Hoàng Anh": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:32:21.822566"
+    },
+    "Trần Hoài Anh": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:32:24.467611"
+    },
+    "Trần Thị Thắng": {
+      "count": 2,
+      "finished_at": "2026-04-12T18:32:37.685642"
+    },
+    "Nguyễn Thị Thanh Xuân": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:32:40.332967"
+    },
+    "Nguyễn Quang Hà": {
+      "count": 3,
+      "finished_at": "2026-04-12T18:32:54.343883"
+    },
+    "Lê Minh Quốc": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:32:59.325189"
+    },
+    "Nguyễn Trọng Tạo": {
+      "count": 3,
+      "finished_at": "2026-04-12T18:33:11.210340"
+    },
+    "Phạm Xuân Nguyên": {
+      "count": 22,
+      "finished_at": "2026-04-12T18:33:29.136929"
+    },
+    "Nguyễn Huệ Chi": {
+      "count": 2,
+      "finished_at": "2026-04-12T18:33:42.368119"
+    },
+    "Trần Nho Thìn": {
+      "count": 14,
+      "finished_at": "2026-04-12T18:33:50.786698"
+    },
+    "Nguyễn Văn Long": {
+      "count": 15,
+      "finished_at": "2026-04-12T18:34:09.707822"
+    },
+    "Phan Cự Đệ": {
+      "count": 7,
+      "finished_at": "2026-04-12T18:34:23.274153"
+    },
+    "Đinh Trí Dũng": {
+      "count": 4,
+      "finished_at": "2026-04-12T18:34:37.155188"
+    },
+    "Nguyễn Thị Bình": {
+      "count": 6,
+      "finished_at": "2026-04-12T18:34:52.591052"
+    },
+    "Đỗ Đức Hiểu": {
+      "count": 1,
+      "finished_at": "2026-04-12T18:35:06.339303"
+    },
+    "Lê Ngọc Trà": {
+      "count": 3,
+      "finished_at": "2026-04-12T18:35:19.029524"
+    },
+    "Nguyễn Thị Minh Thái": {
+      "count": 16,
+      "finished_at": "2026-04-12T18:35:34.176599"
+    },
+    "Trần Hữu Tá": {
+      "count": 7,
+      "finished_at": "2026-04-12T18:35:52.495286"
+    },
+    "Nguyễn Hiến Lê": {
+      "count": 8,
+      "finished_at": "2026-04-12T18:36:04.611795"
+    },
+    "Giản Tư Trung": {
+      "count": 4,
+      "finished_at": "2026-04-12T18:36:15.612643"
+    },
+    "Phan Văn Trường": {
+      "count": 5,
+      "finished_at": "2026-04-12T18:36:22.390631"
+    },
+    "Nguyễn Cảnh Bình": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:36:29.646428"
+    },
+    "Trần Đình Thiên": {
+      "count": 14,
+      "finished_at": "2026-04-12T18:36:46.838448"
+    },
+    "Phạm Đoan Trang": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:36:49.495982"
+    },
+    "Trần Quốc Vượng": {
+      "count": 11,
+      "finished_at": "2026-04-12T18:37:05.810792"
+    },
+    "Phan Huy Lê": {
+      "count": 4,
+      "finished_at": "2026-04-12T18:37:10.639028"
+    },
+    "Dương Trung Quốc": {
+      "count": 5,
+      "finished_at": "2026-04-12T18:37:23.722756"
+    },
+    "Hà Văn Tấn": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:37:28.550472"
+    },
+    "Nguyễn Khắc Viện": {
+      "count": 7,
+      "finished_at": "2026-04-12T18:37:35.651489"
+    },
+    "Nguyễn Văn Huyên": {
+      "count": 13,
+      "finished_at": "2026-04-12T18:37:53.040118"
+    },
+    "Trần Văn Giàu": {
+      "count": 7,
+      "finished_at": "2026-04-12T18:38:01.645828"
+    },
+    "Phạm Văn Đồng": {
+      "count": 10,
+      "finished_at": "2026-04-12T18:38:13.988099"
+    },
+    "Võ Nguyên Giáp": {
+      "count": 27,
+      "finished_at": "2026-04-12T18:38:35.050165"
+    },
+    "Nguyễn Lân": {
+      "count": 5,
+      "finished_at": "2026-04-12T18:38:48.114563"
+    },
+    "Đinh Gia Khánh": {
+      "count": 3,
+      "finished_at": "2026-04-12T18:39:04.890354"
+    },
+    "Trần Ngọc Thêm": {
+      "count": 3,
+      "finished_at": "2026-04-12T18:39:09.946676"
+    },
+    "Nguyễn Từ Chi": {
+      "count": 5,
+      "finished_at": "2026-04-12T18:39:22.856088"
+    },
+    "Tô Ngọc Thanh": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:39:25.496919"
+    },
+    "Ngô Bảo Châu": {
+      "count": 8,
+      "finished_at": "2026-04-12T18:39:35.170936"
+    },
+    "Hoàng Tụy": {
+      "count": 1,
+      "finished_at": "2026-04-12T18:39:40.150678"
+    },
+    "Tạ Quang Bửu": {
+      "count": 6,
+      "finished_at": "2026-04-12T18:39:44.698467"
+    },
+    "Nguyễn Văn Hiệu": {
+      "count": 9,
+      "finished_at": "2026-04-12T18:39:57.304498"
+    },
+    "Phan Đình Diệu": {
+      "count": 8,
+      "finished_at": "2026-04-12T18:40:11.069853"
+    },
+    "Tôn Thất Tùng": {
+      "count": 11,
+      "finished_at": "2026-04-12T18:40:20.188139"
+    },
+    "Hồ Đắc Di": {
+      "count": 6,
+      "finished_at": "2026-04-12T18:40:32.231813"
+    },
+    "Phạm Ngọc Thạch": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:40:34.853192"
+    },
+    "Lương Định Của": {
+      "count": 18,
+      "finished_at": "2026-04-12T18:40:51.804642"
+    },
+    "Trần Đại Nghĩa": {
+      "count": 4,
+      "finished_at": "2026-04-12T18:40:56.813353"
+    },
+    "Nguyễn Lân Dũng": {
+      "count": 7,
+      "finished_at": "2026-04-12T18:41:09.173143"
+    },
+    "Vũ Hà Văn": {
+      "count": 2,
+      "finished_at": "2026-04-12T18:41:21.220146"
+    },
+    "Nguyễn Tiến Dũng": {
+      "count": 2,
+      "finished_at": "2026-04-12T18:41:26.058048"
+    },
+    "Hồ Tú Bảo": {
+      "count": 10,
+      "finished_at": "2026-04-12T18:41:35.394818"
+    },
+    "Nguyễn Xuân Xanh": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:41:38.016733"
+    },
+    "Lê Nguyên Hoàng": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:41:40.713272"
+    },
+    "Thích Nhất Hạnh": {
+      "count": 3,
+      "finished_at": "2026-04-12T18:41:46.072951"
+    },
+    "Thích Trí Quang": {
+      "count": 2,
+      "finished_at": "2026-04-12T18:41:50.480585"
+    },
+    "Thích Thanh Từ": {
+      "count": 0,
+      "finished_at": "2026-04-12T18:41:53.137018"
+    }
+  }
+}

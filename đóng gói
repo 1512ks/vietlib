@@ -1,0 +1,95 @@
+# Kế hoạch Đóng gói và Triển khai (Packaging Implementation Plan)
+
+Tài liệu này trình bày chi tiết kế hoạch đóng gói ứng dụng **RAG Chatbot Thư viện Văn học Việt Nam** thành container bằng **Docker** và quản lý dịch vụ bằng **Docker Compose**. Mục tiêu là giúp hệ thống có khả năng chạy độc lập, nhất quán giữa môi trường phát triển (development) và môi trường vận hành (production).
+
+---
+
+## 1. Phân tích Hiện trạng Hệ thống
+
+Dự án hiện đã có cấu trúc cơ bản sẵn sàng cho việc đóng gói:
+* **Mã nguồn chính**: `app.py`, `retrieval_qa.py`, `question_suggester.py`.
+* **Module nội bộ**: `chunking/`, `search/`, `vector_store/`.
+* **Dữ liệu đi kèm**: `data/bm25_index.pkl` (Chỉ số BM25 đã được sinh sẵn nặng ~25.5MB).
+* **Dependencies**: Đã có [requirements.txt](file:///c:/Users/Admin/Desktop/%C4%90ATN/requirements.txt) chỉ định các thư viện Python cần thiết.
+* **Môi trường & Bảo mật**: File cấu hình mẫu `.env` và `.streamlit/secrets.toml` chứa các token API (Gemini API, Qdrant Cloud).
+* **Docker & Compose**: Đã có sẵn file [Dockerfile](file:///c:/Users/Admin/Desktop/%C4%90ATN/Dockerfile) và [docker-compose.yml](file:///c:/Users/Admin/Desktop/%C4%90ATN/docker-compose.yml) ở mức cơ bản, cần được kiểm tra tối ưu hóa và thực thi đóng gói hoàn chỉnh.
+
+---
+
+## 2. Kế hoạch Thực hiện Đóng gói
+
+Quy trình đóng gói sẽ bao gồm 4 bước chính:
+
+```mermaid
+graph TD
+    A[Kiểm tra & Tối ưu Dockerfile / Compose] --> B[Chuẩn bị Môi trường .env bảo mật]
+    B --> C[Tiến hành Build & Khởi chạy Container]
+    C --> D[Kiểm tra Healthcheck & Kiểm thử chức năng]
+```
+
+### Bước 2.1: Rà soát & Tối ưu cấu hình Docker
+
+#### 1. [Dockerfile](file:///c:/Users/Admin/Desktop/%C4%90ATN/Dockerfile)
+* Sử dụng base image nhẹ `python:3.10-slim`.
+* Cài đặt các gói biên dịch cần thiết cho một số thư viện Python (`gcc`, `g++`).
+* Sao chép và cài đặt các dependencies thông qua `requirements.txt` trước để tận dụng Docker Layer Caching.
+* Sao chép toàn bộ mã nguồn và dữ liệu cần thiết (`data/bm25_index.pkl`).
+* Thiết lập `HEALTHCHECK` kiểm tra trạng thái hoạt động của Streamlit qua endpoint `http://localhost:8501/_stcore/health`.
+* Thiết lập lệnh chạy mặc định headless.
+
+#### 2. [docker-compose.yml](file:///c:/Users/Admin/Desktop/%C4%90ATN/docker-compose.yml)
+* Khai báo service `chatbot` build từ context hiện tại.
+* Ánh xạ cổng `8501:8501`.
+* Đọc biến môi trường an toàn qua thuộc tính `env_file: - .env`.
+* Thiết lập giới hạn tài nguyên tối đa (Memory 2G, CPU hạn mức tùy chọn) để đảm bảo an toàn cho máy chủ vật lý.
+
+---
+
+## 3. Các bước Triển khai Chi tiết
+
+### Bước 3.1: Chuẩn bị file `.env`
+Đảm bảo file `.env` chứa đầy đủ các thông tin kết nối cần thiết để container có thể giao tiếp với các dịch vụ bên ngoài (Gemini API, Qdrant Cloud):
+```env
+GEMINI_API_KEY=AIzaSyCfsmXjoG1juLm331ZMte0he_l-9FWvTA8
+QDRANT_URL=https://your-qdrant-cloud-cluster.qdrant.io
+QDRANT_API_KEY=your-qdrant-api-key
+```
+> [!IMPORTANT]
+> Tuyệt đối không commit file `.env` lên Git. File này đã được thêm vào hệ thống `.gitignore` và `.dockerignore` một cách chính xác.
+
+### Bước 3.2: Lệnh Build và Khởi chạy Hệ thống
+Sử dụng các lệnh Docker Compose tiêu chuẩn để thực hiện đóng gói và khởi chạy:
+
+* **Tạo và khởi chạy Container lần đầu (hoặc khi có thay đổi code/dependencies):**
+  ```powershell
+  docker compose up --build -d
+  ```
+  *(Tham số `-d` chạy container dưới nền background)*
+
+* **Xem log thời gian thực của ứng dụng:**
+  ```powershell
+  docker compose logs -f chatbot
+  ```
+
+* **Dừng và dọn dẹp tài nguyên:**
+  ```powershell
+  docker compose down
+  ```
+
+---
+
+## 4. Kế hoạch Xác minh & Kiểm thử (Verification Plan)
+
+Sau khi container khởi chạy thành công, chúng ta cần tiến hành kiểm thử để đảm bảo mọi chức năng RAG hoạt động trơn tru bên trong môi trường Docker cách ly:
+
+### 1. Kiểm tra Trạng thái Container & Healthcheck
+* Chạy lệnh `docker ps` để xem trạng thái container `vn-literature-chatbot`. Trạng thái phải hiển thị `Up (healthy)`.
+* Trạng thái `healthy` xác nhận endpoint `_stcore/health` của Streamlit phản hồi mã code 200 thành công.
+
+### 2. Kiểm thử Giao diện (Manual Verification)
+* Truy cập địa chỉ `http://localhost:8501` trên trình duyệt máy local.
+* Thử tương tác nhập câu hỏi (ví dụ: *"Truyện Kiều của Nguyễn Du nói về điều gì?"*).
+* Kiểm tra xem phản hồi có hiển thị đầy đủ:
+  * Câu trả lời RAG từ Gemini Flash.
+  * Các nguồn tham khảo (Citation cards) kèm điểm score chính xác.
+  * Tốc độ phản hồi (Latency) hiển thị chi tiết cho từng bước Retrieve và LLM.

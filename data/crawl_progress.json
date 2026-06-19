@@ -1,0 +1,100 @@
+{
+  "started_at": "2026-03-29T22:13:44.074075",
+  "last_updated": "2026-03-30T05:21:18.179560",
+  "total_articles": 8250,
+  "total_errors": 0,
+  "completed_categories": {
+    "Văn học Việt Nam": {
+      "count": 1643,
+      "finished_at": "2026-03-29T23:36:36.870277"
+    },
+    "Tác phẩm văn học Việt Nam": {
+      "count": 90,
+      "finished_at": "2026-03-29T23:41:01.048113"
+    },
+    "Tiểu thuyết Việt Nam": {
+      "count": 69,
+      "finished_at": "2026-03-29T23:44:24.990844"
+    },
+    "Truyện ngắn Việt Nam": {
+      "count": 15,
+      "finished_at": "2026-03-29T23:45:07.215426"
+    },
+    "Thơ Việt Nam": {
+      "count": 697,
+      "finished_at": "2026-03-30T00:17:53.750325"
+    },
+    "Truyện thơ Việt Nam": {
+      "count": 21,
+      "finished_at": "2026-03-30T00:18:51.584768"
+    },
+    "Kịch Việt Nam": {
+      "count": 110,
+      "finished_at": "2026-03-30T00:23:53.039446"
+    },
+    "Ký Việt Nam": {
+      "count": 0,
+      "finished_at": "2026-03-30T00:23:58.711118"
+    },
+    "Truyện tranh Việt Nam": {
+      "count": 24,
+      "finished_at": "2026-03-30T00:25:29.021672"
+    },
+    "Văn học dân gian Việt Nam": {
+      "count": 52,
+      "finished_at": "2026-03-30T00:28:38.260508"
+    },
+    "Văn học cổ điển Việt Nam": {
+      "count": 263,
+      "finished_at": "2026-03-30T00:41:57.876989"
+    },
+    "Văn học hiện đại Việt Nam": {
+      "count": 0,
+      "finished_at": "2026-03-30T00:42:03.596963"
+    },
+    "Văn học đương đại Việt Nam": {
+      "count": 0,
+      "finished_at": "2026-03-30T00:42:09.275704"
+    },
+    "Nhà văn Việt Nam": {
+      "count": 1283,
+      "finished_at": "2026-03-30T01:43:14.881599"
+    },
+    "Nhà thơ Việt Nam": {
+      "count": 554,
+      "finished_at": "2026-03-30T02:08:05.798133"
+    },
+    "Tác giả Việt Nam": {
+      "count": 1,
+      "finished_at": "2026-03-30T02:08:14.086463"
+    },
+    "Nhà văn Hà Nội": {
+      "count": 0,
+      "finished_at": "2026-03-30T02:08:19.786781"
+    },
+    "Văn học thiếu nhi Việt Nam": {
+      "count": 65,
+      "finished_at": "2026-03-30T02:11:41.690763"
+    },
+    "Sách thiếu nhi Việt Nam": {
+      "count": 0,
+      "finished_at": "2026-03-30T02:11:47.366936"
+    },
+    "Sách tiếng Việt": {
+      "count": 48,
+      "finished_at": "2026-03-30T02:13:59.167477"
+    },
+    "Sách Việt Nam": {
+      "count": 143,
+      "finished_at": "2026-03-30T02:20:57.820509"
+    },
+    "Tiểu sử người Việt Nam": {
+      "count": 0,
+      "finished_at": "2026-03-30T02:21:03.483273"
+    },
+    "Lịch sử Việt Nam": {
+      "count": 3172,
+      "finished_at": "2026-03-30T05:21:15.174902"
+    }
+  }
+}

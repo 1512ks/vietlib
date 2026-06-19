@@ -1,0 +1,60 @@
+# ============================================================
+#  .gitignore — RAG Chatbot Thư viện Văn học Việt Nam
+#  TUYỆT ĐỐI không commit API Keys và dữ liệu nhạy cảm lên GitHub
+# ============================================================
+
+# ── Secrets & API Keys ──
+.env
+.env.local
+.env.production
+.streamlit/secrets.toml
+
+# ── Virtual Environment ──
+.venv/
+venv/
+env/
+
+# ── Python cache ──
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# ── Dữ liệu lớn (quá lớn để lưu trên GitHub) ──
+data/vector_db/
+data/raw/
+data/raw_v2/
+data/archive/
+data/archive.zip
+data/embeddings/
+data/processed/
+data/*.log
+data/generate_summaries_v3.log
+
+# ── File cá nhân (không liên quan đến mã nguồn) ──
+*.pdf
+*.xlsx
+*.tex
+*.aux
+*.out
+*.toc
+*.mp4
+*.png
+*.jpg
+CV.pdf
+APIKEY
+APIKEYS.tex
+Bang_tinh_chi_phi_cosplay.xlsx
+tố\ vấn.mp4
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+.DS_Store
+
+# ── Misc ──
+*.bak
+scratchpad_*.md

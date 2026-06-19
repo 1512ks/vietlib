@@ -1,0 +1,65 @@
+# ── Secrets & API Keys (TUYỆT ĐỐI không commit lên Git) ──
+.env
+.env.local
+.env.production
+
+# ── Streamlit secrets ──
+.streamlit/secrets.toml
+
+# ── Virtual Environment ──
+.venv/
+venv/
+env/
+
+# ── Python cache ──
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+.Python
+
+# ── Dữ liệu lớn (không cần cho Docker deployment) ──
+# Vector DB cục bộ (dùng Qdrant Cloud thay thế)
+data/vector_db/
+
+# Dữ liệu thô (đã xử lý, không cần trong container)
+data/raw/
+data/raw_v2/
+data/archive/
+data/archive.zip
+data/embeddings/
+data/processed/
+
+# Log files
+data/*.log
+data/*.json
+data/*.txt
+
+# ── Tài liệu báo cáo (LaTeX, PDF) ──
+*.tex
+*.pdf
+*.aux
+*.log
+*.out
+*.toc
+*.xlsx
+
+# ── File media ──
+*.png
+*.jpg
+*.jpeg
+*.mp4
+*.gif
+
+# ── IDE & hệ điều hành ──
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db
+.DS_Store
+
+# ── Backup files ──
+*.bak
+*.backup

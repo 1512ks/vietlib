@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"/c/Users/Admin/Desktop/ĐATN\" && ls -R crawler chunking data 2>/dev/null | head -80)",
+      "Bash(grep -nA20 \"BOOK_CATEGORIES\" crawler/config_v2.py)",
+      "Bash(grep -nA30 \"ALL_QUERIES\\\\|QUERIES =\" crawler/gbooks_config.py)",
+      "Bash(python -c ' *)",
+      "Bash(cat \"C:\\\\Users\\\\Admin\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-Admin-Desktop--ATN\\\\23b28ae6-3206-4ac7-b92f-1984ff0eb5f3\\\\tasks\\\\bxqmdnr5t.output\")",
+      "Bash(cd \"/c/Users/Admin/Desktop/ĐATN\" && rm -f data/_stats_genre.txt && echo \"cleaned\")",
+      "Bash(rm -f _head.tex _tail.tex)",
+      "Bash(pdflatex -interaction=nonstopmode -halt-on-error DATN.tex)",
+      "Bash(echo \"exit pass1: $?\")",
+      "Bash(pdflatex -interaction=nonstopmode DATN.tex)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(rm -f _build.log)",
+      "Bash(rm -f _b.log)"
+    ]
+  }
+}

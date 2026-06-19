@@ -1,0 +1,48 @@
+# Quy hoạch lại cấu trúc dữ liệu cho RAG (Vietnamese Literature)
+
+Mục tiêu: Đảm bảo RAG luôn "hiểu" được bối cảnh của một đoạn văn bản (Tên sách, Tác giả, Thể loại...) và khắc phục triệt để tình trạng bỏ sót tác phẩm.
+
+## Vấn đề hiện tại
+1. **Mất thông tin bối cảnh (Context Loss)**: Hiện tại Chunking chia văn bản thành các đoạn 200 từ. Nếu đoạn văn ở giữa truyện không hề nhắc đến tên "Kim Dung" hay "Thần Điêu Hiệp Lữ", thì khi search "Truyện kiếm hiệp Kim Dung", vector search sẽ không bao giờ tìm thấy đoạn đó.
+2. **Bỏ sót tác phẩm do Deduplication sai lầm**: Lệnh deduplicate hiện tại chỉ dựa vào `title`. Điều này dẫn đến 2 lỗi nghiêm trọng:
+   - Hai tác phẩm trùng tên của 2 tác giả khác nhau sẽ bị xoá mất 1.
+   - Nếu Wikipedia có bài về tác phẩm, toàn bộ dữ liệu từ `archive` của tác phẩm đó sẽ bị bỏ qua hoàn toàn.
+
+## Kế hoạch thay đổi (Proposed Changes)
+
+### 1. Nâng cấp bộ Deduplication (Gộp dữ liệu thay vì xoá)
+Thay vì xoá bỏ khi trùng tên, chúng ta sẽ gộp (Merge) các nguồn lại thành một "Siêu hồ sơ" (Super Book Card) cho mỗi tác phẩm:
+- Dùng khoá định danh kép: `[Tên tác phẩm] + [Tác giả]`. Trùng cả hai mới coi là 1 tác phẩm.
+- **Nếu Wiki, Gbooks, Archive trùng nhau**:
+  - Lấy `description` chi tiết nhất (ưu tiên Wiki).
+  - Bổ sung `genres`, `publishedDate` từ Gbooks.
+  - Bổ sung `ai_summary` và `word_count` (số trang) từ Archive.
+
+### 2. Chiến lược "Metadata Injection" vào Embeddings
+Để mô hình Vector Search luôn biết một đoạn văn thuộc về tác phẩm nào, chúng ta sẽ ép (inject) metadata vào phần đầu của **mọi chunk** văn bản trước khi đưa qua mô hình Embedding.
+
+**Cấu trúc mỗi Chunk sẽ trông như sau:**
+```text
+[Tác phẩm: Số Đỏ] | [Tác giả: Vũ Trọng Phụng] | [Năm: 1936] | [Thể loại: Hiện thực phê phán]
+[Tóm tắt: ...]
+--- NỘI DUNG CHUNK ---
+(Nội dung 200 từ của tác phẩm hoặc bài viết Wikipedia...)
+```
+Nhờ vậy, bất kỳ chunk nào cũng mang đầy đủ DNA của tác phẩm. Khi RAG bốc context này đưa cho Gemini, Gemini cũng sẽ có ngay thông tin năm sáng tác, thể loại, tóm tắt mà không cần tìm kiếm thêm.
+
+## Các file cần sửa đổi
+
+#### [MODIFY] `build_knowledge_base.py`
+- Thay đổi logic `get_unique_files()`: Chuyển từ "Ghi đè" sang "Merge" dữ liệu theo khoá `title + author`.
+- Trích xuất toàn bộ metadata (genres, year, summary) để truyền xuống Chunker.
+
+#### [MODIFY] `chunking/chunker.py`
+- Bổ sung hàm `inject_metadata(chunk_text, metadata)` để gắn chuỗi `[Tác phẩm: ...] | [Tác giả: ...]` vào trước thuộc tính `text` của `TextChunk`.
+
+#### [MODIFY] `search/search_pipeline.py` (nếu cần)
+- Đảm bảo BM25 cũng index luôn phần metadata này để search keyword chính xác 100%.
+
+> [!IMPORTANT]
+> **User Review Required**
+> 1. Với cấu trúc "Metadata Injection" mỗi chunk sẽ bị dài thêm khoảng 30-50 từ (cho metadata). Bạn có đồng ý đánh đổi một chút không gian chunk này để lấy lại độ chính xác tuyệt đối khi search theo tác giả/thể loại không?
+> 2. Bạn có muốn giữ lại toàn bộ chi tiết truyện (từ archive/wiki) hay chỉ cần tóm tắt và metadata là đủ? (Nếu chỉ cần tóm tắt, ta có thể giới hạn mỗi tác phẩm chỉ sinh ra ĐÚNG 1 CHUNK chứa đầy đủ thông tin).
