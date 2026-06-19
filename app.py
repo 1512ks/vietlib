@@ -12,6 +12,7 @@ Yêu cầu:
 from __future__ import annotations
 
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -24,6 +25,17 @@ try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
+    pass
+
+# ── Cầu nối Secrets của Streamlit Cloud → biến môi trường ──
+# Khi deploy trên Streamlit Cloud không có file .env; các module dùng
+# os.environ.get(...) cần được nạp giá trị từ st.secrets.
+try:
+    for _k in ("GEMINI_API_KEY", "QDRANT_URL", "QDRANT_API_KEY",
+               "BM25_INDEX_URL", "VECTOR_DB_URL"):
+        if _k in st.secrets and not os.environ.get(_k):
+            os.environ[_k] = str(st.secrets[_k])
+except Exception:
     pass
 
 
