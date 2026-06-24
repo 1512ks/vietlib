@@ -83,11 +83,11 @@ def make_model():
     return genai.GenerativeModel("gemini-2.5-flash", tools=[tool])
 
 
-def enrich_one(model, row: dict) -> tuple[dict, list[str]]:
-    """Trả về (row đã cập nhật, danh sách field AI điền)."""
+def enrich_one(model, row: dict) -> tuple[dict, list[str], bool]:
+    """Trả về (row, field AI điền, ok). ok=False = LỖI API (quota/mạng) → đừng ghi, để resume thử lại."""
     missing = [f for f in ENRICH_FIELDS if not (row.get(f) or "").strip()]
     if not missing:
-        return row, []
+        return row, [], True
     prompt = build_prompt(row["title"], row.get("author", ""), row.get("summary", ""), missing)
     for attempt in range(MAX_RETRY):
         try:
@@ -104,13 +104,13 @@ def enrich_one(model, row: dict) -> tuple[dict, list[str]]:
                         v = mm.group(0)
                     row[f] = v
                     filled.append(f)
-            return row, filled
+            return row, filled, True   # gọi thành công (kể cả khi không tra ra gì)
         except Exception as e:
             if attempt == MAX_RETRY - 1:
-                print(f"    ⚠️ lỗi sau {MAX_RETRY} lần: {str(e)[:80]}")
-                return row, []
+                print(f"    ⚠️ lỗi API sau {MAX_RETRY} lần: {str(e)[:80]}")
+                return row, [], False   # lỗi thật → để resume thử lại
             time.sleep(2 ** attempt * 2)   # backoff cho rate-limit
-    return row, []
+    return row, [], False
 
 
 def main():
@@ -139,7 +139,7 @@ def main():
     if not done_ids:
         w.writeheader()
 
-    processed = enriched = api_calls = 0
+    processed = enriched = api_calls = consec_fail = 0
     try:
         for row in rows:
             if row["id"] in done_ids:
@@ -156,14 +156,17 @@ def main():
                 continue
 
             api_calls += 1
-            try:
-                row, filled = enrich_one(model, row)
-            except Exception as e:   # bất kỳ lỗi lạ nào → bỏ qua cuốn này, KHÔNG sập job
-                print(f"  [{processed+1}] {row['title'][:40]:40s} ← ⚠️ bỏ qua ({str(e)[:50]})")
-                row["ai_filled"] = ""
-                w.writerow(row); fout.flush()
-                processed += 1
+            row, filled, ok = enrich_one(model, row)
+            if not ok:
+                # Lỗi API (quota/mạng): KHÔNG ghi → resume sẽ thử lại cuốn này
+                consec_fail += 1
+                print(f"  [{processed}] {row['title'][:40]:40s} ← ⚠️ lỗi API (chưa ghi, sẽ thử lại khi resume)")
+                if consec_fail >= 5:
+                    print("\n  ⛔ 5 lỗi liên tiếp — có thể HẾT QUOTA/mất mạng. Dừng để giữ chỗ; "
+                          "chạy lại sau (vd ngày mai) sẽ thử lại đúng các cuốn này.")
+                    break
                 continue
+            consec_fail = 0
             row["ai_filled"] = ",".join(filled)
             w.writerow(row); fout.flush()
             processed += 1
