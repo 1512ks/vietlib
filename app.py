@@ -892,6 +892,8 @@ if query:
 
     contexts, latency, answer, engine = [], {}, "", None
     _rr = use_reranker if search_mode == "hybrid" else None
+    # Hiện loading NGAY — giữ liên tục qua suốt init + retrieve + chờ token đầu tiên
+    show_loading(loading_ph)
     try:
         engine = get_engine()
         engine.top_k = top_k  # Apply top_k TRƯỚC khi search
@@ -900,13 +902,13 @@ if query:
         cached = None if is_suggested else engine.peek_cache(query, mode=search_mode,
                                                              use_reranker=_rr)
         if cached is not None:
+            loading_ph.empty()
             answer   = cached["answer"]
             contexts = cached["contexts"]
             latency  = {**cached["latency"], "cached": True}
             st.session_state.search_pool = cached.get("pool", contexts)
             answer_ph.markdown(_bot_bubble(answer), unsafe_allow_html=True)
         else:
-            show_loading(loading_ph)
             retr = engine.retrieve(
                 query,
                 mode=search_mode,
@@ -915,9 +917,9 @@ if query:
             )
             st.session_state.search_pool = retr["pool"]   # cập nhật cache (≤ 1000 đầu sách)
             contexts = retr["contexts"]
-            loading_ph.empty()
 
             if retr["blocked_answer"] is not None:
+                loading_ph.empty()
                 answer  = retr["blocked_answer"]
                 latency = {"retrieve_ms": retr["retrieve_ms"], "llm_ms": 0,
                            "total_ms": retr["retrieve_ms"]}
@@ -926,10 +928,14 @@ if query:
                 from retrieval_qa import build_prompt
                 prompt = build_prompt(query, contexts,
                                       low_confidence=retr["low_confidence"])
-                t0, acc = time.time(), ""
+                t0, acc, first = time.time(), "", True
                 for chunk in engine.gemini.generate_stream(prompt):
+                    if first:                 # token đầu tới → mới tắt loading
+                        loading_ph.empty()
+                        first = False
                     acc += chunk
                     answer_ph.markdown(_bot_bubble(acc + "▌"), unsafe_allow_html=True)
+                loading_ph.empty()            # phòng trường hợp không có chunk nào
                 answer = acc.strip()
                 llm_ms = round((time.time() - t0) * 1000)
                 latency = {"retrieve_ms": retr["retrieve_ms"], "llm_ms": llm_ms,
