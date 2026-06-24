@@ -99,11 +99,14 @@ def parse_json(text: str) -> dict:
         return {}
 
 
-def make_model():
+DEFAULT_MODEL = "gemini-2.5-flash"   # chất lượng cao; "gemini-2.5-flash-lite" rẻ/nhanh hơn
+
+
+def make_model(model_name: str = DEFAULT_MODEL):
     import google.generativeai as genai
     genai.configure(api_key=os.environ["GEMINI_API_KEY"])
     tool = genai.protos.Tool(google_search=genai.protos.Tool.GoogleSearch())
-    return genai.GenerativeModel("gemini-2.5-flash", tools=[tool])
+    return genai.GenerativeModel(model_name, tools=[tool])
 
 
 def enrich_one(model, row: dict) -> tuple[dict, list[str], bool]:
@@ -143,7 +146,10 @@ def main():
     ap.add_argument("--limit", type=int, default=0, help="Chỉ xử lý N cuốn đầu cần làm giàu (dry-run)")
     ap.add_argument("--daily-cap", type=int, default=DAILY_CAP_DEFAULT,
                     help=f"Số lệnh grounding tối đa/ngày (mặc định {DAILY_CAP_DEFAULT} = hạn mức free). 0 = bỏ giới hạn.")
+    ap.add_argument("--model", default=DEFAULT_MODEL,
+                    help=f"Model Gemini (mặc định {DEFAULT_MODEL}; rẻ/nhanh hơn: gemini-2.5-flash-lite)")
     args = ap.parse_args()
+    print(f"  Model: {args.model}")
 
     today, daily_count = load_daily(DAILY_STATE)
     if args.daily_cap:
@@ -162,7 +168,7 @@ def main():
             done_ids.add(r["id"])
         print(f"  Resume: đã có {len(done_ids):,} dòng trong {out_path.name}")
 
-    model = make_model()
+    model = make_model(args.model)
     fout = open(out_path, "a", encoding="utf-8-sig", newline="")
     w = csv.DictWriter(fout, fieldnames=cols)
     if not done_ids:
