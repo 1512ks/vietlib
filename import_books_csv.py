@@ -25,8 +25,7 @@ IN_CSV = "data/books_metadata_enriched.csv"
 # Cột CSV -> khoá JSON (trùng tên, viết tường minh cho rõ)
 FIELD_MAP = {
     "author": "author", "publication_year": "publication_year", "genre": "genre",
-    "publisher": "publisher", "page_count": "page_count", "isbn": "isbn",
-    "cover_url": "cover_url",
+    "publisher": "publisher", "page_count": "page_count",
 }
 
 

@@ -35,7 +35,7 @@ IN_CSV  = "data/books_metadata_raw.csv"
 OUT_CSV = "data/books_metadata_enriched.csv"
 
 # Trường được phép làm giàu (KHÔNG đụng summary — đã 98.5% đầy, theo nguyên tắc fill-empty)
-ENRICH_FIELDS = ["author", "publication_year", "genre", "publisher", "page_count", "isbn", "cover_url"]
+ENRICH_FIELDS = ["author", "publication_year", "genre", "publisher", "page_count"]
 DELAY = 0.5          # giây giữa các lần gọi
 MAX_RETRY = 3
 
@@ -47,8 +47,6 @@ def build_prompt(title: str, author: str, summary: str, missing: list[str]) -> s
         "genre": "thể loại văn học chuẩn (Tiểu thuyết, Truyện ngắn, Thơ, Kịch, Hồi ký, Tản văn...)",
         "publisher": "nhà xuất bản của ấn bản đầu/phổ biến",
         "page_count": "số trang (số nguyên)",
-        "isbn": "mã ISBN-13 nếu tra được",
-        "cover_url": "URL ảnh bìa nếu tra được",
     }
     want = "\n".join(f'  - "{f}": {field_desc[f]}' for f in missing)
     return (
