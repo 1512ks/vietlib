@@ -434,14 +434,16 @@ if str(st.context.theme.get("type", "dark")).lower() == "light":
 #  Cache
 # ============================================================
 @st.cache_resource(show_spinner=False)
-def load_engine(use_reranker: bool = True):
+def load_engine():
+    # Luôn build kèm reranker (1 engine duy nhất). Việc bật/tắt rerank được
+    # truyền theo từng truy vấn qua ask()/retrieve() → không rebuild khi gạt toggle.
     try:
         from utils.download_utils import check_and_download_resources
         check_and_download_resources()
     except Exception as e:
         st.warning(f"Lỗi khi kiểm tra/tải tài nguyên tự động: {e}")
     from retrieval_qa import RetrievalQA
-    return RetrievalQA.build(use_reranker=use_reranker)
+    return RetrievalQA.build(use_reranker=True)
 
 
 @st.cache_resource(show_spinner=False)
@@ -462,6 +464,8 @@ def init_session():
         "use_reranker": True,
         "top_k": 5,
         "n_suggest": 3,
+        "from_suggestion": False,   # True khi query đến từ chip câu hỏi đề xuất
+        "search_pool": [],          # Cache search tích lũy (≤ 1000 đầu sách)
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -574,7 +578,7 @@ with st.sidebar:
 #  Header
 # ============================================================
 mode_icons = {"hybrid": "🔀", "bm25": "📝", "vector": "🧠"}
-mode_names = {"hybrid": "Hybrid+Rerank", "bm25": "BM25 Only", "vector": "Vector Only"}
+mode_names = {"hybrid": "Hybrid", "bm25": "BM25 Only", "vector": "Vector Only"}
 rerank_tag = " + Rerank" if (search_mode == "hybrid" and use_reranker) else ""
 
 st.markdown(f"""
@@ -594,8 +598,8 @@ st.markdown(f"""
 #  Engine loader
 # ============================================================
 def get_engine():
-    with st.spinner("⏳ Đang khởi tạo hệ thống... (chỉ cần chờ lần đầu)"):
-        return load_engine(use_reranker=use_reranker)
+    with st.spinner("⏳ Đang khởi tạo hệ thống & nạp model... (chỉ cần chờ lần đầu)"):
+        return load_engine()
 
 
 # ============================================================
@@ -798,6 +802,7 @@ def render_message(msg: dict, show_snip: bool = False):
                 with col:
                     if st.button(s, key=f"sug_{id(msg)}_{i}", use_container_width=True):
                         st.session_state.pending_query = s
+                        st.session_state.from_suggestion = True  # giữ & mở rộng cache search
                         st.rerun()
 
 
@@ -830,6 +835,7 @@ with chat_container:
             with cols[i % 2]:
                 if st.button(starter, use_container_width=True, key=f"start_{i}"):
                     st.session_state.pending_query = starter
+                    st.session_state.from_suggestion = False  # câu hỏi mới → reset cache
                     st.rerun()
     else:
         # Đánh dấu message mới nhất
@@ -848,11 +854,15 @@ with chat_container:
 user_input = st.chat_input("Nhập câu hỏi về văn học Việt Nam...")
 
 query = None
+is_suggested = False
 if st.session_state.pending_query:
     query = st.session_state.pending_query
     st.session_state.pending_query = None
+    is_suggested = bool(st.session_state.from_suggestion)
+    st.session_state.from_suggestion = False
 elif user_input:
     query = user_input.strip()
+    is_suggested = False   # gõ tay = câu hỏi mới
 
 
 # ============================================================
@@ -861,28 +871,83 @@ elif user_input:
 if query:
     st.session_state.messages.append({"role": "user", "content": query})
 
-    loading_ph = st.empty()
-    show_loading(loading_ph)
+    # Câu hỏi mới (không đến từ chip đề xuất) → xóa cache search cũ
+    if not is_suggested:
+        st.session_state.search_pool = []
+
+    # Hiển thị ngay bong bóng người dùng + placeholder câu trả lời (streaming)
+    with chat_container:
+        st.markdown(
+            f'<div class="chat-user"><div class="chat-user-bubble">{query}</div></div>',
+            unsafe_allow_html=True,
+        )
+        loading_ph = st.empty()
+        answer_ph  = st.empty()
+
+    def _bot_bubble(text: str) -> str:
+        return (
+            f'<div class="chat-bot"><div class="chat-bot-inner">'
+            f'<div class="chat-bot-bubble">{text}</div></div></div>'
+        )
+
+    contexts, latency, answer, engine = [], {}, "", None
+    _rr = use_reranker if search_mode == "hybrid" else None
     try:
         engine = get_engine()
         engine.top_k = top_k  # Apply top_k TRƯỚC khi search
 
-        result = engine.ask(
-            query,
-            mode=search_mode,
-            use_reranker=use_reranker if search_mode == "hybrid" else None,
-        )
-        answer   = result["answer"]
-        contexts = result["contexts"]
-        latency  = result["latency"]
-    except Exception as e:
-        answer   = f"❌ Có lỗi xảy ra: {str(e)}"
-        contexts = []
-        latency  = {}
-    finally:
-        loading_ph.empty()
+        # ── Cache hit tức thì cho câu hỏi mới lặp lại (không streaming) ──
+        cached = None if is_suggested else engine.peek_cache(query, mode=search_mode,
+                                                             use_reranker=_rr)
+        if cached is not None:
+            answer   = cached["answer"]
+            contexts = cached["contexts"]
+            latency  = {**cached["latency"], "cached": True}
+            st.session_state.search_pool = cached.get("pool", contexts)
+            answer_ph.markdown(_bot_bubble(answer), unsafe_allow_html=True)
+        else:
+            show_loading(loading_ph)
+            retr = engine.retrieve(
+                query,
+                mode=search_mode,
+                use_reranker=_rr,
+                pool=st.session_state.search_pool,   # tận dụng cache search nếu là follow-up
+            )
+            st.session_state.search_pool = retr["pool"]   # cập nhật cache (≤ 1000 đầu sách)
+            contexts = retr["contexts"]
+            loading_ph.empty()
 
-    # Sinh câu hỏi gợi ý
+            if retr["blocked_answer"] is not None:
+                answer  = retr["blocked_answer"]
+                latency = {"retrieve_ms": retr["retrieve_ms"], "llm_ms": 0,
+                           "total_ms": retr["retrieve_ms"]}
+                answer_ph.markdown(_bot_bubble(answer), unsafe_allow_html=True)
+            else:
+                from retrieval_qa import build_prompt
+                prompt = build_prompt(query, contexts,
+                                      low_confidence=retr["low_confidence"])
+                t0, acc = time.time(), ""
+                for chunk in engine.gemini.generate_stream(prompt):
+                    acc += chunk
+                    answer_ph.markdown(_bot_bubble(acc + "▌"), unsafe_allow_html=True)
+                answer = acc.strip()
+                llm_ms = round((time.time() - t0) * 1000)
+                latency = {"retrieve_ms": retr["retrieve_ms"], "llm_ms": llm_ms,
+                           "total_ms": retr["retrieve_ms"] + llm_ms}
+                answer_ph.markdown(_bot_bubble(answer), unsafe_allow_html=True)
+
+                # Lưu cache exact-match chỉ cho câu hỏi mới (follow-up phụ thuộc pool)
+                if not is_suggested and answer:
+                    engine.store_cache(query, search_mode, _rr, {
+                        "answer": answer, "contexts": contexts,
+                        "pool": retr["pool"], "latency": latency,
+                    })
+    except Exception as e:
+        loading_ph.empty()
+        answer, contexts, latency = f"❌ Có lỗi xảy ra: {str(e)}", [], {}
+        answer_ph.markdown(_bot_bubble(answer), unsafe_allow_html=True)
+
+    # Sinh câu hỏi gợi ý — SAU khi câu trả lời đã hiển thị (không chặn UI)
     suggestions = []
     if contexts:
         try:

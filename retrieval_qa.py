@@ -62,6 +62,8 @@ TOP_K_CONTEXT   = 5                    # Số context chunks đưa vào prompt
 MAX_CONTEXT_LEN = 800                  # Ký tự tối đa mỗi chunk (tránh vượt token limit)
 RELEVANCE_THRESHOLD = 0.003            # RRF score tối thiểu — dưới ngưỡng này coi là out-of-corpus
 LOW_CONF_THRESHOLD  = 0.006            # Dưới ngưỡng này: cảnh báo trong prompt là “thông tin có thể không chính xác”
+SEARCH_POOL_MAX     = 1000             # Giới hạn số đầu sách lưu trong cache search (pool tích lũy)
+MERGE_RERANK_CAP    = 60               # Số candidate tối đa đưa vào cross-encoder khi gộp pool (chặn latency)
 
 
 # ============================================================
@@ -294,6 +296,21 @@ class GeminiClient:
         )
         return response.text.strip()
 
+    def generate_stream(self, prompt: str, temperature: float = 0.2):
+        """Gọi Gemini API ở chế độ streaming — yield từng đoạn text khi sẵn sàng.
+
+        Giảm mạnh độ trễ cảm nhận: chữ hiện dần thay vì chờ toàn bộ câu trả lời.
+        """
+        response = self.model.generate_content(
+            prompt,
+            generation_config={"temperature": temperature},
+            stream=True,
+        )
+        for chunk in response:
+            text = getattr(chunk, "text", "")
+            if text:
+                yield text
+
 
 # ============================================================
 #  RetrievalQA Engine
@@ -366,10 +383,154 @@ class RetrievalQA:
 
         gemini = GeminiClient(api_key=api_key, model=gemini_model)
 
+        # ── Warm-up: nạp sẵn embedder + cross-encoder ngay lúc khởi tạo ──
+        # Tránh dồn chi phí tải model (~vài giây) vào câu hỏi đầu tiên của người dùng.
+        try:
+            print("⏳ Warm-up models (embedder + reranker)...")
+            pipeline.search("khởi động hệ thống", top_k=1, mode="hybrid",
+                            use_reranker=use_reranker)
+        except Exception as e:
+            print(f"⚠️ Warm-up bỏ qua (sẽ nạp model ở truy vấn đầu): {e}")
+
         elapsed = (time.time() - t0) * 1000
         print(f"✅ Sẵn sàng! ({elapsed:.0f}ms) | Model: {gemini_model}\n")
 
         return cls(pipeline, gemini, top_k=top_k)
+
+    # ----------------------------------------------------------
+    #  Helpers cache search (pool tích lũy)
+    # ----------------------------------------------------------
+    @staticmethod
+    def _to_ctx(r) -> dict:
+        """Chuyển SearchResult → context dict thống nhất."""
+        return {
+            "doc_id" : r.doc_id,
+            "text"   : r.text,
+            "title"  : r.metadata.get("title", r.metadata.get("name", "Không rõ")),
+            "author" : r.metadata.get("author", r.metadata.get("authors", "Không rõ")),
+            "score"  : r.rerank_score if r.rerank_score else r.score,
+            "metadata": r.metadata,
+        }
+
+    def _merge_pool(
+        self,
+        query: str,
+        pool: List[dict],
+        new_ctx: List[dict],
+        use_reranker: Optional[bool],
+        mode: str,
+    ) -> List[dict]:
+        """
+        Gộp pool cũ + kết quả mới (dedup theo doc_id), re-rank theo query hiện tại.
+
+        Khi follow-up câu hỏi đề xuất: tận dụng lại các đầu sách đã tìm trước đó
+        và bổ sung kết quả mới, rồi chấm điểm lại toàn bộ theo câu hỏi mới.
+        """
+        by_id: dict = {}
+        for c in pool:
+            by_id[c["doc_id"]] = c
+        for c in new_ctx:          # kết quả mới ghi đè (điểm/ text mới hơn)
+            by_id[c["doc_id"]] = c
+        merged = list(by_id.values())
+
+        reranker = getattr(self.pipeline, "reranker", None)
+        do_rerank = (
+            (use_reranker if use_reranker is not None else True)
+            and mode == "hybrid"
+            and reranker is not None
+        )
+
+        if do_rerank and merged:
+            # Chặn latency: chỉ đưa tối đa MERGE_RERANK_CAP candidate (ưu tiên điểm cũ cao)
+            merged.sort(key=lambda c: c.get("score", 0) or 0, reverse=True)
+            head = merged[:MERGE_RERANK_CAP]
+            tail = merged[MERGE_RERANK_CAP:]
+            scores = reranker.score(query, [c.get("text", "") for c in head])
+            for c, s in zip(head, scores):
+                c["score"] = float(s)
+            head.sort(key=lambda c: c["score"], reverse=True)
+            merged = head + tail
+        else:
+            merged.sort(key=lambda c: c.get("score", 0) or 0, reverse=True)
+
+        return merged[:SEARCH_POOL_MAX]   # Giới hạn 1000 đầu sách trong cache search
+
+    # ----------------------------------------------------------
+    #  Retrieve (tách riêng để hỗ trợ streaming + cache search)
+    # ----------------------------------------------------------
+    def retrieve(
+        self,
+        query: str,
+        mode: str = "hybrid",
+        use_reranker: Optional[bool] = None,
+        pool: Optional[List[dict]] = None,
+        verbose: bool = False,
+    ) -> dict:
+        """
+        Lấy context cho câu hỏi. Nếu có `pool` (cache search từ lượt trước, do
+        người dùng chọn câu hỏi đề xuất) thì gộp + re-rank cùng kết quả mới.
+
+        Returns dict:
+            contexts       : List[dict] top_k đưa vào prompt
+            pool           : List[dict] cache search đã cập nhật (≤ 1000)
+            low_confidence : bool
+            retrieve_ms    : int
+            blocked_answer : Optional[str] — câu trả lời chặn (out-of-corpus) nếu có
+        """
+        pool = pool or []
+        t0 = time.time()
+        results = self.pipeline.search(
+            query, top_k=self.top_k, use_reranker=use_reranker, mode=mode,
+        )
+        t_retrieve = round((time.time() - t0) * 1000)
+
+        # Không có kết quả mới VÀ không có pool cũ → chặn
+        if not results and not pool:
+            return {
+                "contexts": [], "pool": [], "low_confidence": False,
+                "retrieve_ms": t_retrieve,
+                "blocked_answer": "Xin lỗi, tôi không tìm thấy tài liệu liên quan đến câu hỏi này trong thư viện.",
+            }
+
+        # Gate relevance chỉ khi đây là câu hỏi mới (không có pool tích lũy)
+        if results and not pool:
+            top_score = results[0].rerank_score if results[0].rerank_score else results[0].score
+            if top_score < RELEVANCE_THRESHOLD:
+                return {
+                    "contexts": [], "pool": [], "low_confidence": False,
+                    "retrieve_ms": t_retrieve,
+                    "blocked_answer": (
+                        "Tôi không tìm thấy thông tin về chủ đề này trong thư viện của chúng tôi. "
+                        "Thư viện hiện tập trung vào văn học Việt Nam và các tác phẩm dịch phổ biến tại Việt Nam. "
+                        "Bạn có thể hỏi về tác phẩm, tác giả hoặc chủ đề văn học Việt Nam khác không?"
+                    ),
+                }
+
+        new_ctx = [self._to_ctx(r) for r in results]
+
+        # Gộp với pool cũ (nếu có) hoặc dùng riêng kết quả mới
+        merged = self._merge_pool(query, pool, new_ctx, use_reranker, mode) if pool else new_ctx
+
+        # top_k context cho prompt
+        contexts = []
+        for i, c in enumerate(merged[: self.top_k], 1):
+            contexts.append({**c, "source_idx": i})
+
+        updated_pool = merged[:SEARCH_POOL_MAX]
+        low_confidence = bool(contexts) and (contexts[0].get("score", 0) or 0) < LOW_CONF_THRESHOLD
+
+        if verbose:
+            print(f"\n📚 Context ({len(contexts)} chunks, pool={len(updated_pool)}, {t_retrieve}ms):")
+            for ctx in contexts:
+                print(f"  [{ctx['source_idx']}] {ctx['title']} — {ctx['author']} (score={ctx['score']:.4f})")
+
+        return {
+            "contexts": contexts,
+            "pool": updated_pool,
+            "low_confidence": low_confidence,
+            "retrieve_ms": t_retrieve,
+            "blocked_answer": None,
+        }
 
     # ----------------------------------------------------------
     #  Ask
@@ -380,106 +541,85 @@ class RetrievalQA:
         mode: str = "hybrid",
         use_reranker: Optional[bool] = None,
         verbose: bool = False,
+        pool: Optional[List[dict]] = None,
     ) -> dict:
         """
-        Trả lời câu hỏi sử dụng RAG pipeline.
+        Trả lời câu hỏi sử dụng RAG pipeline (non-streaming, dùng cho CLI).
 
         Args:
             query        : Câu hỏi người dùng
             mode         : "hybrid" | "bm25" | "vector"
             use_reranker : Override reranker setting
-            verbose      : In thêm thông tin debug
+            pool         : Cache search tích lũy (None = câu hỏi mới)
 
         Returns:
-            dict với các key:
-                answer    : Câu trả lời từ Gemini
-                contexts  : List[dict] các context đã dùng
-                latency   : dict thời gian từng bước (ms)
+            dict: answer, contexts, pool, latency
         """
-        # ── Cache lookup ──
+        # ── Cache lookup (chỉ cho câu hỏi mới, không có pool tích lũy) ──
         _reranker_flag = use_reranker if use_reranker is not None else True
         _cache_key = (query.strip().lower(), mode, _reranker_flag, self.top_k)
-        if _cache_key in self._cache:
+        if not pool and _cache_key in self._cache:
             cached = self._cache[_cache_key].copy()
             cached["latency"] = {**cached["latency"], "cached": True}
+            cached.setdefault("pool", cached.get("contexts", []))
             return cached
 
         t_total = time.time()
+        retr = self.retrieve(query, mode=mode, use_reranker=use_reranker,
+                             pool=pool, verbose=verbose)
 
-        # ── Bước 1: Retrieve context ──
-        t0 = time.time()
-        results = self.pipeline.search(
-            query,
-            top_k=self.top_k,
-            use_reranker=use_reranker,
-            mode=mode,
-        )
-        t_retrieve = (time.time() - t0) * 1000
-
-        if not results:
+        if retr["blocked_answer"] is not None:
             return {
-                "answer": "Xin lỗi, tôi không tìm thấy tài liệu liên quan đến câu hỏi này trong thư viện.",
+                "answer": retr["blocked_answer"],
                 "contexts": [],
-                "latency": {"retrieve_ms": round(t_retrieve), "llm_ms": 0, "total_ms": round(t_retrieve)},
+                "pool": retr["pool"],
+                "latency": {"retrieve_ms": retr["retrieve_ms"], "llm_ms": 0,
+                            "total_ms": retr["retrieve_ms"]},
             }
 
-        # ── Bước 2: Kiểm tra relevance score — chặn hallucination tại tầng retrieval ──
-        top_score = results[0].rerank_score if results[0].rerank_score else results[0].score
-        if top_score < RELEVANCE_THRESHOLD:
-            return {
-                "answer": (
-                    "Tôi không tìm thấy thông tin về chủ đề này trong thư viện của chúng tôi. "
-                    "Thư viện hiện tập trung vào văn học Việt Nam và các tác phẩm dịch phổ biến tại Việt Nam. "
-                    "Bạn có thể hỏi về tác phẩm, tác giả hoặc chủ đề văn học Việt Nam khác không?"
-                ),
-                "contexts": [],
-                "latency": {"retrieve_ms": round(t_retrieve), "llm_ms": 0, "total_ms": round(t_retrieve)},
-            }
-
-        # ── Bước 3: Chuẩn bị context ──
-        low_confidence = top_score < LOW_CONF_THRESHOLD  # Cảnh báo khi score thấp
-        contexts = []
-        for i, r in enumerate(results, 1):
-            contexts.append({
-                "source_idx" : i,
-                "doc_id"     : r.doc_id,
-                "text"       : r.text,
-                "title"      : r.metadata.get("title", r.metadata.get("name", "Không rõ")),
-                "author"     : r.metadata.get("author", r.metadata.get("authors", "Không rõ")),
-                "score"      : r.rerank_score if r.rerank_score else r.score,
-            })
-
-        if verbose:
-            print(f"\n📚 Context tìm được ({len(contexts)} chunks, {t_retrieve:.0f}ms | top_score={top_score:.4f}):")
-            for ctx in contexts:
-                print(f"  [{ctx['source_idx']}] {ctx['title']} — {ctx['author']} (score={ctx['score']:.4f})")
-
-        # ── Bước 4: Build prompt & gọi Gemini ──
-        # Nếu confidence thấp, thêm cảnh báo vào prompt để LLM thận trọng hơn
-        prompt = build_prompt(query, contexts, low_confidence=low_confidence)
+        contexts = retr["contexts"]
+        prompt = build_prompt(query, contexts, low_confidence=retr["low_confidence"])
         t0 = time.time()
         answer = self.gemini.generate(prompt)
-        t_llm = (time.time() - t0) * 1000
-
-        t_total_ms = (time.time() - t_total) * 1000
+        t_llm = round((time.time() - t0) * 1000)
 
         result = {
             "answer"  : answer,
             "contexts": contexts,
+            "pool"    : retr["pool"],
             "latency" : {
-                "retrieve_ms": round(t_retrieve),
-                "llm_ms"     : round(t_llm),
-                "total_ms"   : round(t_total_ms),
+                "retrieve_ms": retr["retrieve_ms"],
+                "llm_ms"     : t_llm,
+                "total_ms"   : round((time.time() - t_total) * 1000),
             },
         }
 
-        # ── Lưu cache (LRU đơn giản) ──
-        if len(self._cache) >= self._cache_max:
-            oldest_key = next(iter(self._cache))
-            del self._cache[oldest_key]
-        self._cache[_cache_key] = result
+        # Chỉ cache exact-match cho câu hỏi mới (kết quả follow-up phụ thuộc pool)
+        if not pool:
+            if len(self._cache) >= self._cache_max:
+                del self._cache[next(iter(self._cache))]
+            self._cache[_cache_key] = result
 
         return result
+
+    # ----------------------------------------------------------
+    #  Cache exact-match (dùng cho UI streaming: trả tức thì câu lặp lại)
+    # ----------------------------------------------------------
+    def _exact_key(self, query: str, mode: str, use_reranker: Optional[bool]):
+        flag = use_reranker if use_reranker is not None else True
+        return (query.strip().lower(), mode, flag, self.top_k)
+
+    def peek_cache(self, query: str, mode: str = "hybrid",
+                   use_reranker: Optional[bool] = None) -> Optional[dict]:
+        """Trả về kết quả đã cache cho câu hỏi y hệt (None nếu chưa có)."""
+        return self._cache.get(self._exact_key(query, mode, use_reranker))
+
+    def store_cache(self, query: str, mode: str, use_reranker: Optional[bool],
+                    result: dict) -> None:
+        """Lưu kết quả 1 câu hỏi mới vào cache exact-match (LRU)."""
+        if len(self._cache) >= self._cache_max:
+            del self._cache[next(iter(self._cache))]
+        self._cache[self._exact_key(query, mode, use_reranker)] = result
 
     def ask_no_rag(self, query: str) -> str:
         """Hỏi thẳng Gemini không qua retrieval (để so sánh)."""

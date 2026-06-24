@@ -110,7 +110,7 @@ class CrossEncoderReranker:
             show_progress_bar=False,
             convert_to_numpy=True,
         )
-        logger.info(f"Cross-Encoder reranked {len(candidates)} docs trong {time.time()-t0*1000:.0f}ms")
+        logger.info(f"Cross-Encoder reranked {len(candidates)} docs trong {(time.time()-t0)*1000:.0f}ms")
 
         # Gán rerank_score
         for candidate, score in zip(candidates, scores):
@@ -127,6 +127,23 @@ class CrossEncoderReranker:
             c.score = c.rerank_score
 
         return reranked
+
+    def score(self, query: str, texts: List[str]) -> List[float]:
+        """
+        Tính rerank score cho từng cặp (query, text) — dùng để re-rank pool
+        các context dict (không phải SearchResult). Trả về list float cùng thứ tự.
+        """
+        if not texts:
+            return []
+        model = self._load()
+        pairs = [(query, t[:self.max_length]) for t in texts]
+        scores = model.predict(
+            pairs,
+            batch_size=self.batch_size,
+            show_progress_bar=False,
+            convert_to_numpy=True,
+        )
+        return [float(s) for s in scores]
 
     def rerank_with_threshold(
         self,
