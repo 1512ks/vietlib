@@ -33,8 +33,8 @@ except ImportError:
 
 IN_CSV  = "data/books_metadata_raw.csv"
 OUT_CSV = "data/books_metadata_enriched.csv"
-DAILY_STATE = "data/enrich_daily.json"   # đếm lệnh grounding theo ngày (chống vượt phí)
-DAILY_CAP_DEFAULT = 1500                  # hạn mức grounding MIỄN PHÍ/ngày của Google
+DAILY_STATE = "data/enrich_daily.json"   # đếm lệnh grounding theo ngày (chỉ để theo dõi)
+DAILY_CAP_DEFAULT = 0                     # 0 = KHÔNG giới hạn; đặt 1500 để giữ trong hạn mức free
 
 # Trường được phép làm giàu (KHÔNG đụng summary — đã 98.5% đầy, theo nguyên tắc fill-empty)
 ENRICH_FIELDS = ["author", "publication_year", "genre", "publisher", "page_count"]
@@ -145,7 +145,7 @@ def main():
     ap.add_argument("--out", default=OUT_CSV)
     ap.add_argument("--limit", type=int, default=0, help="Chỉ xử lý N cuốn đầu cần làm giàu (dry-run)")
     ap.add_argument("--daily-cap", type=int, default=DAILY_CAP_DEFAULT,
-                    help=f"Số lệnh grounding tối đa/ngày (mặc định {DAILY_CAP_DEFAULT} = hạn mức free). 0 = bỏ giới hạn.")
+                    help="Số lệnh grounding tối đa/ngày (mặc định 0 = KHÔNG giới hạn). Đặt 1500 để giữ trong hạn mức miễn phí.")
     ap.add_argument("--model", default=DEFAULT_MODEL,
                     help=f"Model Gemini (mặc định {DEFAULT_MODEL}; rẻ/nhanh hơn: gemini-2.5-flash-lite)")
     args = ap.parse_args()
@@ -154,6 +154,8 @@ def main():
     today, daily_count = load_daily(DAILY_STATE)
     if args.daily_cap:
         print(f"  Hạn mức ngày: đã chạy {daily_count}/{args.daily_cap} lệnh grounding hôm nay.")
+    else:
+        print(f"  Hạn mức ngày: KHÔNG giới hạn (đã chạy {daily_count} lệnh grounding hôm nay).")
 
     rows = list(csv.DictReader(open(args.inp, encoding="utf-8-sig")))
     cols = list(rows[0].keys())
