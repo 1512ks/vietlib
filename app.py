@@ -910,8 +910,9 @@ elif user_input:
 if query:
     st.session_state.messages.append({"role": "user", "content": query})
 
-    # Câu hỏi mới (không đến từ chip đề xuất) → xóa cache search cũ
-    if not is_suggested:
+    # Xóa cache search khi sang chủ đề mới. Khi BẬT ghi nhớ hội thoại, giữ pool để
+    # câu hỏi nối tiếp gõ tay (vd "hai quyển này…") vẫn còn ngữ cảnh các tài liệu đã tìm.
+    if not is_suggested and not memory_on:
         st.session_state.search_pool = []
 
     # Hiển thị ngay bong bóng người dùng + placeholder câu trả lời (streaming)

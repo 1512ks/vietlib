@@ -65,10 +65,10 @@ LOW_CONF_THRESHOLD  = 0.006            # Dưới ngưỡng này: cảnh báo tro
 SEARCH_POOL_MAX     = 1000             # Giới hạn số đầu sách lưu trong cache search (pool tích lũy)
 MERGE_RERANK_CAP    = 60               # Số candidate tối đa đưa vào cross-encoder khi gộp pool (chặn latency)
 HISTORY_WINDOW      = 5                 # Window mặc định của format_history (memory thực tế do ngân sách token quyết định)
-HISTORY_MSG_MAXLEN  = 500              # Cắt mỗi tin nhắn lịch sử tối đa N ký tự để không phình prompt
+HISTORY_MSG_MAXLEN  = 5000             # Cắt mỗi tin nhắn lịch sử tối đa N ký tự (đủ chứa trọn 1 câu trả lời; tổng vẫn do ngân sách token điều tiết)
 REWRITER_MODEL      = "gemini-2.5-flash-lite"  # Model rẻ/nhanh để viết lại câu hỏi nối tiếp
 # ── Giới hạn context & tự tóm tắt (Pha 4+) ──
-CONTEXT_TOKEN_LIMIT  = 12000           # Ngân sách token tự đặt cho toàn prompt (model hỗ trợ ~1M; cap vì latency/chi phí)
+CONTEXT_TOKEN_LIMIT  = 20000           # Ngân sách token tự đặt cho toàn prompt (model hỗ trợ ~1M; cap vì latency/chi phí)
 SUMMARY_TRIGGER_RATIO = 0.75           # Tự tóm tắt khi prompt ước tính vượt tỉ lệ này của ngân sách
 CHARS_PER_TOKEN      = 3.0             # Ước lượng token từ ký tự (tiếng Việt, hơi bảo thủ)
 MIN_VERBATIM_TURNS   = 1               # Luôn giữ ít nhất N lượt gần nhất nguyên văn
