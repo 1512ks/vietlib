@@ -466,6 +466,9 @@ def init_session():
         "n_suggest": 3,
         "from_suggestion": False,   # True khi query đến từ chip câu hỏi đề xuất
         "search_pool": [],          # Cache search tích lũy (≤ 1000 đầu sách)
+        "conv_summary": "",         # Tóm tắt chạy các lượt cũ (Pha 4 — summary memory)
+        "summarized_idx": 0,        # Số tin nhắn đã được gộp vào tóm tắt
+        "context_usage": 0,         # Token ước tính của prompt lượt gần nhất (cho context bar)
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -505,6 +508,38 @@ with st.sidebar:
         use_reranker = False
 
     top_k = st.slider("📄 Số tài liệu tham khảo (Top-K)", 1, 10, 5)
+
+    memory_on = st.checkbox(
+        "🧠 Ghi nhớ hội thoại",
+        value=True,
+        help="Nhớ các lượt trước trong phiên để hiểu câu hỏi nối tiếp (\"tác giả đó\", \"cuốn này\"…)",
+    )
+
+    # ── Context bar: mức dùng ngân sách token (cập nhật sau mỗi lượt) ──
+    try:
+        from retrieval_qa import CONTEXT_TOKEN_LIMIT as _CTX_LIMIT, SUMMARY_TRIGGER_RATIO as _CTX_TRIG
+    except Exception:
+        _CTX_LIMIT, _CTX_TRIG = 12000, 0.75
+    _ctx_used = int(st.session_state.get("context_usage", 0) or 0)
+    _ctx_pct  = min(100, round(100 * _ctx_used / _CTX_LIMIT)) if _CTX_LIMIT else 0
+    _ctx_color = ("#4ade80" if _ctx_pct < 50
+                  else "#facc15" if _ctx_pct < _CTX_TRIG * 100
+                  else "#f87171")
+    st.markdown(
+        f"""
+        <div style="margin-top:0.5rem;">
+          <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:#94a3b8;margin-bottom:4px;">
+            <span>📊 Ngữ cảnh</span><span>{_ctx_used:,}/{_CTX_LIMIT:,} tok · {_ctx_pct}%</span>
+          </div>
+          <div style="position:relative;height:9px;background:rgba(255,255,255,0.08);border-radius:999px;overflow:hidden;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:{_ctx_pct}%;background:{_ctx_color};border-radius:999px;transition:width .4s ease;"></div>
+            <div style="position:absolute;left:{_CTX_TRIG*100:.0f}%;top:0;height:100%;width:2px;background:#fca5a5;"></div>
+          </div>
+          <div style="font-size:0.68rem;color:#64748b;margin-top:3px;">Vạch đỏ = ngưỡng tự tóm tắt ({_CTX_TRIG*100:.0f}%)</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     st.divider()
     st.markdown("**💡 Câu hỏi gợi ý**")
@@ -561,6 +596,10 @@ with st.sidebar:
     if st.button("🗑️ Xóa lịch sử chat", use_container_width=True):
         st.session_state.messages = []
         st.session_state.pending_query = None
+        st.session_state.search_pool = []        # xóa luôn cache search
+        st.session_state.from_suggestion = False
+        st.session_state.conv_summary = ""       # xóa tóm tắt hội thoại
+        st.session_state.summarized_idx = 0
         st.rerun()
 
     st.divider()
@@ -892,15 +931,27 @@ if query:
 
     contexts, latency, answer, engine = [], {}, "", None
     _rr = use_reranker if search_mode == "hybrid" else None
+    history, conv_summary = None, None
     # Hiện loading NGAY — giữ liên tục qua suốt init + retrieve + chờ token đầu tiên
     show_loading(loading_ph)
     try:
         engine = get_engine()
         engine.top_k = top_k  # Apply top_k TRƯỚC khi search
 
-        # ── Cache hit tức thì cho câu hỏi mới lặp lại (không streaming) ──
-        cached = None if is_suggested else engine.peek_cache(query, mode=search_mode,
-                                                             use_reranker=_rr)
+        # ── Bộ nhớ hội thoại: giới hạn context + tự tóm tắt theo ngân sách (Pha 4+) ──
+        if memory_on:
+            history, st.session_state.conv_summary, st.session_state.summarized_idx = \
+                engine.fit_memory(
+                    st.session_state.messages,
+                    st.session_state.conv_summary,
+                    st.session_state.summarized_idx,
+                    query=query,
+                )
+            conv_summary = st.session_state.conv_summary or None
+
+        # ── Cache hit tức thì: chỉ cho lượt độc lập (không chip, không lịch sử/tóm tắt) ──
+        cached = (engine.peek_cache(query, mode=search_mode, use_reranker=_rr)
+                  if (not is_suggested and not history and not conv_summary) else None)
         if cached is not None:
             loading_ph.empty()
             answer   = cached["answer"]
@@ -909,8 +960,11 @@ if query:
             st.session_state.search_pool = cached.get("pool", contexts)
             answer_ph.markdown(_bot_bubble(answer), unsafe_allow_html=True)
         else:
+            # History-aware retrieval: viết lại câu hỏi nối tiếp thành câu hỏi độc lập
+            search_query = (engine.contextualize_query(query, history, conv_summary)
+                            if (history or conv_summary) else query)
             retr = engine.retrieve(
-                query,
+                search_query,
                 mode=search_mode,
                 use_reranker=_rr,
                 pool=st.session_state.search_pool,   # tận dụng cache search nếu là follow-up
@@ -927,7 +981,8 @@ if query:
             else:
                 from retrieval_qa import build_prompt
                 prompt = build_prompt(query, contexts,
-                                      low_confidence=retr["low_confidence"])
+                                      low_confidence=retr["low_confidence"],
+                                      history=history, summary=conv_summary)   # bộ nhớ hội thoại
                 t0, acc, first = time.time(), "", True
                 for chunk in engine.gemini.generate_stream(prompt):
                     if first:                 # token đầu tới → mới tắt loading
@@ -942,8 +997,8 @@ if query:
                            "total_ms": retr["retrieve_ms"] + llm_ms}
                 answer_ph.markdown(_bot_bubble(answer), unsafe_allow_html=True)
 
-                # Lưu cache exact-match chỉ cho câu hỏi mới (follow-up phụ thuộc pool)
-                if not is_suggested and answer:
+                # Cache exact-match: chỉ lưu cho lượt độc lập (không chip, không lịch sử/tóm tắt)
+                if not is_suggested and not history and not conv_summary and answer:
                     engine.store_cache(query, search_mode, _rr, {
                         "answer": answer, "contexts": contexts,
                         "pool": retr["pool"], "latency": latency,
@@ -952,6 +1007,14 @@ if query:
         loading_ph.empty()
         answer, contexts, latency = f"❌ Có lỗi xảy ra: {str(e)}", [], {}
         answer_ph.markdown(_bot_bubble(answer), unsafe_allow_html=True)
+
+    # Cập nhật context bar: token ước tính của prompt lượt này (cho lần rerun kế tiếp)
+    if engine is not None:
+        try:
+            st.session_state.context_usage = engine.estimate_context_tokens(
+                query, contexts, history, conv_summary)
+        except Exception:
+            pass
 
     # Sinh câu hỏi gợi ý — SAU khi câu trả lời đã hiển thị (không chặn UI)
     suggestions = []
