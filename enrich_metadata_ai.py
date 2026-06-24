@@ -33,11 +33,34 @@ except ImportError:
 
 IN_CSV  = "data/books_metadata_raw.csv"
 OUT_CSV = "data/books_metadata_enriched.csv"
+DAILY_STATE = "data/enrich_daily.json"   # đếm lệnh grounding theo ngày (chống vượt phí)
+DAILY_CAP_DEFAULT = 1500                  # hạn mức grounding MIỄN PHÍ/ngày của Google
 
 # Trường được phép làm giàu (KHÔNG đụng summary — đã 98.5% đầy, theo nguyên tắc fill-empty)
 ENRICH_FIELDS = ["author", "publication_year", "genre", "publisher", "page_count"]
 DELAY = 0.5          # giây giữa các lần gọi
 MAX_RETRY = 3
+
+
+def load_daily(path: str) -> tuple[str, int]:
+    """Trả (hôm_nay_iso, số lệnh grounding đã chạy hôm nay). Sang ngày mới → reset 0."""
+    import datetime
+    today = datetime.date.today().isoformat()
+    try:
+        d = json.load(open(path, encoding="utf-8"))
+        if d.get("date") == today:
+            return today, int(d.get("count", 0))
+    except Exception:
+        pass
+    return today, 0
+
+
+def save_daily(path: str, today: str, count: int) -> None:
+    try:
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        json.dump({"date": today, "count": count}, open(path, "w", encoding="utf-8"))
+    except Exception:
+        pass
 
 
 def build_prompt(title: str, author: str, summary: str, missing: list[str]) -> str:
@@ -118,7 +141,13 @@ def main():
     ap.add_argument("--in", dest="inp", default=IN_CSV)
     ap.add_argument("--out", default=OUT_CSV)
     ap.add_argument("--limit", type=int, default=0, help="Chỉ xử lý N cuốn đầu cần làm giàu (dry-run)")
+    ap.add_argument("--daily-cap", type=int, default=DAILY_CAP_DEFAULT,
+                    help=f"Số lệnh grounding tối đa/ngày (mặc định {DAILY_CAP_DEFAULT} = hạn mức free). 0 = bỏ giới hạn.")
     args = ap.parse_args()
+
+    today, daily_count = load_daily(DAILY_STATE)
+    if args.daily_cap:
+        print(f"  Hạn mức ngày: đã chạy {daily_count}/{args.daily_cap} lệnh grounding hôm nay.")
 
     rows = list(csv.DictReader(open(args.inp, encoding="utf-8-sig")))
     cols = list(rows[0].keys())
@@ -155,6 +184,12 @@ def main():
                 w.writerow(row); fout.flush()
                 continue
 
+            # Chặn vượt phí: dừng khi đạt hạn mức grounding miễn phí/ngày
+            if args.daily_cap and daily_count >= args.daily_cap:
+                print(f"\n  🛑 Đã đạt {args.daily_cap} lệnh grounding HÔM NAY (hết hạn mức miễn phí). "
+                      f"Dừng để tránh phí ~$35/1k. Chạy lại NGÀY MAI để tiếp tục.")
+                break
+
             api_calls += 1
             row, filled, ok = enrich_one(model, row)
             if not ok:
@@ -167,6 +202,8 @@ def main():
                     break
                 continue
             consec_fail = 0
+            daily_count += 1                              # chỉ đếm lệnh grounding THÀNH CÔNG
+            save_daily(DAILY_STATE, today, daily_count)
             row["ai_filled"] = ",".join(filled)
             w.writerow(row); fout.flush()
             processed += 1
@@ -186,6 +223,8 @@ def main():
     finally:
         fout.close()
     print(f"\n  ✅ Xử lý {processed} cuốn | điền được {enriched} | ghi → {out_path}")
+    if args.daily_cap:
+        print(f"  📊 Grounding hôm nay: {daily_count}/{args.daily_cap} (còn {max(0, args.daily_cap - daily_count)} miễn phí).")
 
 
 if __name__ == "__main__":
