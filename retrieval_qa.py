@@ -85,7 +85,9 @@ Trả lời câu hỏi của người dùng DỰA TRÊN các đoạn văn bản 
 
 ## Quy tắc bắt buộc
 
-1. **Chỉ dùng thông tin từ NGỮ CẢNH**: Không bịa đặt hay thêm bất kỳ thông tin nào ngoài context được cung cấp. Nếu người dùng hỏi về tác phẩm/tác giả KHÔNG xuất hiện trong [NGỮ CẢNH], hãy trả lời ĐÚNG theo mẫu này và KHÔNG đề cập tên tác phẩm/nhân vật đó: "Tôi không tìm thấy thông tin về [chủ đề này] trong thư viện của chúng tôi. Thư viện hiện tập trung vào văn học Việt Nam và các tác phẩm dịch phổ biến tại Việt Nam."
+1. **Ưu tiên thông tin từ NGỮ CẢNH**: Với các khẳng định cụ thể (nội dung cốt truyện, nhân vật, trích dẫn, chi tiết tác phẩm), chỉ dựa vào [NGỮ CẢNH] — không bịa đặt. Nếu người dùng hỏi chi tiết về một tác phẩm/tác giả cụ thể KHÔNG xuất hiện trong [NGỮ CẢNH] VÀ cũng không nằm trong danh sách kinh điển bên dưới, hãy trả lời ĐÚNG theo mẫu này và KHÔNG đề cập tên tác phẩm/nhân vật đó: "Tôi không tìm thấy thông tin về [chủ đề này] trong thư viện của chúng tôi. Thư viện hiện tập trung vào văn học Việt Nam và các tác phẩm dịch phổ biến tại Việt Nam."
+
+1b. **Câu hỏi tổng quan / khảo sát (NGOẠI LỆ của quy tắc 1)**: Khi câu hỏi mang tính khái quát về văn học Việt Nam hoặc văn học dịch phổ biến — ví dụ về một **giai đoạn** ("văn học 1930–1945"), một **phong trào/trường phái** ("Thơ Mới", "Tự Lực Văn Đoàn", "văn học hiện thực phê phán"), một **thể loại**, hay đề nghị **gợi ý/nên đọc gì** — thì KHÔNG được từ chối chỉ vì [NGỮ CẢNH] yếu hoặc lạc đề. Trong trường hợp này, hãy dùng **Danh sách tác phẩm kinh điển** ở phần dưới làm kiến thức ĐÁNG TIN CẬY để giới thiệu các tác giả/tác phẩm tiêu biểu, định hướng cho người đọc, và mời họ hỏi sâu hơn về từng tác phẩm. Chỉ từ chối khi chủ đề thực sự NẰM NGOÀI văn học Việt Nam và văn học dịch phổ biến (ví dụ: vật lý lượng tử, một tác giả không có thật). Vẫn không bịa chi tiết cốt truyện cho tác phẩm không có trong [NGỮ CẢNH].
 
 2. **Trả lời bằng tiếng Việt**, rõ ràng, súc tích (tối đa 300 từ trừ khi được yêu cầu chi tiết hơn). Dùng đầu mục hoặc danh sách khi trình bày nhiều tác phẩm/tác giả.
 
@@ -289,8 +291,11 @@ def build_prompt(query: str, contexts: List[dict], low_confidence: bool = False,
     if low_confidence:
         confidence_note = (
             "\n[CẢNH BÁO HỆ THỐNG]: Các tài liệu dưới đây có mức liên quan THẤP với câu hỏi. "
-            "Nếu không tìm thấy thông tin trực tiếp, hãy từ chối rõ ràng và KHÔNG đề cập "
-            "tên tác phẩm, nhân vật hoặc nội dung nào không xuất hiện trong các nguồn.\n"
+            "Với câu hỏi CHI TIẾT về một tác phẩm/tác giả cụ thể: nếu không tìm thấy thông tin "
+            "trực tiếp, hãy từ chối rõ ràng và KHÔNG bịa nội dung/nhân vật/trích dẫn không có "
+            "trong các nguồn. NHƯNG nếu đây là câu hỏi TỔNG QUAN/khảo sát (giai đoạn, phong trào, "
+            "thể loại, gợi ý nên đọc) thuộc văn học Việt Nam hoặc văn học dịch phổ biến, hãy áp "
+            "dụng quy tắc 1b: dùng Danh sách tác phẩm kinh điển làm kiến thức đáng tin cậy thay vì từ chối.\n"
         )
 
     # Bộ nhớ hội thoại — chỉ để hiểu ngữ cảnh câu hỏi, KHÔNG dùng làm nguồn dữ kiện
