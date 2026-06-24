@@ -1,0 +1,43 @@
+{
+  "_comment": "MẪU THAM CHIẾU — 1 tác phẩm với metadata đầy đủ (schema v2). Dùng làm khuôn cho build_knowledge_base v2 và cho enrichment.",
+
+  "id": "uuid5(NAMESPACE_OID, 'chí phèo | nam cao')",
+  "title": "Chí Phèo",
+  "alt_titles": ["Cái lò gạch cũ", "Đôi lứa xứng đôi"],
+  "entity_type": "work",
+  "parent_id": null,
+
+  "author": "Nam Cao",
+  "authors": ["Nam Cao"],
+  "period": "1930-1945",
+  "movement": "Hiện thực phê phán",
+  "genre": ["Truyện ngắn"],
+  "year_composed": 1941,
+  "language": "vi",
+  "origin": "vietnam",
+
+  "is_canonical": true,
+  "quality_tier": "canon",
+
+  "source": "wikipedia",
+  "source_url": "https://vi.wikipedia.org/wiki/Chí_Phèo",
+  "wikidata_id": "Q5101332",
+  "year_source": "wikidata",
+  "author_source": "wikidata",
+
+  "characters": ["Chí Phèo", "Thị Nở", "Bá Kiến"],
+  "themes": ["Sự tha hóa", "Bi kịch người nông dân", "Khát vọng lương thiện", "Xã hội thực dân nửa phong kiến"],
+  "setting": "Làng Vũ Đại",
+
+  "summary": "Truyện ngắn kể về Chí Phèo — một người nông dân lương thiện bị xã hội thực dân nửa phong kiến đẩy vào con đường lưu manh hóa, trở thành 'con quỷ dữ của làng Vũ Đại'. Cuộc gặp gỡ với Thị Nở thức tỉnh khát vọng hoàn lương, nhưng định kiến xã hội cự tuyệt, dẫn tới bi kịch giết Bá Kiến rồi tự sát.",
+
+  "text": "[Tiêu đề: Chí Phèo] | [Tác giả: Nam Cao] | [Năm sáng tác: 1941] | [Giai đoạn: 1930-1945] | [Trào lưu: Hiện thực phê phán] | [Thể loại: Truyện ngắn]\n\nTóm tắt: Truyện ngắn kể về Chí Phèo — người nông dân lương thiện bị xã hội thực dân nửa phong kiến đẩy vào con đường lưu manh hóa...\n\nNội dung chi tiết:\nChí Phèo là một trong những truyện ngắn xuất sắc nhất của Nam Cao và của văn học hiện thực phê phán Việt Nam giai đoạn 1930–1945. Tác phẩm ban đầu có tên 'Cái lò gạch cũ', khi in lần đầu (1941) bị nhà xuất bản Đời Mới đổi thành 'Đôi lứa xứng đôi', sau này Nam Cao đặt lại là 'Chí Phèo'. Truyện khắc họa số phận bi thảm của người nông dân bị bần cùng hóa và tha hóa nhân cách...",
+
+  "page_count": 0,
+  "word_count": 0,
+  "isbn": "",
+  "publisher": "",
+  "cover_url": "",
+  "crawled_at": "2026-06-24T00:00:00",
+  "last_verified": "2026-06-24"
+}
