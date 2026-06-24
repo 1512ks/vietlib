@@ -93,7 +93,7 @@ def enrich_one(model, row: dict) -> tuple[dict, list[str]]:
     prompt = build_prompt(row["title"], row.get("author", ""), row.get("summary", ""), missing)
     for attempt in range(MAX_RETRY):
         try:
-            resp = model.generate_content(prompt)
+            resp = model.generate_content(prompt, request_options={"timeout": 90})
             data = parse_json(resp.text)
             filled = []
             for f in missing:
@@ -142,37 +142,48 @@ def main():
         w.writeheader()
 
     processed = enriched = api_calls = 0
-    for row in rows:
-        if row["id"] in done_ids:
-            continue
-        # Bỏ qua trang người (tác giả) — không enrich như sách
-        if (row.get("entity_type") or "work") == "author":
-            row["ai_filled"] = ""
+    try:
+        for row in rows:
+            if row["id"] in done_ids:
+                continue
+            # Bỏ qua trang người (tác giả) — không enrich như sách
+            if (row.get("entity_type") or "work") == "author":
+                row["ai_filled"] = ""
+                w.writerow(row); fout.flush()
+                continue
+            need = [f for f in ENRICH_FIELDS if not (row.get(f) or "").strip()]
+            if not need:
+                row["ai_filled"] = ""
+                w.writerow(row); fout.flush()
+                continue
+
+            api_calls += 1
+            try:
+                row, filled = enrich_one(model, row)
+            except Exception as e:   # bất kỳ lỗi lạ nào → bỏ qua cuốn này, KHÔNG sập job
+                print(f"  [{processed+1}] {row['title'][:40]:40s} ← ⚠️ bỏ qua ({str(e)[:50]})")
+                row["ai_filled"] = ""
+                w.writerow(row); fout.flush()
+                processed += 1
+                continue
+            row["ai_filled"] = ",".join(filled)
             w.writerow(row); fout.flush()
-            continue
-        need = [f for f in ENRICH_FIELDS if not (row.get(f) or "").strip()]
-        if not need:
-            row["ai_filled"] = ""
-            w.writerow(row); fout.flush()
-            continue
+            processed += 1
+            if filled:
+                enriched += 1
+                print(f"  [{processed}] {row['title'][:40]:40s} ← {filled}")
+            else:
+                print(f"  [{processed}] {row['title'][:40]:40s} ← (không tra được)")
+            time.sleep(DELAY)
 
-        api_calls += 1
-        row, filled = enrich_one(model, row)
-        row["ai_filled"] = ",".join(filled)
-        w.writerow(row); fout.flush()
-        processed += 1
-        if filled:
-            enriched += 1
-            print(f"  [{processed}] {row['title'][:40]:40s} ← {filled}")
-        else:
-            print(f"  [{processed}] {row['title'][:40]:40s} ← (không tra được)")
-        time.sleep(DELAY)
-
-        if args.limit and api_calls >= args.limit:
-            print(f"\n  ⏹ Dừng dry-run ở {args.limit} cuốn.")
-            break
-
-    fout.close()
+            if args.limit and api_calls >= args.limit:
+                print(f"\n  ⏹ Dừng dry-run ở {args.limit} cuốn.")
+                break
+    except KeyboardInterrupt:
+        print(f"\n  ⏸ Đã dừng (Ctrl+C). Đã lưu {processed} cuốn. "
+              f"Chạy lại đúng lệnh này để TIẾP TỤC từ chỗ dừng.")
+    finally:
+        fout.close()
     print(f"\n  ✅ Xử lý {processed} cuốn | điền được {enriched} | ghi → {out_path}")
 
 
