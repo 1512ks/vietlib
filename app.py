@@ -315,11 +315,16 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
 /* ── Input ── */
 [data-testid="stChatInput"] textarea {
-    background: rgba(255,255,255,0.05) !important;
+    background: rgba(15,23,42,0.85) !important;
     border: 1px solid rgba(139,92,246,0.35) !important;
     border-radius: 14px !important;
-    color: #e2e8f0 !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
     font-size: 0.95rem !important;
+}
+[data-testid="stChatInput"] textarea::placeholder {
+    color: #94a3b8 !important;
+    opacity: 1 !important;
 }
 [data-testid="stChatInput"] textarea:focus {
     border-color: #8b5cf6 !important;
@@ -409,6 +414,20 @@ hr { border-color: rgba(255,255,255,0.06) !important; }
 ::-webkit-scrollbar-track { background:transparent; }
 </style>
 """, unsafe_allow_html=True)
+
+# ── Màu chữ ô Nhập theo theme (Light = đen, Dark = trắng) ──
+if str(st.context.theme.get("type", "dark")).lower() == "light":
+    st.markdown("""
+    <style>
+    [data-testid="stChatInput"] textarea {
+        background: #ffffff !important;
+        color: #111111 !important;
+    }
+    [data-testid="stChatInput"] textarea::placeholder {
+        color: #6b7280 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 
 # ============================================================
@@ -766,9 +785,9 @@ def render_message(msg: dict, show_snip: bool = False):
         meta_html += '</div>'
         st.markdown(meta_html + '</div></div>', unsafe_allow_html=True)
 
-        # Citation cards
-        if contexts:
-            render_citations(contexts, show_snip)
+        # Citation cards — đã ẩn khỏi giao diện theo yêu cầu
+        # if contexts:
+        #     render_citations(contexts, show_snip)
 
         # Suggestion chips — chỉ cho message mới nhất
         if suggestions and msg.get("is_latest", False):
