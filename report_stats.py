@@ -31,6 +31,104 @@ LABEL = {
 }
 SUMMARY_MIN = 50
 
+# ── Chuẩn hóa thể loại: map tiếng Anh -> tiếng Việt, giữ nhãn tiếng Việt sẵn có ──
+_VI_CHARS = set("ăâêôơưđáàảãạắằẳẵặấầẩẫậéèẻẽẹếềểễệíìỉĩịóòỏõọốồổỗộớờởỡợúùủũụứừửữựýỳỷỹỵ")
+# Kiểm tra theo thứ tự, mẫu CỤ THỂ đặt trước (substring, đã lowercase)
+GENRE_PATTERNS = [
+    ("historical fiction", "Tiểu thuyết lịch sử"),
+    ("juvenile", "Văn học thiếu nhi"),
+    ("children", "Văn học thiếu nhi"),
+    ("short stor", "Truyện ngắn"),
+    ("poet", "Thơ"),
+    ("graphic novel", "Truyện tranh"),
+    ("comic", "Truyện tranh"),
+    ("drama", "Kịch"),
+    ("play", "Kịch"),
+    ("memoir", "Hồi ký"),
+    ("autobiograph", "Tự truyện"),
+    ("biography", "Tiểu sử"),
+    ("authors", "Tiểu sử"),               # "Authors, Vietnamese"
+    ("literary criticism", "Phê bình văn học"),
+    ("literary collection", "Tuyển tập văn học"),
+    ("essay", "Tản văn"),
+    ("romance", "Tiểu thuyết lãng mạn"),
+    ("education", "Sách giáo dục"),
+    ("study", "Sách giáo dục"),
+    ("textbook", "Sách giáo dục"),
+    ("religion", "Tôn giáo"),
+    ("buddhis", "Tôn giáo"),
+    ("philosophy", "Triết học"),
+    # Văn học dân gian / cổ tích (đặt trước 'vietnam' chung chung)
+    ("folk literature", "Văn học dân gian"),
+    ("folklore", "Văn học dân gian"),
+    ("fairy tale", "Truyện cổ tích"),
+    ("legend", "Truyền thuyết"),
+    ("mythology", "Thần thoại"),
+    # Phi hư cấu / chuyên ngành
+    ("social science", "Khoa học xã hội"),
+    ("political science", "Chính trị"),
+    ("politic", "Chính trị"),
+    ("business", "Kinh tế"),
+    ("economic", "Kinh tế"),
+    ("self-help", "Kỹ năng sống"),
+    ("self help", "Kỹ năng sống"),
+    ("body, mind", "Tâm linh"),
+    ("mind & spirit", "Tâm linh"),
+    ("psychology", "Tâm lý học"),
+    ("computer", "Tin học"),
+    ("technology", "Khoa học - Công nghệ"),
+    ("medical", "Y học"),
+    ("health", "Sức khỏe"),
+    ("cooking", "Ẩm thực"),
+    ("travel", "Du ký"),
+    ("performing arts", "Nghệ thuật biểu diễn"),
+    ("music", "Âm nhạc"),
+    ("antiques", "Sưu tầm"),
+    ("collectible", "Sưu tầm"),
+    ("language arts", "Ngôn ngữ học"),
+    ("dictionar", "Từ điển"),
+    ("reference", "Sách tham khảo"),
+    ("law", "Pháp luật"),
+    ("generals", "Tiểu sử"),
+    ("intellectual", "Tiểu sử"),
+    ("science", "Khoa học"),
+    ("history", "Lịch sử"),
+    ("novel", "Tiểu thuyết"),
+    ("fiction", "Tiểu thuyết"),
+    # Phi hư cấu / chủ đề khác xuất hiện trong corpus
+    ("indochinese war", "Lịch sử"),
+    ("war", "Lịch sử"),
+    ("communis", "Chính trị"),
+    ("bible", "Tôn giáo"),
+    ("composer", "Tiểu sử"),
+    ("festival", "Văn hóa"),
+    ("cultural", "Văn hóa"),
+    ("relationship", "Gia đình"),
+    ("chinese language", "Ngôn ngữ học"),
+    ("fine art", "Mỹ thuật"),
+    ("art", "Nghệ thuật"),
+    # Nhãn địa lý/quốc gia + 'literature' chung chung — bắt cuối cùng
+    ("vietnamese literature", "Văn học Việt Nam"),
+    ("hanoi", "Văn học Việt Nam"),
+    ("vietnam", "Văn học Việt Nam"),
+    ("literary", "Văn học"),
+    ("literature", "Văn học"),
+]
+
+
+def _has_vi(s: str) -> bool:
+    return any(c in _VI_CHARS for c in s.lower())
+
+
+def normalize_genre(g: str) -> str:
+    gl = g.lower().strip()
+    for pat, vi in GENRE_PATTERNS:
+        if pat in gl:
+            return vi
+    if _has_vi(g):            # đã là tiếng Việt -> giữ nguyên
+        return g.strip()
+    return "Khác"             # tiếng Anh/không phải thể loại (vd 'Vietnam', 'General')
+
 
 def is_filled(v: str, field: str) -> bool:
     v = (v or "").strip()
@@ -83,17 +181,25 @@ def main():
 
     # ── Phân bố thể loại (toàn corpus, trên work) ──
     g = collections.Counter()
+    khac_raw = collections.Counter()   # nhãn gốc rơi vào "Khác" (để mở rộng map)
     have_genre = 0
     for r in works:
         gv = (r.get("genre") or "").strip()
         if gv:
             have_genre += 1
-            g[gv] += 1
+            norm = normalize_genre(gv)
+            g[norm] += 1
+            if norm == "Khác":
+                khac_raw[gv] += 1
     cov = have_genre / len(works) * 100 if works else 0
     print(f"\n  Độ phủ thể loại (trên {len(works):,} tác phẩm): {have_genre:,} ({cov:.1f}%)")
-    print(f"  Top {args.top} thể loại:")
+    print(f"  Top {args.top} thể loại (đã chuẩn hóa về tiếng Việt):")
     for name, c in g.most_common(args.top):
         print(f"     {c:>6,}  {name}")
+    if khac_raw:
+        print(f"\n  Nhãn gốc rơi vào \"Khác\" ({sum(khac_raw.values()):,} cuốn) — thêm vào GENRE_PATTERNS nếu muốn map:")
+        for name, c in khac_raw.most_common(12):
+            print(f"     {c:>6,}  {name}")
 
     # ── LaTeX sẵn để dán (định dạng số kiểu VN: thập phân dấu phẩy, nghìn dấu chấm) ──
     def pct(x: float) -> str:
