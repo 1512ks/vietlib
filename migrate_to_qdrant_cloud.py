@@ -36,15 +36,16 @@ def migrate():
     logger.info(f"Đang kết nối tới Qdrant Cloud tại: {url}")
     cloud_client = QdrantClient(url=url, api_key=api_key)
 
-    # 3. Đảm bảo Collection tồn tại trên Cloud
-    if not cloud_client.collection_exists(COLLECTION_NAME):
-        logger.info(f"Tạo mới collection '{COLLECTION_NAME}' trên Cloud...")
-        cloud_client.create_collection(
-            collection_name=COLLECTION_NAME,
-            vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE)
-        )
-    else:
-        logger.info(f"Collection '{COLLECTION_NAME}' đã tồn tại trên Cloud.")
+    # 3. Nạp SẠCH: xoá collection cũ trên Cloud (nếu có) rồi tạo lại.
+    #    Cần thiết vì chunk_id đã đổi sau dedup → upsert thường sẽ để lại điểm cũ lẫn lộn.
+    if cloud_client.collection_exists(COLLECTION_NAME):
+        logger.info(f"Xoá collection cũ '{COLLECTION_NAME}' trên Cloud để nạp sạch...")
+        cloud_client.delete_collection(COLLECTION_NAME)
+    logger.info(f"Tạo mới collection '{COLLECTION_NAME}' trên Cloud...")
+    cloud_client.create_collection(
+        collection_name=COLLECTION_NAME,
+        vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE)
+    )
 
     # 4. Lấy tổng số điểm để theo dõi tiến độ
     total_points = local_client.count(COLLECTION_NAME).count
