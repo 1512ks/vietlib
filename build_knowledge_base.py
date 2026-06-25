@@ -62,30 +62,42 @@ def get_merged_documents() -> list[TextChunk]:
     all_files = [f for f in all_files if "meta" not in f.name]
     logger.info(f"Total found: {len(all_files):,} files. Merging by title+author...")
 
-    # Gom nhóm theo khoá
-    unique_docs = {}
+    import re as _re
 
+    def _norm_title(t: str) -> str:
+        """Chuẩn hoá tiêu đề để gộp: lowercase, bỏ đuôi '(tiểu thuyết)'..., gọn khoảng trắng."""
+        t = t.lower().strip()
+        t = _re.sub(r"\s*\([^)]*\)\s*$", "", t)
+        return _re.sub(r"\s+", " ", t).strip()
+
+    def _author_str(data: dict) -> str:
+        a = data.get("author", "") or data.get("authors", "")
+        if isinstance(a, list):
+            a = a[0] if a else ""
+        return str(a).strip()
+
+    # ── Pass 1: gom theo (norm_title, author) ──
+    unique_docs = {}
     for f in all_files:
         try:
             with open(f, "r", encoding="utf-8") as fh:
                 data = json.load(fh)
 
-            title = data.get("title", data.get("name", "")).strip()
+            title = (data.get("title") or data.get("name") or "").strip()
             if not title:
                 continue
 
-            author = data.get("author", data.get("authors", "")).strip()
-            
-            # Đối với khái niệm, nhân vật hoặc tác giả thì author có thể rỗng, 
-            # gộp chung bằng tên.
-            key = f"{title.lower()} | {author.lower()}"
+            author = _author_str(data)
+            nt = _norm_title(title)
+            # Khoá tác giả = token tên đã sắp xếp → gộp được tên bị đảo thứ tự
+            # (vd Google Books trả "Trọng Phụng Vũ" cho "Vũ Trọng Phụng").
+            akey = " ".join(sorted(author.lower().split()))
+            key = f"{nt} | {akey}"
 
             if key not in unique_docs:
                 unique_docs[key] = {
-                    "title": title,
-                    "author": author,
-                    "sources": {},
-                    "paths": []
+                    "title": title, "author": author,
+                    "norm_title": nt, "sources": {}, "paths": [],
                 }
 
             # Xác định source gốc
@@ -100,10 +112,34 @@ def get_merged_documents() -> list[TextChunk]:
             unique_docs[key]["sources"][source] = data
             unique_docs[key]["paths"].append(str(f))
 
-        except Exception as e:
+        except Exception:
             continue
 
-    logger.info(f"After grouping: {len(unique_docs):,} unique entities.")
+    n_pass1 = len(unique_docs)
+
+    # ── Pass 2: gộp nhóm author-RỖNG vào nhóm CÓ tác giả cùng tiêu đề (chỉ khi DUY NHẤT,
+    #            để tránh gộp nhầm hai tác phẩm trùng tên khác tác giả) ──
+    authored_by_title = {}
+    for k, dd in unique_docs.items():
+        if dd["author"]:
+            authored_by_title.setdefault(dd["norm_title"], []).append(k)
+
+    merged = 0
+    for k in list(unique_docs.keys()):
+        dd = unique_docs.get(k)
+        if not dd or dd["author"]:
+            continue
+        cands = authored_by_title.get(dd["norm_title"], [])
+        if len(cands) == 1:
+            tgt = unique_docs[cands[0]]
+            for s, dat in dd["sources"].items():
+                tgt["sources"].setdefault(s, dat)   # không ghi đè nguồn đã có của nhóm đích
+            tgt["paths"].extend(dd["paths"])
+            del unique_docs[k]
+            merged += 1
+
+    logger.info(f"After grouping: pass1={n_pass1:,} → gộp {merged:,} nhóm author-rỗng → "
+                f"{len(unique_docs):,} unique entities.")
 
     # Tạo TextChunk với Metadata Injection
     final_chunks = []
@@ -112,6 +148,13 @@ def get_merged_documents() -> list[TextChunk]:
         sources = doc_data["sources"]
         title = doc_data["title"]
         author = doc_data["author"]
+        # Hiển thị: ưu tiên tên từ wikipedia/archive (đúng thứ tự VN) hơn gbooks (hay đảo)
+        for s in ("wikipedia", "archive_compact", "gbooks"):
+            if s in sources:
+                a = _author_str(sources[s])
+                if a:
+                    author = a
+                    break
         
         summary = ""
         genres = []
@@ -213,6 +256,16 @@ def get_merged_documents() -> list[TextChunk]:
 def reset_databases():
     """Xoá sạch collection trên Qdrant và file BM25 cũ"""
     logger.info("Resetting databases...")
+    # Qdrant LOCAL mode: delete_collection KHÔNG xoá sạch trên đĩa → xoá thẳng thư mục
+    # để tránh tích điểm rác giữa các lần rebuild. (Cloud thì thư mục này không tồn tại.)
+    try:
+        import shutil
+        from vector_store.qdrant_client_app import DB_DIR
+        if DB_DIR.exists():
+            shutil.rmtree(DB_DIR, ignore_errors=True)
+            logger.info(f"Đã xoá thư mục Qdrant local: {DB_DIR}")
+    except Exception as e:
+        logger.warning(f"Không xoá được thư mục Qdrant local: {e}")
     try:
         db = QdrantManager(collection_name=COLLECTION_NAME, vector_size=384)
         db.client.delete_collection(COLLECTION_NAME)
