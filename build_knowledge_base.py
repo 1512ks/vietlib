@@ -29,6 +29,18 @@ BM25_CACHE_PATH = Path("data/bm25_index.pkl")
 # Các thư mục con cần nạp (loại bỏ concept vì chứa lịch sử/quân sự không liên quan văn học)
 INCLUDE_SUBDIRS = {"author", "work", "gbooks", "archive_compact"}
 
+
+def _pick(sources: dict, *keys) -> str:
+    """Lấy giá trị non-empty đầu tiên của một trường qua tất cả các nguồn của 1 thực thể."""
+    for src in sources.values():
+        for k in keys:
+            v = src.get(k)
+            if isinstance(v, list):
+                v = v[0] if v else ""
+            if v not in (None, "", []):
+                return str(v).strip()
+    return ""
+
 def get_merged_documents() -> list[TextChunk]:
     """
     Quét các thư mục, gộp các nguồn dữ liệu chung của một tác phẩm/tác giả
@@ -106,20 +118,22 @@ def get_merged_documents() -> list[TextChunk]:
         year = ""
         word_count = ""
         ai_summary = ""
-        
+        publisher = ""
+        genre_val = ""
+
         # Merge data từ các nguồn
         if "wikipedia" in sources:
             w = sources["wikipedia"]
             # Ưu tiên lấy description (đoạn mở đầu), nếu không có thì lấy content cắt ngắn
             summary = w.get("description", "") or w.get("content", "")
-            
+
         if "gbooks" in sources:
             gb = sources["gbooks"]
             if not summary:
                 summary = gb.get("description", "")
             genres = gb.get("categories", gb.get("genres", []))
             year = gb.get("publishedDate", "")
-            
+
         if "archive_compact" in sources:
             ac = sources["archive_compact"]
             ai_summary = ac.get("ai_summary", "")
@@ -127,6 +141,15 @@ def get_merged_documents() -> list[TextChunk]:
             if not summary:
                 # Dùng ai_summary nếu có, nếu không thì dùng 'content' (chứa Trích đoạn mở đầu)
                 summary = ai_summary or ac.get("content", "")
+
+        # === Ưu tiên siêu dữ liệu ĐÃ LÀM GIÀU (đọc từ MỌI nguồn sau bước import) ===
+        enriched_year = _pick(sources, "publication_year")
+        if enriched_year:
+            year = enriched_year                      # năm làm giàu > publishedDate (reprint)
+        publisher = _pick(sources, "publisher")
+        genre_val = _pick(sources, "genre")
+        if not genres and genre_val:
+            genres = [genre_val]
                 
         # Dọn dẹp summary
         summary = summary.strip()
@@ -146,6 +169,7 @@ def get_merged_documents() -> list[TextChunk]:
                 genres_str = str(genres)
             parts.append(f"[Thể loại: {genres_str}]")
             
+        if publisher: parts.append(f"[Nhà xuất bản: {publisher}]")
         if word_count: parts.append(f"[Độ dài tác phẩm: ~{word_count} từ]")
         
         chunk_text = " | ".join(parts) + "\n\n"
@@ -174,6 +198,9 @@ def get_merged_documents() -> list[TextChunk]:
             metadata={
                 "title": title,
                 "author": author,
+                "year": year,
+                "genre": genre_val or (genres[0] if genres else ""),
+                "publisher": publisher,
                 "source": ", ".join(sources.keys())
             }
         )
@@ -241,6 +268,9 @@ def main():
                 "source_doc_id": chunk.doc_id,
                 "title": chunk.metadata.get("title", ""),
                 "author": chunk.metadata.get("author", ""),
+                "year": chunk.metadata.get("year", ""),
+                "genre": chunk.metadata.get("genre", ""),
+                "publisher": chunk.metadata.get("publisher", ""),
                 "source": chunk.metadata.get("source", ""),
             }
             for chunk in batch
