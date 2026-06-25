@@ -1,0 +1,653 @@
+21:13:15 [INFO] vector_store.qdrant_client_app: Kết nối tới Qdrant Cloud tại: https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io
+21:13:17 [INFO] httpx: HTTP Request: GET https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/exists "HTTP/1.1 200 OK"
+21:13:17 [INFO] httpx: HTTP Request: GET https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+21:13:18 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/count "HTTP/1.1 200 OK"
+21:13:18 [INFO] vector_store.qdrant_client_app: Đã kết nối Collection 'vn_literature'. Tổng documents: 11759
+21:13:20 [INFO] search.search_pipeline: === Đang khởi tạo SearchPipeline ===
+21:13:20 [INFO] search.bm25_retriever: Loading BM25 cache từ data\bm25_index.pkl...
+21:13:20 [INFO] search.bm25_retriever: Đã load BM25 cache (11759 docs)
+21:13:20 [INFO] search.search_pipeline: === SearchPipeline đã sẵn sàng ===
+21:13:20 [INFO] __main__: 
+--- Đánh giá mode=bm25, rerank=False (30 queries) ---
+21:13:20 [INFO] search.evaluator: Bắt đầu evaluation 30 queries @ K=[1, 3, 5, 10] (mode=bm25)
+21:13:20 [INFO] search.search_pipeline: [Pipeline] 'Chí Phèo là tác phẩm của tác giả nào...' → 10 results | 59ms (mode=bm25, rerank=False)
+21:13:20 [INFO] search.evaluator:   [F001] Chí Phèo là tác phẩm của tác giả nào… | relevant=4/10 | 59ms
+21:13:20 [INFO] search.search_pipeline: [Pipeline] 'Số đỏ của Vũ Trọng Phụng...' → 10 results | 38ms (mode=bm25, rerank=False)
+21:13:20 [INFO] search.evaluator:   [F002] Số đỏ của Vũ Trọng Phụng… | relevant=10/10 | 38ms
+21:13:20 [INFO] search.search_pipeline: [Pipeline] 'Truyện Kiều Nguyễn Du...' → 10 results | 24ms (mode=bm25, rerank=False)
+21:13:20 [INFO] search.evaluator:   [F003] Truyện Kiều Nguyễn Du… | relevant=10/10 | 25ms
+21:13:20 [INFO] search.search_pipeline: [Pipeline] 'Tắt đèn Ngô Tất Tố viết về nông dân...' → 10 results | 57ms (mode=bm25, rerank=False)
+21:13:20 [INFO] search.evaluator:   [F004] Tắt đèn Ngô Tất Tố viết về nông dân… | relevant=7/10 | 57ms
+21:13:20 [INFO] search.search_pipeline: [Pipeline] 'Đoạn trường tân thanh Nguyễn Gia Thiều...' → 10 results | 40ms (mode=bm25, rerank=False)
+21:13:20 [INFO] search.evaluator:   [F005] Đoạn trường tân thanh Nguyễn Gia Thiều… | relevant=2/10 | 42ms
+21:13:20 [INFO] search.search_pipeline: [Pipeline] 'Tác phẩm của Nguyễn Nhật Ánh...' → 10 results | 43ms (mode=bm25, rerank=False)
+21:13:20 [INFO] search.evaluator:   [A001] Tác phẩm của Nguyễn Nhật Ánh… | relevant=3/10 | 43ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Sách của Nam Cao trước cách mạng...' → 10 results | 44ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [A002] Sách của Nam Cao trước cách mạng… | relevant=3/10 | 44ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Tô Hoài viết những tác phẩm gì...' → 10 results | 46ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [A003] Tô Hoài viết những tác phẩm gì… | relevant=7/10 | 46ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Truyện của Nguyễn Huy Thiệp...' → 10 results | 31ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [A004] Truyện của Nguyễn Huy Thiệp… | relevant=9/10 | 31ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Các tiểu thuyết của Hồ Biểu Chánh...' → 10 results | 47ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [A005] Các tiểu thuyết của Hồ Biểu Chánh… | relevant=10/10 | 47ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Thơ Xuân Diệu tình yêu lãng mạn...' → 10 results | 40ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [A006] Thơ Xuân Diệu tình yêu lãng mạn… | relevant=6/10 | 40ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Bảo Ninh Nỗi buồn chiến tranh...' → 10 results | 41ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [A007] Bảo Ninh Nỗi buồn chiến tranh… | relevant=5/10 | 42ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Truyện ngắn về cuộc sống người nông dân Việt Nam n...' → 10 results | 74ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [S001] Truyện ngắn về cuộc sống người nông dân Việt Nam n… | relevant=10/10 | 74ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Sách thiếu nhi văn học Việt Nam dành cho trẻ em...' → 10 results | 66ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [S002] Sách thiếu nhi văn học Việt Nam dành cho trẻ em… | relevant=10/10 | 66ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Tiểu thuyết lịch sử Việt Nam thời kỳ phong kiến...' → 10 results | 56ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [S003] Tiểu thuyết lịch sử Việt Nam thời kỳ phong kiến… | relevant=10/10 | 56ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Thơ tình yêu đôi lứa lãng mạn...' → 10 results | 46ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [S004] Thơ tình yêu đôi lứa lãng mạn… | relevant=9/10 | 47ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Văn học chiến tranh kháng chiến chống Mỹ...' → 10 results | 47ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [S005] Văn học chiến tranh kháng chiến chống Mỹ… | relevant=10/10 | 47ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Truyện cổ tích dân gian Việt Nam...' → 10 results | 43ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [S006] Truyện cổ tích dân gian Việt Nam… | relevant=10/10 | 44ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Tiểu thuyết kiếm hiệp võ thuật...' → 10 results | 37ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [S007] Tiểu thuyết kiếm hiệp võ thuật… | relevant=9/10 | 37ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Hồi ký tự truyện nhà văn Việt Nam...' → 10 results | 52ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [S008] Hồi ký tự truyện nhà văn Việt Nam… | relevant=2/10 | 52ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Truyện dài về gia đình và tình thân...' → 10 results | 56ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [S009] Truyện dài về gia đình và tình thân… | relevant=5/10 | 56ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Sách văn học đương đại Việt Nam sau đổi mới...' → 10 results | 65ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [S010] Sách văn học đương đại Việt Nam sau đổi mới… | relevant=4/10 | 65ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Tôi muốn đọc sách buồn về nỗi cô đơn và sự mất mát...' → 10 results | 83ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [S011] Tôi muốn đọc sách buồn về nỗi cô đơn và sự mất mát… | relevant=10/10 | 83ms
+21:13:21 [INFO] search.search_pipeline: [Pipeline] 'Câu chuyện về người phụ nữ bị xã hội áp bức và phâ...' → 10 results | 102ms (mode=bm25, rerank=False)
+21:13:21 [INFO] search.evaluator:   [S012] Câu chuyện về người phụ nữ bị xã hội áp bức và phâ… | relevant=9/10 | 102ms
+21:13:22 [INFO] search.search_pipeline: [Pipeline] 'Văn học Việt Nam giai đoạn 1930 đến 1945 trước các...' → 10 results | 74ms (mode=bm25, rerank=False)
+21:13:22 [INFO] search.evaluator:   [S013] Văn học Việt Nam giai đoạn 1930 đến 1945 trước các… | relevant=10/10 | 74ms
+21:13:22 [INFO] search.search_pipeline: [Pipeline] 'Tiểu thuyết có yếu tố tâm linh ma quỷ và huyền bí...' → 10 results | 75ms (mode=bm25, rerank=False)
+21:13:22 [INFO] search.evaluator:   [S014] Tiểu thuyết có yếu tố tâm linh ma quỷ và huyền bí… | relevant=8/10 | 76ms
+21:13:22 [INFO] search.search_pipeline: [Pipeline] 'Ai là tác giả của tập thơ Từ ấy...' → 10 results | 61ms (mode=bm25, rerank=False)
+21:13:22 [INFO] search.evaluator:   [F006] Ai là tác giả của tập thơ Từ ấy… | relevant=1/10 | 61ms
+21:13:22 [INFO] search.search_pipeline: [Pipeline] 'Vợ nhặt là truyện ngắn của Kim Lân...' → 10 results | 60ms (mode=bm25, rerank=False)
+21:13:22 [INFO] search.evaluator:   [F007] Vợ nhặt là truyện ngắn của Kim Lân… | relevant=3/10 | 61ms
+21:13:22 [INFO] search.search_pipeline: [Pipeline] 'Sáng tác của Thạch Lam về cuộc sống bình dị...' → 10 results | 64ms (mode=bm25, rerank=False)
+21:13:22 [INFO] search.evaluator:   [A008] Sáng tác của Thạch Lam về cuộc sống bình dị… | relevant=4/10 | 64ms
+21:13:22 [INFO] search.search_pipeline: [Pipeline] 'Truyện ngắn của Nguyễn Công Hoan châm biếm xã hội...' → 10 results | 61ms (mode=bm25, rerank=False)
+21:13:22 [INFO] search.evaluator:   [A009] Truyện ngắn của Nguyễn Công Hoan châm biếm xã hội… | relevant=3/10 | 61ms
+21:13:22 [INFO] search.evaluator: Đã lưu evaluation report → data\evaluation_results\eval_bm25_20260625_211314.json
+21:13:22 [INFO] __main__: 
+--- Đánh giá mode=vector, rerank=False (30 queries) ---
+21:13:22 [INFO] search.evaluator: Bắt đầu evaluation 30 queries @ K=[1, 3, 5, 10] (mode=vector)
+21:13:28 [INFO] chunking.embedder: Loading model 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2' trên cpu...
+21:13:29 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+21:13:29 [WARNING] huggingface_hub.utils._http: Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+21:13:29 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/modules.json "HTTP/1.1 200 OK"
+21:13:29 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+21:13:29 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/config_sentence_transformers.json "HTTP/1.1 200 OK"
+21:13:29 [INFO] sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2.
+21:13:29 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+21:13:29 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/config_sentence_transformers.json "HTTP/1.1 200 OK"
+21:13:30 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+21:13:30 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/README.md "HTTP/1.1 200 OK"
+21:13:30 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+21:13:30 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/modules.json "HTTP/1.1 200 OK"
+21:13:30 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:30 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/sentence_bert_config.json "HTTP/1.1 200 OK"
+21:13:31 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+21:13:31 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:31 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/config.json "HTTP/1.1 200 OK"
+
+⏳ Đang khởi tạo Search Engine...
+✅ Pipeline ready (6360ms)
+
+
+======================================================================
+  Mode: BM25 
+  Queries: 30 | Avg latency: 55ms
+======================================================================
++-----+---------------+------------+--------+--------+
+|   K |   Precision@K |   Recall@K |   F1@K |    MRR |
++=====+===============+============+========+========+
+|   1 |        0.7667 |     0.7667 | 0.7667 | 0.8633 |
++-----+---------------+------------+--------+--------+
+|   3 |        0.7667 |     0.7667 | 0.7667 | 0.8633 |
++-----+---------------+------------+--------+--------+
+|   5 |        0.7133 |     0.7133 | 0.7133 | 0.8633 |
++-----+---------------+------------+--------+--------+
+|  10 |        0.6767 |     0.6767 | 0.6767 | 0.8633 |
++-----+---------------+------------+--------+--------+
+
+  Breakdown theo loại query (P@5):
+Type         P@3     P@5
+--------  ------  ------
+FACTUAL   0.7619  0.6571
+AUTHOR    0.7037  0.6
+SEMANTIC  0.8095  0.8143
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3797.29it/s]
+[1mBertModel LOAD REPORT[0m from: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+21:13:31 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+21:13:32 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+21:13:32 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+21:13:32 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+21:13:32 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:32 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/tokenizer_config.json "HTTP/1.1 200 OK"
+21:13:33 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:33 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/config.json "HTTP/1.1 200 OK"
+21:13:33 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:33 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/config.json "HTTP/1.1 200 OK"
+21:13:33 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:33 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/tokenizer_config.json "HTTP/1.1 200 OK"
+21:13:34 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:34 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/tokenizer_config.json "HTTP/1.1 200 OK"
+21:13:34 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+21:13:34 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+21:13:36 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 "HTTP/1.1 200 OK"
+21:13:37 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:37 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+21:13:37 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 "HTTP/1.1 200 OK"
+21:13:37 [INFO] chunking.embedder:   → Load xong trong 9.3s
+21:13:38 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:38 [INFO] search.search_pipeline: [Pipeline] 'Chí Phèo là tác phẩm của tác giả nào...' → 10 results | 16107ms (mode=vector, rerank=False)
+21:13:38 [INFO] search.evaluator:   [F001] Chí Phèo là tác phẩm của tác giả nào… | relevant=0/10 | 16107ms
+21:13:38 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:38 [INFO] search.search_pipeline: [Pipeline] 'Số đỏ của Vũ Trọng Phụng...' → 10 results | 265ms (mode=vector, rerank=False)
+21:13:38 [INFO] search.evaluator:   [F002] Số đỏ của Vũ Trọng Phụng… | relevant=1/10 | 265ms
+21:13:39 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:39 [INFO] search.search_pipeline: [Pipeline] 'Truyện Kiều Nguyễn Du...' → 10 results | 276ms (mode=vector, rerank=False)
+21:13:39 [INFO] search.evaluator:   [F003] Truyện Kiều Nguyễn Du… | relevant=1/10 | 276ms
+21:13:39 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:39 [INFO] search.search_pipeline: [Pipeline] 'Tắt đèn Ngô Tất Tố viết về nông dân...' → 10 results | 286ms (mode=vector, rerank=False)
+21:13:39 [INFO] search.evaluator:   [F004] Tắt đèn Ngô Tất Tố viết về nông dân… | relevant=1/10 | 286ms
+21:13:39 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:39 [INFO] search.search_pipeline: [Pipeline] 'Đoạn trường tân thanh Nguyễn Gia Thiều...' → 10 results | 294ms (mode=vector, rerank=False)
+21:13:39 [INFO] search.evaluator:   [F005] Đoạn trường tân thanh Nguyễn Gia Thiều… | relevant=0/10 | 294ms
+21:13:39 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:39 [INFO] search.search_pipeline: [Pipeline] 'Tác phẩm của Nguyễn Nhật Ánh...' → 10 results | 283ms (mode=vector, rerank=False)
+21:13:39 [INFO] search.evaluator:   [A001] Tác phẩm của Nguyễn Nhật Ánh… | relevant=0/10 | 283ms
+21:13:40 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:40 [INFO] search.search_pipeline: [Pipeline] 'Sách của Nam Cao trước cách mạng...' → 10 results | 304ms (mode=vector, rerank=False)
+21:13:40 [INFO] search.evaluator:   [A002] Sách của Nam Cao trước cách mạng… | relevant=0/10 | 304ms
+21:13:40 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:40 [INFO] search.search_pipeline: [Pipeline] 'Tô Hoài viết những tác phẩm gì...' → 10 results | 291ms (mode=vector, rerank=False)
+21:13:40 [INFO] search.evaluator:   [A003] Tô Hoài viết những tác phẩm gì… | relevant=1/10 | 291ms
+21:13:40 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:40 [INFO] search.search_pipeline: [Pipeline] 'Truyện của Nguyễn Huy Thiệp...' → 10 results | 291ms (mode=vector, rerank=False)
+21:13:40 [INFO] search.evaluator:   [A004] Truyện của Nguyễn Huy Thiệp… | relevant=0/10 | 291ms
+21:13:41 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:41 [INFO] search.search_pipeline: [Pipeline] 'Các tiểu thuyết của Hồ Biểu Chánh...' → 10 results | 304ms (mode=vector, rerank=False)
+21:13:41 [INFO] search.evaluator:   [A005] Các tiểu thuyết của Hồ Biểu Chánh… | relevant=3/10 | 304ms
+21:13:41 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:41 [INFO] search.search_pipeline: [Pipeline] 'Thơ Xuân Diệu tình yêu lãng mạn...' → 10 results | 291ms (mode=vector, rerank=False)
+21:13:41 [INFO] search.evaluator:   [A006] Thơ Xuân Diệu tình yêu lãng mạn… | relevant=0/10 | 291ms
+21:13:41 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:41 [INFO] search.search_pipeline: [Pipeline] 'Bảo Ninh Nỗi buồn chiến tranh...' → 10 results | 313ms (mode=vector, rerank=False)
+21:13:41 [INFO] search.evaluator:   [A007] Bảo Ninh Nỗi buồn chiến tranh… | relevant=1/10 | 313ms
+21:13:42 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:42 [INFO] search.search_pipeline: [Pipeline] 'Truyện ngắn về cuộc sống người nông dân Việt Nam n...' → 10 results | 300ms (mode=vector, rerank=False)
+21:13:42 [INFO] search.evaluator:   [S001] Truyện ngắn về cuộc sống người nông dân Việt Nam n… | relevant=8/10 | 300ms
+21:13:42 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:42 [INFO] search.search_pipeline: [Pipeline] 'Sách thiếu nhi văn học Việt Nam dành cho trẻ em...' → 10 results | 305ms (mode=vector, rerank=False)
+21:13:42 [INFO] search.evaluator:   [S002] Sách thiếu nhi văn học Việt Nam dành cho trẻ em… | relevant=2/10 | 305ms
+21:13:42 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:42 [INFO] search.search_pipeline: [Pipeline] 'Tiểu thuyết lịch sử Việt Nam thời kỳ phong kiến...' → 10 results | 301ms (mode=vector, rerank=False)
+21:13:42 [INFO] search.evaluator:   [S003] Tiểu thuyết lịch sử Việt Nam thời kỳ phong kiến… | relevant=7/10 | 302ms
+21:13:42 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:42 [INFO] search.search_pipeline: [Pipeline] 'Thơ tình yêu đôi lứa lãng mạn...' → 10 results | 311ms (mode=vector, rerank=False)
+21:13:42 [INFO] search.evaluator:   [S004] Thơ tình yêu đôi lứa lãng mạn… | relevant=10/10 | 311ms
+21:13:43 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:43 [INFO] search.search_pipeline: [Pipeline] 'Văn học chiến tranh kháng chiến chống Mỹ...' → 10 results | 309ms (mode=vector, rerank=False)
+21:13:43 [INFO] search.evaluator:   [S005] Văn học chiến tranh kháng chiến chống Mỹ… | relevant=8/10 | 309ms
+21:13:43 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:43 [INFO] search.search_pipeline: [Pipeline] 'Truyện cổ tích dân gian Việt Nam...' → 10 results | 298ms (mode=vector, rerank=False)
+21:13:43 [INFO] search.evaluator:   [S006] Truyện cổ tích dân gian Việt Nam… | relevant=2/10 | 298ms
+21:13:43 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:43 [INFO] search.search_pipeline: [Pipeline] 'Tiểu thuyết kiếm hiệp võ thuật...' → 10 results | 274ms (mode=vector, rerank=False)
+21:13:43 [INFO] search.evaluator:   [S007] Tiểu thuyết kiếm hiệp võ thuật… | relevant=7/10 | 274ms
+21:13:44 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:44 [INFO] search.search_pipeline: [Pipeline] 'Hồi ký tự truyện nhà văn Việt Nam...' → 10 results | 286ms (mode=vector, rerank=False)
+21:13:44 [INFO] search.evaluator:   [S008] Hồi ký tự truyện nhà văn Việt Nam… | relevant=2/10 | 286ms
+21:13:44 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:44 [INFO] search.search_pipeline: [Pipeline] 'Truyện dài về gia đình và tình thân...' → 10 results | 258ms (mode=vector, rerank=False)
+21:13:44 [INFO] search.evaluator:   [S009] Truyện dài về gia đình và tình thân… | relevant=9/10 | 259ms
+21:13:44 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:44 [INFO] search.search_pipeline: [Pipeline] 'Sách văn học đương đại Việt Nam sau đổi mới...' → 10 results | 275ms (mode=vector, rerank=False)
+21:13:44 [INFO] search.evaluator:   [S010] Sách văn học đương đại Việt Nam sau đổi mới… | relevant=1/10 | 276ms
+21:13:44 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:44 [INFO] search.search_pipeline: [Pipeline] 'Tôi muốn đọc sách buồn về nỗi cô đơn và sự mất mát...' → 10 results | 281ms (mode=vector, rerank=False)
+21:13:44 [INFO] search.evaluator:   [S011] Tôi muốn đọc sách buồn về nỗi cô đơn và sự mất mát… | relevant=10/10 | 281ms
+21:13:45 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:45 [INFO] search.search_pipeline: [Pipeline] 'Câu chuyện về người phụ nữ bị xã hội áp bức và phâ...' → 10 results | 305ms (mode=vector, rerank=False)
+21:13:45 [INFO] search.evaluator:   [S012] Câu chuyện về người phụ nữ bị xã hội áp bức và phâ… | relevant=10/10 | 305ms
+21:13:45 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:45 [INFO] search.search_pipeline: [Pipeline] 'Văn học Việt Nam giai đoạn 1930 đến 1945 trước các...' → 10 results | 272ms (mode=vector, rerank=False)
+21:13:45 [INFO] search.evaluator:   [S013] Văn học Việt Nam giai đoạn 1930 đến 1945 trước các… | relevant=2/10 | 272ms
+21:13:45 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:45 [INFO] search.search_pipeline: [Pipeline] 'Tiểu thuyết có yếu tố tâm linh ma quỷ và huyền bí...' → 10 results | 272ms (mode=vector, rerank=False)
+21:13:45 [INFO] search.evaluator:   [S014] Tiểu thuyết có yếu tố tâm linh ma quỷ và huyền bí… | relevant=7/10 | 272ms
+21:13:46 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:46 [INFO] search.search_pipeline: [Pipeline] 'Ai là tác giả của tập thơ Từ ấy...' → 10 results | 284ms (mode=vector, rerank=False)
+21:13:46 [INFO] search.evaluator:   [F006] Ai là tác giả của tập thơ Từ ấy… | relevant=1/10 | 284ms
+21:13:46 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:46 [INFO] search.search_pipeline: [Pipeline] 'Vợ nhặt là truyện ngắn của Kim Lân...' → 10 results | 273ms (mode=vector, rerank=False)
+21:13:46 [INFO] search.evaluator:   [F007] Vợ nhặt là truyện ngắn của Kim Lân… | relevant=0/10 | 274ms
+21:13:46 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:46 [INFO] search.search_pipeline: [Pipeline] 'Sáng tác của Thạch Lam về cuộc sống bình dị...' → 10 results | 288ms (mode=vector, rerank=False)
+21:13:46 [INFO] search.evaluator:   [A008] Sáng tác của Thạch Lam về cuộc sống bình dị… | relevant=1/10 | 289ms
+21:13:46 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:46 [INFO] search.search_pipeline: [Pipeline] 'Truyện ngắn của Nguyễn Công Hoan châm biếm xã hội...' → 10 results | 301ms (mode=vector, rerank=False)
+21:13:46 [INFO] search.evaluator:   [A009] Truyện ngắn của Nguyễn Công Hoan châm biếm xã hội… | relevant=1/10 | 301ms
+21:13:46 [INFO] search.evaluator: Đã lưu evaluation report → data\evaluation_results\eval_vector_20260625_211314.json
+21:13:46 [INFO] __main__: 
+--- Đánh giá mode=hybrid, rerank=False (30 queries) ---
+21:13:46 [INFO] search.evaluator: Bắt đầu evaluation 30 queries @ K=[1, 3, 5, 10] (mode=hybrid)
+21:13:47 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:47 [INFO] search.reranker: Loading Cross-Encoder 'cross-encoder/ms-marco-MiniLM-L-6-v2' trên cpu...
+21:13:47 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+21:13:48 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 404 Not Found"
+21:13:48 [INFO] sentence_transformers.base.model: No modules.json found for cross-encoder/ms-marco-MiniLM-L-6-v2, initializing a new CrossEncoder model.
+21:13:48 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/cross-encoder/ms-marco-MiniLM-L-6-v2 "HTTP/1.1 307 Temporary Redirect"
+21:13:48 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/cross-encoder/ms-marco-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+21:13:48 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:49 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:49 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/cross-encoder/ms-marco-MiniLM-L6-v2/c5ee24cb16019beea0893ab7796b1df96625c6b8/config.json "HTTP/1.1 200 OK"
+21:13:49 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2/resolve/main/adapter_config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:49 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+21:13:50 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:50 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:50 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/cross-encoder/ms-marco-MiniLM-L6-v2/c5ee24cb16019beea0893ab7796b1df96625c6b8/config.json "HTTP/1.1 200 OK"
+
+======================================================================
+  Mode: VECTOR 
+  Queries: 30 | Avg latency: 817ms
+======================================================================
++-----+---------------+------------+--------+--------+
+|   K |   Precision@K |   Recall@K |   F1@K |    MRR |
++=====+===============+============+========+========+
+|   1 |        0.3333 |     0.3333 | 0.3333 | 0.4464 |
++-----+---------------+------------+--------+--------+
+|   3 |        0.3333 |     0.3333 | 0.3333 | 0.4464 |
++-----+---------------+------------+--------+--------+
+|   5 |        0.3533 |     0.3533 | 0.3533 | 0.4464 |
++-----+---------------+------------+--------+--------+
+|  10 |        0.32   |     0.32   | 0.32   | 0.4464 |
++-----+---------------+------------+--------+--------+
+
+  Breakdown theo loại query (P@5):
+Type         P@3     P@5
+--------  ------  ------
+FACTUAL   0.0476  0.0571
+AUTHOR    0.1111  0.1333
+SEMANTIC  0.619   0.6429
+
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 2232.79it/s]
+[1mBertForSequenceClassification LOAD REPORT[0m from: cross-encoder/ms-marco-MiniLM-L-6-v2
+Key                          | Status     |  | 
+-----------------------------+------------+--+-
+bert.embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+21:13:50 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2/resolve/main/processor_config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:51 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+21:13:51 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:51 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+21:13:52 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2/resolve/main/video_preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:52 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+21:13:52 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:53 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+21:13:53 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:53 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:53 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/cross-encoder/ms-marco-MiniLM-L6-v2/c5ee24cb16019beea0893ab7796b1df96625c6b8/tokenizer_config.json "HTTP/1.1 200 OK"
+21:13:54 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:54 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:54 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/cross-encoder/ms-marco-MiniLM-L6-v2/c5ee24cb16019beea0893ab7796b1df96625c6b8/config.json "HTTP/1.1 200 OK"
+21:13:54 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:55 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:55 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/cross-encoder/ms-marco-MiniLM-L6-v2/c5ee24cb16019beea0893ab7796b1df96625c6b8/config.json "HTTP/1.1 200 OK"
+21:13:55 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:55 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+21:13:55 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/cross-encoder/ms-marco-MiniLM-L6-v2/c5ee24cb16019beea0893ab7796b1df96625c6b8/tokenizer_config.json "HTTP/1.1 200 OK"
+21:13:56 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/cross-encoder/ms-marco-MiniLM-L-6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 307 Temporary Redirect"
+21:13:56 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/cross-encoder/ms-marco-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+21:13:56 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/cross-encoder/ms-marco-MiniLM-L-6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 307 Temporary Redirect"
+21:13:57 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/cross-encoder/ms-marco-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+21:13:57 [INFO] search.reranker:   → Load xong trong 10.0s
+21:13:57 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 374ms
+21:13:57 [INFO] search.search_pipeline: [Pipeline] 'Chí Phèo là tác phẩm của tác giả nào...' → 10 results | 10712ms (mode=hybrid, rerank=True)
+21:13:57 [INFO] search.evaluator:   [F001] Chí Phèo là tác phẩm của tác giả nào… | relevant=4/10 | 10713ms
+21:13:58 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:58 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 117ms
+21:13:58 [INFO] search.search_pipeline: [Pipeline] 'Số đỏ của Vũ Trọng Phụng...' → 10 results | 1072ms (mode=hybrid, rerank=True)
+21:13:58 [INFO] search.evaluator:   [F002] Số đỏ của Vũ Trọng Phụng… | relevant=6/10 | 1072ms
+21:13:59 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:59 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 110ms
+21:13:59 [INFO] search.search_pipeline: [Pipeline] 'Truyện Kiều Nguyễn Du...' → 10 results | 599ms (mode=hybrid, rerank=True)
+21:13:59 [INFO] search.evaluator:   [F003] Truyện Kiều Nguyễn Du… | relevant=5/10 | 599ms
+21:13:59 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:13:59 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 157ms
+21:13:59 [INFO] search.search_pipeline: [Pipeline] 'Tắt đèn Ngô Tất Tố viết về nông dân...' → 10 results | 466ms (mode=hybrid, rerank=True)
+21:13:59 [INFO] search.evaluator:   [F004] Tắt đèn Ngô Tất Tố viết về nông dân… | relevant=5/10 | 466ms
+21:14:00 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:00 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 161ms
+21:14:00 [INFO] search.search_pipeline: [Pipeline] 'Đoạn trường tân thanh Nguyễn Gia Thiều...' → 10 results | 465ms (mode=hybrid, rerank=True)
+21:14:00 [INFO] search.evaluator:   [F005] Đoạn trường tân thanh Nguyễn Gia Thiều… | relevant=1/10 | 465ms
+21:14:00 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:00 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 150ms
+21:14:00 [INFO] search.search_pipeline: [Pipeline] 'Tác phẩm của Nguyễn Nhật Ánh...' → 10 results | 444ms (mode=hybrid, rerank=True)
+21:14:00 [INFO] search.evaluator:   [A001] Tác phẩm của Nguyễn Nhật Ánh… | relevant=1/10 | 444ms
+21:14:00 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:01 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 151ms
+21:14:01 [INFO] search.search_pipeline: [Pipeline] 'Sách của Nam Cao trước cách mạng...' → 10 results | 445ms (mode=hybrid, rerank=True)
+21:14:01 [INFO] search.evaluator:   [A002] Sách của Nam Cao trước cách mạng… | relevant=2/10 | 445ms
+21:14:01 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:01 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 137ms
+21:14:01 [INFO] search.search_pipeline: [Pipeline] 'Tô Hoài viết những tác phẩm gì...' → 10 results | 425ms (mode=hybrid, rerank=True)
+21:14:01 [INFO] search.evaluator:   [A003] Tô Hoài viết những tác phẩm gì… | relevant=3/10 | 425ms
+21:14:01 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:02 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 158ms
+21:14:02 [INFO] search.search_pipeline: [Pipeline] 'Truyện của Nguyễn Huy Thiệp...' → 10 results | 454ms (mode=hybrid, rerank=True)
+21:14:02 [INFO] search.evaluator:   [A004] Truyện của Nguyễn Huy Thiệp… | relevant=5/10 | 454ms
+21:14:02 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:02 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 137ms
+21:14:02 [INFO] search.search_pipeline: [Pipeline] 'Các tiểu thuyết của Hồ Biểu Chánh...' → 10 results | 425ms (mode=hybrid, rerank=True)
+21:14:02 [INFO] search.evaluator:   [A005] Các tiểu thuyết của Hồ Biểu Chánh… | relevant=8/10 | 425ms
+21:14:02 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:02 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 195ms
+21:14:02 [INFO] search.search_pipeline: [Pipeline] 'Thơ Xuân Diệu tình yêu lãng mạn...' → 10 results | 484ms (mode=hybrid, rerank=True)
+21:14:02 [INFO] search.evaluator:   [A006] Thơ Xuân Diệu tình yêu lãng mạn… | relevant=3/10 | 484ms
+21:14:03 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:03 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 117ms
+21:14:03 [INFO] search.search_pipeline: [Pipeline] 'Bảo Ninh Nỗi buồn chiến tranh...' → 10 results | 406ms (mode=hybrid, rerank=True)
+21:14:03 [INFO] search.evaluator:   [A007] Bảo Ninh Nỗi buồn chiến tranh… | relevant=5/10 | 406ms
+21:14:03 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:03 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 144ms
+21:14:03 [INFO] search.search_pipeline: [Pipeline] 'Truyện ngắn về cuộc sống người nông dân Việt Nam n...' → 10 results | 468ms (mode=hybrid, rerank=True)
+21:14:03 [INFO] search.evaluator:   [S001] Truyện ngắn về cuộc sống người nông dân Việt Nam n… | relevant=8/10 | 468ms
+21:14:04 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:04 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 135ms
+21:14:04 [INFO] search.search_pipeline: [Pipeline] 'Sách thiếu nhi văn học Việt Nam dành cho trẻ em...' → 10 results | 659ms (mode=hybrid, rerank=True)
+21:14:04 [INFO] search.evaluator:   [S002] Sách thiếu nhi văn học Việt Nam dành cho trẻ em… | relevant=6/10 | 659ms
+21:14:04 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:04 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 156ms
+21:14:04 [INFO] search.search_pipeline: [Pipeline] 'Tiểu thuyết lịch sử Việt Nam thời kỳ phong kiến...' → 10 results | 465ms (mode=hybrid, rerank=True)
+21:14:04 [INFO] search.evaluator:   [S003] Tiểu thuyết lịch sử Việt Nam thời kỳ phong kiến… | relevant=9/10 | 465ms
+21:14:05 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:05 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 130ms
+21:14:05 [INFO] search.search_pipeline: [Pipeline] 'Thơ tình yêu đôi lứa lãng mạn...' → 10 results | 417ms (mode=hybrid, rerank=True)
+21:14:05 [INFO] search.evaluator:   [S004] Thơ tình yêu đôi lứa lãng mạn… | relevant=10/10 | 417ms
+21:14:05 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:05 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 151ms
+21:14:05 [INFO] search.search_pipeline: [Pipeline] 'Văn học chiến tranh kháng chiến chống Mỹ...' → 10 results | 446ms (mode=hybrid, rerank=True)
+21:14:05 [INFO] search.evaluator:   [S005] Văn học chiến tranh kháng chiến chống Mỹ… | relevant=10/10 | 446ms
+21:14:06 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:06 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 136ms
+21:14:06 [INFO] search.search_pipeline: [Pipeline] 'Truyện cổ tích dân gian Việt Nam...' → 10 results | 636ms (mode=hybrid, rerank=True)
+21:14:06 [INFO] search.evaluator:   [S006] Truyện cổ tích dân gian Việt Nam… | relevant=7/10 | 637ms
+21:14:06 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:06 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 159ms
+21:14:06 [INFO] search.search_pipeline: [Pipeline] 'Tiểu thuyết kiếm hiệp võ thuật...' → 10 results | 440ms (mode=hybrid, rerank=True)
+21:14:06 [INFO] search.evaluator:   [S007] Tiểu thuyết kiếm hiệp võ thuật… | relevant=8/10 | 440ms
+21:14:07 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:07 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 136ms
+21:14:07 [INFO] search.search_pipeline: [Pipeline] 'Hồi ký tự truyện nhà văn Việt Nam...' → 10 results | 652ms (mode=hybrid, rerank=True)
+21:14:07 [INFO] search.evaluator:   [S008] Hồi ký tự truyện nhà văn Việt Nam… | relevant=2/10 | 652ms
+21:14:07 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:07 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 120ms
+21:14:07 [INFO] search.search_pipeline: [Pipeline] 'Truyện dài về gia đình và tình thân...' → 10 results | 420ms (mode=hybrid, rerank=True)
+21:14:07 [INFO] search.evaluator:   [S009] Truyện dài về gia đình và tình thân… | relevant=8/10 | 420ms
+21:14:08 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:08 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 132ms
+21:14:08 [INFO] search.search_pipeline: [Pipeline] 'Sách văn học đương đại Việt Nam sau đổi mới...' → 10 results | 653ms (mode=hybrid, rerank=True)
+21:14:08 [INFO] search.evaluator:   [S010] Sách văn học đương đại Việt Nam sau đổi mới… | relevant=3/10 | 653ms
+21:14:08 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:09 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 157ms
+21:14:09 [INFO] search.search_pipeline: [Pipeline] 'Tôi muốn đọc sách buồn về nỗi cô đơn và sự mất mát...' → 10 results | 488ms (mode=hybrid, rerank=True)
+21:14:09 [INFO] search.evaluator:   [S011] Tôi muốn đọc sách buồn về nỗi cô đơn và sự mất mát… | relevant=10/10 | 488ms
+21:14:09 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:09 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 157ms
+21:14:09 [INFO] search.search_pipeline: [Pipeline] 'Câu chuyện về người phụ nữ bị xã hội áp bức và phâ...' → 10 results | 509ms (mode=hybrid, rerank=True)
+21:14:09 [INFO] search.evaluator:   [S012] Câu chuyện về người phụ nữ bị xã hội áp bức và phâ… | relevant=10/10 | 509ms
+21:14:09 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:10 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 122ms
+21:14:10 [INFO] search.search_pipeline: [Pipeline] 'Văn học Việt Nam giai đoạn 1930 đến 1945 trước các...' → 10 results | 647ms (mode=hybrid, rerank=True)
+21:14:10 [INFO] search.evaluator:   [S013] Văn học Việt Nam giai đoạn 1930 đến 1945 trước các… | relevant=6/10 | 647ms
+21:14:10 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:10 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 166ms
+21:14:10 [INFO] search.search_pipeline: [Pipeline] 'Tiểu thuyết có yếu tố tâm linh ma quỷ và huyền bí...' → 10 results | 493ms (mode=hybrid, rerank=True)
+21:14:10 [INFO] search.evaluator:   [S014] Tiểu thuyết có yếu tố tâm linh ma quỷ và huyền bí… | relevant=8/10 | 493ms
+21:14:11 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:11 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 117ms
+21:14:11 [INFO] search.search_pipeline: [Pipeline] 'Ai là tác giả của tập thơ Từ ấy...' → 10 results | 628ms (mode=hybrid, rerank=True)
+21:14:11 [INFO] search.evaluator:   [F006] Ai là tác giả của tập thơ Từ ấy… | relevant=2/10 | 628ms
+21:14:11 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:11 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 156ms
+21:14:11 [INFO] search.search_pipeline: [Pipeline] 'Vợ nhặt là truyện ngắn của Kim Lân...' → 10 results | 460ms (mode=hybrid, rerank=True)
+21:14:11 [INFO] search.evaluator:   [F007] Vợ nhặt là truyện ngắn của Kim Lân… | relevant=2/10 | 460ms
+21:14:12 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:12 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 126ms
+21:14:12 [INFO] search.search_pipeline: [Pipeline] 'Sáng tác của Thạch Lam về cuộc sống bình dị...' → 10 results | 442ms (mode=hybrid, rerank=True)
+21:14:12 [INFO] search.evaluator:   [A008] Sáng tác của Thạch Lam về cuộc sống bình dị… | relevant=3/10 | 442ms
+21:14:12 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:12 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 148ms
+21:14:12 [INFO] search.search_pipeline: [Pipeline] 'Truyện ngắn của Nguyễn Công Hoan châm biếm xã hội...' → 10 results | 666ms (mode=hybrid, rerank=True)
+21:14:12 [INFO] search.evaluator:   [A009] Truyện ngắn của Nguyễn Công Hoan châm biếm xã hội… | relevant=3/10 | 666ms
+21:14:12 [INFO] search.evaluator: Đã lưu evaluation report → data\evaluation_results\eval_hybrid_20260625_211314.json
+21:14:12 [INFO] __main__: 
+--- Đánh giá mode=hybrid, rerank=True (30 queries) ---
+21:14:12 [INFO] search.evaluator: Bắt đầu evaluation 30 queries @ K=[1, 3, 5, 10] (mode=hybrid)
+21:14:13 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:13 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 159ms
+21:14:13 [INFO] search.search_pipeline: [Pipeline] 'Chí Phèo là tác phẩm của tác giả nào...' → 10 results | 464ms (mode=hybrid, rerank=True)
+21:14:13 [INFO] search.evaluator:   [F001] Chí Phèo là tác phẩm của tác giả nào… | relevant=4/10 | 464ms
+21:14:13 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:14 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 145ms
+21:14:14 [INFO] search.search_pipeline: [Pipeline] 'Số đỏ của Vũ Trọng Phụng...' → 10 results | 639ms (mode=hybrid, rerank=True)
+21:14:14 [INFO] search.evaluator:   [F002] Số đỏ của Vũ Trọng Phụng… | relevant=6/10 | 639ms
+21:14:14 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:14 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 120ms
+21:14:14 [INFO] search.search_pipeline: [Pipeline] 'Truyện Kiều Nguyễn Du...' → 10 results | 605ms (mode=hybrid, rerank=True)
+21:14:14 [INFO] search.evaluator:   [F003] Truyện Kiều Nguyễn Du… | relevant=5/10 | 605ms
+21:14:14 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:15 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 166ms
+21:14:15 [INFO] search.search_pipeline: [Pipeline] 'Tắt đèn Ngô Tất Tố viết về nông dân...' → 10 results | 475ms (mode=hybrid, rerank=True)
+21:14:15 [INFO] search.evaluator:   [F004] Tắt đèn Ngô Tất Tố viết về nông dân… | relevant=5/10 | 475ms
+21:14:15 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:15 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 134ms
+21:14:15 [INFO] search.search_pipeline: [Pipeline] 'Đoạn trường tân thanh Nguyễn Gia Thiều...' → 10 results | 638ms (mode=hybrid, rerank=True)
+21:14:15 [INFO] search.evaluator:   [F005] Đoạn trường tân thanh Nguyễn Gia Thiều… | relevant=1/10 | 638ms
+21:14:16 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:16 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 160ms
+21:14:16 [INFO] search.search_pipeline: [Pipeline] 'Tác phẩm của Nguyễn Nhật Ánh...' → 10 results | 495ms (mode=hybrid, rerank=True)
+21:14:16 [INFO] search.evaluator:   [A001] Tác phẩm của Nguyễn Nhật Ánh… | relevant=1/10 | 495ms
+21:14:16 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:16 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 150ms
+21:14:16 [INFO] search.search_pipeline: [Pipeline] 'Sách của Nam Cao trước cách mạng...' → 10 results | 441ms (mode=hybrid, rerank=True)
+21:14:16 [INFO] search.evaluator:   [A002] Sách của Nam Cao trước cách mạng… | relevant=2/10 | 441ms
+21:14:17 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:17 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 128ms
+21:14:17 [INFO] search.search_pipeline: [Pipeline] 'Tô Hoài viết những tác phẩm gì...' → 10 results | 676ms (mode=hybrid, rerank=True)
+21:14:17 [INFO] search.evaluator:   [A003] Tô Hoài viết những tác phẩm gì… | relevant=3/10 | 676ms
+21:14:17 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:18 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 114ms
+21:14:18 [INFO] search.search_pipeline: [Pipeline] 'Truyện của Nguyễn Huy Thiệp...' → 10 results | 601ms (mode=hybrid, rerank=True)
+21:14:18 [INFO] search.evaluator:   [A004] Truyện của Nguyễn Huy Thiệp… | relevant=5/10 | 601ms
+21:14:18 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:18 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 165ms
+21:14:18 [INFO] search.search_pipeline: [Pipeline] 'Các tiểu thuyết của Hồ Biểu Chánh...' → 10 results | 461ms (mode=hybrid, rerank=True)
+21:14:18 [INFO] search.evaluator:   [A005] Các tiểu thuyết của Hồ Biểu Chánh… | relevant=8/10 | 461ms
+21:14:18 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:18 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 191ms
+21:14:18 [INFO] search.search_pipeline: [Pipeline] 'Thơ Xuân Diệu tình yêu lãng mạn...' → 10 results | 499ms (mode=hybrid, rerank=True)
+21:14:18 [INFO] search.evaluator:   [A006] Thơ Xuân Diệu tình yêu lãng mạn… | relevant=3/10 | 499ms
+21:14:19 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:20 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 118ms
+21:14:20 [INFO] search.search_pipeline: [Pipeline] 'Bảo Ninh Nỗi buồn chiến tranh...' → 10 results | 1162ms (mode=hybrid, rerank=True)
+21:14:20 [INFO] search.evaluator:   [A007] Bảo Ninh Nỗi buồn chiến tranh… | relevant=5/10 | 1162ms
+21:14:20 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:20 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 128ms
+21:14:20 [INFO] search.search_pipeline: [Pipeline] 'Truyện ngắn về cuộc sống người nông dân Việt Nam n...' → 10 results | 684ms (mode=hybrid, rerank=True)
+21:14:20 [INFO] search.evaluator:   [S001] Truyện ngắn về cuộc sống người nông dân Việt Nam n… | relevant=8/10 | 684ms
+21:14:21 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:21 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 138ms
+21:14:21 [INFO] search.search_pipeline: [Pipeline] 'Sách thiếu nhi văn học Việt Nam dành cho trẻ em...' → 10 results | 667ms (mode=hybrid, rerank=True)
+21:14:21 [INFO] search.evaluator:   [S002] Sách thiếu nhi văn học Việt Nam dành cho trẻ em… | relevant=6/10 | 667ms
+21:14:21 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:22 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 131ms
+21:14:22 [INFO] search.search_pipeline: [Pipeline] 'Tiểu thuyết lịch sử Việt Nam thời kỳ phong kiến...' → 10 results | 649ms (mode=hybrid, rerank=True)
+21:14:22 [INFO] search.evaluator:   [S003] Tiểu thuyết lịch sử Việt Nam thời kỳ phong kiến… | relevant=9/10 | 649ms
+21:14:22 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:22 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 154ms
+21:14:22 [INFO] search.search_pipeline: [Pipeline] 'Thơ tình yêu đôi lứa lãng mạn...' → 10 results | 442ms (mode=hybrid, rerank=True)
+21:14:22 [INFO] search.evaluator:   [S004] Thơ tình yêu đôi lứa lãng mạn… | relevant=10/10 | 442ms
+21:14:22 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:23 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 144ms
+21:14:23 [INFO] search.search_pipeline: [Pipeline] 'Văn học chiến tranh kháng chiến chống Mỹ...' → 10 results | 443ms (mode=hybrid, rerank=True)
+21:14:23 [INFO] search.evaluator:   [S005] Văn học chiến tranh kháng chiến chống Mỹ… | relevant=10/10 | 443ms
+21:14:23 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:23 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 136ms
+21:14:23 [INFO] search.search_pipeline: [Pipeline] 'Truyện cổ tích dân gian Việt Nam...' → 10 results | 641ms (mode=hybrid, rerank=True)
+21:14:23 [INFO] search.evaluator:   [S006] Truyện cổ tích dân gian Việt Nam… | relevant=7/10 | 641ms
+21:14:23 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:24 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 156ms
+21:14:24 [INFO] search.search_pipeline: [Pipeline] 'Tiểu thuyết kiếm hiệp võ thuật...' → 10 results | 442ms (mode=hybrid, rerank=True)
+21:14:24 [INFO] search.evaluator:   [S007] Tiểu thuyết kiếm hiệp võ thuật… | relevant=8/10 | 442ms
+21:14:24 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:24 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 134ms
+21:14:24 [INFO] search.search_pipeline: [Pipeline] 'Hồi ký tự truyện nhà văn Việt Nam...' → 10 results | 651ms (mode=hybrid, rerank=True)
+21:14:24 [INFO] search.evaluator:   [S008] Hồi ký tự truyện nhà văn Việt Nam… | relevant=2/10 | 652ms
+21:14:25 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:25 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 152ms
+21:14:25 [INFO] search.search_pipeline: [Pipeline] 'Truyện dài về gia đình và tình thân...' → 10 results | 464ms (mode=hybrid, rerank=True)
+21:14:25 [INFO] search.evaluator:   [S009] Truyện dài về gia đình và tình thân… | relevant=8/10 | 464ms
+21:14:25 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:25 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 146ms
+21:14:25 [INFO] search.search_pipeline: [Pipeline] 'Sách văn học đương đại Việt Nam sau đổi mới...' → 10 results | 661ms (mode=hybrid, rerank=True)
+21:14:25 [INFO] search.evaluator:   [S010] Sách văn học đương đại Việt Nam sau đổi mới… | relevant=3/10 | 661ms
+21:14:26 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:26 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 171ms
+21:14:26 [INFO] search.search_pipeline: [Pipeline] 'Tôi muốn đọc sách buồn về nỗi cô đơn và sự mất mát...' → 10 results | 506ms (mode=hybrid, rerank=True)
+21:14:26 [INFO] search.evaluator:   [S011] Tôi muốn đọc sách buồn về nỗi cô đơn và sự mất mát… | relevant=10/10 | 506ms
+21:14:26 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:26 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 180ms
+21:14:26 [INFO] search.search_pipeline: [Pipeline] 'Câu chuyện về người phụ nữ bị xã hội áp bức và phâ...' → 10 results | 534ms (mode=hybrid, rerank=True)
+21:14:26 [INFO] search.evaluator:   [S012] Câu chuyện về người phụ nữ bị xã hội áp bức và phâ… | relevant=10/10 | 534ms
+21:14:27 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:27 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 151ms
+21:14:27 [INFO] search.search_pipeline: [Pipeline] 'Văn học Việt Nam giai đoạn 1930 đến 1945 trước các...' → 10 results | 683ms (mode=hybrid, rerank=True)
+21:14:27 [INFO] search.evaluator:   [S013] Văn học Việt Nam giai đoạn 1930 đến 1945 trước các… | relevant=6/10 | 683ms
+21:14:27 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:28 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 169ms
+21:14:28 [INFO] search.search_pipeline: [Pipeline] 'Tiểu thuyết có yếu tố tâm linh ma quỷ và huyền bí...' → 10 results | 497ms (mode=hybrid, rerank=True)
+21:14:28 [INFO] search.evaluator:   [S014] Tiểu thuyết có yếu tố tâm linh ma quỷ và huyền bí… | relevant=8/10 | 497ms
+21:14:28 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:28 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 118ms
+21:14:28 [INFO] search.search_pipeline: [Pipeline] 'Ai là tác giả của tập thơ Từ ấy...' → 10 results | 629ms (mode=hybrid, rerank=True)
+21:14:28 [INFO] search.evaluator:   [F006] Ai là tác giả của tập thơ Từ ấy… | relevant=2/10 | 629ms
+21:14:29 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:29 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 143ms
+21:14:29 [INFO] search.search_pipeline: [Pipeline] 'Vợ nhặt là truyện ngắn của Kim Lân...' → 10 results | 443ms (mode=hybrid, rerank=True)
+21:14:29 [INFO] search.evaluator:   [F007] Vợ nhặt là truyện ngắn của Kim Lân… | relevant=2/10 | 443ms
+21:14:29 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:29 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 164ms
+21:14:29 [INFO] search.search_pipeline: [Pipeline] 'Sáng tác của Thạch Lam về cuộc sống bình dị...' → 10 results | 479ms (mode=hybrid, rerank=True)
+21:14:29 [INFO] search.evaluator:   [A008] Sáng tác của Thạch Lam về cuộc sống bình dị… | relevant=3/10 | 479ms
+21:14:29 [INFO] httpx: HTTP Request: POST https://e2c7fa7a-8070-4f7c-98e0-f2cda97bdc09.eu-west-2-0.aws.cloud.qdrant.io:6333/collections/vn_literature/points/query "HTTP/1.1 200 OK"
+21:14:30 [INFO] search.reranker: Cross-Encoder reranked 10 docs trong 124ms
+21:14:30 [INFO] search.search_pipeline: [Pipeline] 'Truyện ngắn của Nguyễn Công Hoan châm biếm xã hội...' → 10 results | 639ms (mode=hybrid, rerank=True)
+21:14:30 [INFO] search.evaluator:   [A009] Truyện ngắn của Nguyễn Công Hoan châm biếm xã hội… | relevant=3/10 | 639ms
+21:14:30 [INFO] search.evaluator: Đã lưu evaluation report → data\evaluation_results\eval_hybrid_rerank_20260625_211314.json
+
+======================================================================
+  Mode: HYBRID 
+  Queries: 30 | Avg latency: 866ms
+======================================================================
++-----+---------------+------------+--------+--------+
+|   K |   Precision@K |   Recall@K |   F1@K |    MRR |
++=====+===============+============+========+========+
+|   1 |        0.8333 |     0.8333 | 0.8333 | 0.8872 |
++-----+---------------+------------+--------+--------+
+|   3 |        0.7667 |     0.7667 | 0.7667 | 0.8872 |
++-----+---------------+------------+--------+--------+
+|   5 |        0.7067 |     0.7067 | 0.7067 | 0.8872 |
++-----+---------------+------------+--------+--------+
+|  10 |        0.5433 |     0.5433 | 0.5433 | 0.8872 |
++-----+---------------+------------+--------+--------+
+
+  Breakdown theo loại query (P@5):
+Type         P@3     P@5
+--------  ------  ------
+FACTUAL   0.7619  0.6286
+AUTHOR    0.7037  0.6222
+SEMANTIC  0.8095  0.8
+
+
+======================================================================
+  Mode: HYBRID + Rerank
+  Queries: 30 | Avg latency: 577ms
+======================================================================
++-----+---------------+------------+--------+--------+
+|   K |   Precision@K |   Recall@K |   F1@K |    MRR |
++=====+===============+============+========+========+
+|   1 |        0.8333 |     0.8333 | 0.8333 | 0.8872 |
++-----+---------------+------------+--------+--------+
+|   3 |        0.7667 |     0.7667 | 0.7667 | 0.8872 |
++-----+---------------+------------+--------+--------+
+|   5 |        0.7067 |     0.7067 | 0.7067 | 0.8872 |
++-----+---------------+------------+--------+--------+
+|  10 |        0.5433 |     0.5433 | 0.5433 | 0.8872 |
++-----+---------------+------------+--------+--------+
+
+  Breakdown theo loại query (P@5):
+Type         P@3     P@5
+--------  ------  ------
+FACTUAL   0.7619  0.6286
+AUTHOR    0.7037  0.6222
+SEMANTIC  0.8095  0.8
+
+
+===========================================================================
+  📊 TỔNG HỢP KẾT QUẢ ĐÁNH GIÁ RETRIEVAL
+===========================================================================
+
+  Precision@K:
++---------------+--------+--------+--------+--------+
+| Mode          |     @1 |     @3 |     @5 |    @10 |
++===============+========+========+========+========+
+| bm25          | 0.7667 | 0.7667 | 0.7133 | 0.6767 |
++---------------+--------+--------+--------+--------+
+| vector        | 0.3333 | 0.3333 | 0.3533 | 0.32   |
++---------------+--------+--------+--------+--------+
+| hybrid        | 0.8333 | 0.7667 | 0.7067 | 0.5433 |
++---------------+--------+--------+--------+--------+
+| hybrid_rerank | 0.8333 | 0.7667 | 0.7067 | 0.5433 |
++---------------+--------+--------+--------+--------+
+
+  MRR:
++---------------+--------+--------+--------+--------+
+| Mode          |     @1 |     @3 |     @5 |    @10 |
++===============+========+========+========+========+
+| bm25          | 0.8633 | 0.8633 | 0.8633 | 0.8633 |
++---------------+--------+--------+--------+--------+
+| vector        | 0.4464 | 0.4464 | 0.4464 | 0.4464 |
++---------------+--------+--------+--------+--------+
+| hybrid        | 0.8872 | 0.8872 | 0.8872 | 0.8872 |
++---------------+--------+--------+--------+--------+
+| hybrid_rerank | 0.8872 | 0.8872 | 0.8872 | 0.8872 |
++---------------+--------+--------+--------+--------+
+
+  Latency trung bình:
+Mode           Avg Latency
+-------------  -------------
+bm25           55ms
+vector         817ms
+hybrid         866ms
+hybrid_rerank  577ms
+
+  💾 Summary saved → data\evaluation_results\eval_summary_20260625_211314.json
+
+✅ Evaluation hoàn tất!
+

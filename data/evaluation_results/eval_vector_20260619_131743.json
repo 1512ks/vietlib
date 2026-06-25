@@ -1,0 +1,207 @@
+{
+  "mode": "vector",
+  "ks": [
+    5
+  ],
+  "n_queries": 14,
+  "avg_latency_ms": 1710.7569660459246,
+  "avg_precision": {
+    "5": 0.5857142857142857
+  },
+  "avg_recall": {
+    "5": 0.5857142857142857
+  },
+  "avg_f1": {
+    "5": 0.5857142857142857
+  },
+  "avg_mrr": {
+    "5": 0.6845238095238094
+  },
+  "by_type": {
+    "SEMANTIC_P@5": 0.5857142857142857
+  },
+  "per_query": [
+    {
+      "query_id": "S001",
+      "query": "Truyện ngắn về cuộc sống người nông dân Việt Nam nghèo khổ",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "mrr": 1.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 5,
+      "latency_ms": 15767.910957336426
+    },
+    {
+      "query_id": "S002",
+      "query": "Sách thiếu nhi văn học Việt Nam dành cho trẻ em",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 0.4,
+      "recall": 0.4,
+      "f1": 0.4000000000000001,
+      "mrr": 0.3333333333333333,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 2,
+      "latency_ms": 782.9256057739258
+    },
+    {
+      "query_id": "S003",
+      "query": "Tiểu thuyết lịch sử Việt Nam thời kỳ phong kiến",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 0.6,
+      "recall": 0.6,
+      "f1": 0.6,
+      "mrr": 0.5,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 3,
+      "latency_ms": 683.4828853607178
+    },
+    {
+      "query_id": "S004",
+      "query": "Thơ tình yêu đôi lứa lãng mạn",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "mrr": 1.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 5,
+      "latency_ms": 616.7171001434326
+    },
+    {
+      "query_id": "S005",
+      "query": "Văn học chiến tranh kháng chiến chống Mỹ",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 0.6,
+      "recall": 0.6,
+      "f1": 0.6,
+      "mrr": 1.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 3,
+      "latency_ms": 633.2552433013916
+    },
+    {
+      "query_id": "S006",
+      "query": "Truyện cổ tích dân gian Việt Nam",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 602.8332710266113
+    },
+    {
+      "query_id": "S007",
+      "query": "Tiểu thuyết kiếm hiệp võ thuật",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 0.2,
+      "recall": 0.2,
+      "f1": 0.20000000000000004,
+      "mrr": 1.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 1,
+      "latency_ms": 613.837480545044
+    },
+    {
+      "query_id": "S008",
+      "query": "Hồi ký tự truyện nhà văn Việt Nam",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 599.3061065673828
+    },
+    {
+      "query_id": "S009",
+      "query": "Truyện dài về gia đình và tình thân",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "mrr": 1.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 5,
+      "latency_ms": 600.0685691833496
+    },
+    {
+      "query_id": "S010",
+      "query": "Sách văn học đương đại Việt Nam sau đổi mới",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 0.2,
+      "recall": 0.2,
+      "f1": 0.20000000000000004,
+      "mrr": 0.5,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 1,
+      "latency_ms": 599.9846458435059
+    },
+    {
+      "query_id": "S011",
+      "query": "Tôi muốn đọc sách buồn về nỗi cô đơn và sự mất mát",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "mrr": 1.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 5,
+      "latency_ms": 617.7008152008057
+    },
+    {
+      "query_id": "S012",
+      "query": "Câu chuyện về người phụ nữ bị xã hội áp bức và phân biệt đối xử",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "mrr": 1.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 5,
+      "latency_ms": 599.0996360778809
+    },
+    {
+      "query_id": "S013",
+      "query": "Văn học Việt Nam giai đoạn 1930 đến 1945 trước cách mạng",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 0.4,
+      "recall": 0.4,
+      "f1": 0.4000000000000001,
+      "mrr": 0.25,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 2,
+      "latency_ms": 616.8825626373291
+    },
+    {
+      "query_id": "S014",
+      "query": "Tiểu thuyết có yếu tố tâm linh ma quỷ và huyền bí",
+      "query_type": "SEMANTIC",
+      "k": 5,
+      "precision": 0.8,
+      "recall": 0.8,
+      "f1": 0.8000000000000002,
+      "mrr": 1.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 4,
+      "latency_ms": 616.5926456451416
+    }
+  ]
+}

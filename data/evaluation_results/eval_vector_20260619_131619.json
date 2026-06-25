@@ -1,0 +1,142 @@
+{
+  "mode": "vector",
+  "ks": [
+    5
+  ],
+  "n_queries": 9,
+  "avg_latency_ms": 2289.402272966173,
+  "avg_precision": {
+    "5": 0.044444444444444446
+  },
+  "avg_recall": {
+    "5": 0.044444444444444446
+  },
+  "avg_f1": {
+    "5": 0.04444444444444445
+  },
+  "avg_mrr": {
+    "5": 0.14814814814814814
+  },
+  "by_type": {
+    "AUTHOR_P@5": 0.044444444444444446
+  },
+  "per_query": [
+    {
+      "query_id": "A001",
+      "query": "Tác phẩm của Nguyễn Nhật Ánh",
+      "query_type": "AUTHOR",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 15602.91600227356
+    },
+    {
+      "query_id": "A002",
+      "query": "Sách của Nam Cao trước cách mạng",
+      "query_type": "AUTHOR",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 735.048770904541
+    },
+    {
+      "query_id": "A003",
+      "query": "Tô Hoài viết những tác phẩm gì",
+      "query_type": "AUTHOR",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 592.5986766815186
+    },
+    {
+      "query_id": "A004",
+      "query": "Truyện của Nguyễn Huy Thiệp",
+      "query_type": "AUTHOR",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 624.1786479949951
+    },
+    {
+      "query_id": "A005",
+      "query": "Các tiểu thuyết của Hồ Biểu Chánh",
+      "query_type": "AUTHOR",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 604.193925857544
+    },
+    {
+      "query_id": "A006",
+      "query": "Thơ Xuân Diệu tình yêu lãng mạn",
+      "query_type": "AUTHOR",
+      "k": 5,
+      "precision": 0.2,
+      "recall": 0.2,
+      "f1": 0.20000000000000004,
+      "mrr": 0.3333333333333333,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 1,
+      "latency_ms": 610.8932495117188
+    },
+    {
+      "query_id": "A007",
+      "query": "Bảo Ninh Nỗi buồn chiến tranh",
+      "query_type": "AUTHOR",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 602.9894351959229
+    },
+    {
+      "query_id": "A008",
+      "query": "Sáng tác của Thạch Lam về cuộc sống bình dị",
+      "query_type": "AUTHOR",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 614.431619644165
+    },
+    {
+      "query_id": "A009",
+      "query": "Truyện ngắn của Nguyễn Công Hoan châm biếm xã hội",
+      "query_type": "AUTHOR",
+      "k": 5,
+      "precision": 0.2,
+      "recall": 0.2,
+      "f1": 0.20000000000000004,
+      "mrr": 1.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 1,
+      "latency_ms": 617.3701286315918
+    }
+  ]
+}

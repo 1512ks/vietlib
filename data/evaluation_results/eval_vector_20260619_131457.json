@@ -1,0 +1,116 @@
+{
+  "mode": "vector",
+  "ks": [
+    5
+  ],
+  "n_queries": 7,
+  "avg_latency_ms": 3028.3242634364537,
+  "avg_precision": {
+    "5": 0.0
+  },
+  "avg_recall": {
+    "5": 0.0
+  },
+  "avg_f1": {
+    "5": 0.0
+  },
+  "avg_mrr": {
+    "5": 0.0
+  },
+  "by_type": {
+    "FACTUAL_P@5": 0.0
+  },
+  "per_query": [
+    {
+      "query_id": "F001",
+      "query": "Chí Phèo là tác phẩm của tác giả nào",
+      "query_type": "FACTUAL",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 17133.522272109985
+    },
+    {
+      "query_id": "F002",
+      "query": "Số đỏ của Vũ Trọng Phụng",
+      "query_type": "FACTUAL",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 757.5876712799072
+    },
+    {
+      "query_id": "F003",
+      "query": "Truyện Kiều Nguyễn Du",
+      "query_type": "FACTUAL",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 657.4947834014893
+    },
+    {
+      "query_id": "F004",
+      "query": "Tắt đèn Ngô Tất Tố viết về nông dân",
+      "query_type": "FACTUAL",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 745.2313899993896
+    },
+    {
+      "query_id": "F005",
+      "query": "Đoạn trường tân thanh Nguyễn Gia Thiều",
+      "query_type": "FACTUAL",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 701.5488147735596
+    },
+    {
+      "query_id": "F006",
+      "query": "Ai là tác giả của tập thơ Từ ấy",
+      "query_type": "FACTUAL",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 608.0374717712402
+    },
+    {
+      "query_id": "F007",
+      "query": "Vợ nhặt là truyện ngắn của Kim Lân",
+      "query_type": "FACTUAL",
+      "k": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mrr": 0.0,
+      "n_retrieved": 5,
+      "n_relevant_retrieved": 0,
+      "latency_ms": 594.8474407196045
+    }
+  ]
+}
