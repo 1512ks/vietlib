@@ -34,7 +34,7 @@ def migrate():
         return
 
     logger.info(f"Đang kết nối tới Qdrant Cloud tại: {url}")
-    cloud_client = QdrantClient(url=url, api_key=api_key)
+    cloud_client = QdrantClient(url=url, api_key=api_key, timeout=120)
 
     # 3. Nạp SẠCH: xoá collection cũ trên Cloud (nếu có) rồi tạo lại.
     #    Cần thiết vì chunk_id đã đổi sau dedup → upsert thường sẽ để lại điểm cũ lẫn lộn.
@@ -51,8 +51,8 @@ def migrate():
     total_points = local_client.count(COLLECTION_NAME).count
     logger.info(f"Bắt đầu migrate {total_points} điểm...")
 
-    # 5. Scroll và Upsert theo lô
-    batch_size = 1000
+    # 5. Scroll và Upsert theo lô (batch nhỏ để tránh WriteTimeout trên kết nối chậm)
+    batch_size = 100
     next_page_offset = None
     processed_count = 0
     start_time = time.time()
@@ -79,11 +79,17 @@ def migrate():
             ) for record in records
         ]
 
-        # Đẩy lên Cloud
-        cloud_client.upsert(
-            collection_name=COLLECTION_NAME,
-            points=points
-        )
+        # Đẩy lên Cloud — retry với backoff khi WriteTimeout / lỗi mạng tạm thời
+        for attempt in range(5):
+            try:
+                cloud_client.upsert(collection_name=COLLECTION_NAME, points=points, wait=True)
+                break
+            except Exception as e:
+                if attempt == 4:
+                    logger.error(f"Upsert thất bại sau 5 lần tại điểm {processed_count}: {e}")
+                    raise
+                logger.warning(f"Upsert lỗi (thử lại {attempt+1}/5): {str(e)[:80]}")
+                time.sleep(2 ** attempt * 2)
 
         processed_count += len(points)
         
