@@ -20,7 +20,7 @@ COLLECTION_NAME = "vn_literature"
 VECTOR_SIZE = 384
 DB_DIR = Path(__file__).parent / "data" / "vector_db"
 
-def migrate():
+def migrate(fresh=False):
     # 1. Kết nối Local
     logger.info(f"Đang kết nối tới Local DB tại: {DB_DIR}")
     local_client = QdrantClient(path=str(DB_DIR))
@@ -34,18 +34,35 @@ def migrate():
         return
 
     logger.info(f"Đang kết nối tới Qdrant Cloud tại: {url}")
-    cloud_client = QdrantClient(url=url, api_key=api_key, timeout=120)
+    # check_compatibility=False: bỏ lệnh gọi kiểm tra phiên bản lúc init (hay treo trên mạng chậm)
+    cloud_client = QdrantClient(url=url, api_key=api_key, timeout=120, check_compatibility=False)
 
-    # 3. Nạp SẠCH: xoá collection cũ trên Cloud (nếu có) rồi tạo lại.
-    #    Cần thiết vì chunk_id đã đổi sau dedup → upsert thường sẽ để lại điểm cũ lẫn lộn.
-    if cloud_client.collection_exists(COLLECTION_NAME):
-        logger.info(f"Xoá collection cũ '{COLLECTION_NAME}' trên Cloud để nạp sạch...")
+    # 3. Chuẩn bị collection.
+    #   --fresh: xoá + tạo lại (nạp sạch tuyệt đối).
+    #   Mặc định: nếu đã có thì GIỮ để RESUME (bỏ qua điểm đã nạp) — tránh nạp lại từ đầu khi bị ngắt.
+    exists = cloud_client.collection_exists(COLLECTION_NAME)
+    if fresh and exists:
+        logger.info(f"[--fresh] Xoá collection cũ '{COLLECTION_NAME}'...")
         cloud_client.delete_collection(COLLECTION_NAME)
-    logger.info(f"Tạo mới collection '{COLLECTION_NAME}' trên Cloud...")
-    cloud_client.create_collection(
-        collection_name=COLLECTION_NAME,
-        vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE)
-    )
+        exists = False
+    if not exists:
+        logger.info(f"Tạo mới collection '{COLLECTION_NAME}' trên Cloud...")
+        cloud_client.create_collection(
+            collection_name=COLLECTION_NAME,
+            vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE)
+        )
+
+    # Resume: lấy danh sách id đã có trên Cloud để bỏ qua (không nạp lại)
+    existing_ids = set()
+    if exists:
+        off = None
+        while True:
+            recs, off = cloud_client.scroll(COLLECTION_NAME, limit=2000, offset=off,
+                                            with_payload=False, with_vectors=False)
+            existing_ids.update(r.id for r in recs)
+            if off is None:
+                break
+        logger.info(f"Resume: Cloud đã có {len(existing_ids):,} điểm → sẽ bỏ qua các điểm này.")
 
     # 4. Lấy tổng số điểm để theo dõi tiến độ
     total_points = local_client.count(COLLECTION_NAME).count
@@ -70,14 +87,17 @@ def migrate():
         if not records:
             break
 
-        # Chuyển đổi Record sang PointStruct
+        # Chuyển đổi Record sang PointStruct (bỏ qua điểm đã có trên Cloud khi resume)
         points = [
-            PointStruct(
-                id=record.id,
-                vector=record.vector,
-                payload=record.payload
-            ) for record in records
+            PointStruct(id=record.id, vector=record.vector, payload=record.payload)
+            for record in records if record.id not in existing_ids
         ]
+
+        if not points:
+            processed_count += len(records)
+            if next_page_offset is None:
+                break
+            continue
 
         # Đẩy lên Cloud — retry với backoff khi WriteTimeout / lỗi mạng tạm thời
         for attempt in range(5):
@@ -107,4 +127,9 @@ def migrate():
     logger.info(f"Tổng thời gian: {time.time() - start_time:.1f} giây.")
 
 if __name__ == "__main__":
-    migrate()
+    import argparse
+    ap = argparse.ArgumentParser(description="Migrate Qdrant Local -> Cloud (resume được).")
+    ap.add_argument("--fresh", action="store_true",
+                    help="Xoá + tạo lại collection trên Cloud (nạp sạch). Mặc định: resume.")
+    args = ap.parse_args()
+    migrate(fresh=args.fresh)
