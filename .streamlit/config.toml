@@ -1,0 +1,7 @@
+# Khóa giao diện về MỘT chế độ — khu thư viện nền sáng sage, sidebar nền teal đậm.
+[theme]
+base = "light"
+primaryColor = "#758467"
+backgroundColor = "#DFE6DA"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#2F3826"

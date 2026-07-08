@@ -415,19 +415,143 @@ hr { border-color: rgba(255,255,255,0.06) !important; }
 </style>
 """, unsafe_allow_html=True)
 
-# ── Màu chữ ô Nhập theo theme (Light = đen, Dark = trắng) ──
-if str(st.context.theme.get("type", "dark")).lower() == "light":
-    st.markdown("""
-    <style>
-    [data-testid="stChatInput"] textarea {
-        background: #ffffff !important;
-        color: #111111 !important;
-    }
-    [data-testid="stChatInput"] textarea::placeholder {
-        color: #6b7280 !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+# ── GIAO DIỆN 1 CHẾ ĐỘ — khu thư viện nền sáng sage, sidebar nền teal đậm ──
+st.markdown("""
+<style>
+/* Khu thư viện: nền động dịu tông sage sáng */
+.stApp {
+    background: linear-gradient(135deg,#DFE6DA 0%,#d2ddc7 38%,#e3e9dc 68%,#dfe6da 100%) !important;
+}
+/* Sidebar (Cài đặt): nền teal đậm, chữ sáng */
+[data-testid="stSidebar"] {
+    background: #0b322e !important;
+    border-right: 1px solid rgba(156,175,136,0.25) !important;
+    backdrop-filter: none !important;
+}
+[data-testid="stSidebar"] * { color: #dbe4d3 !important; }
+[data-testid="stSidebar"] label { color: #a7b79d !important; }
+[data-testid="stSidebar"] [data-baseweb="select"] > div {
+    background: rgba(255,255,255,0.07) !important;
+    border-color: rgba(156,175,136,0.35) !important;
+}
+
+/* Header — hiệu ứng pulse, quầng sáng sage (khu sáng) */
+.app-header {
+    background: #d5ddca !important;
+    border: 1px solid #9CAF88 !important;
+}
+.app-header::before {
+    background: radial-gradient(circle, rgba(117,132,103,0.16) 0%, transparent 60%) !important;
+}
+.app-header h1 {
+    background: linear-gradient(135deg,#758467,#9CAF88,#819171) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+.app-header p { color: #4d5842 !important; }
+
+/* Mode badge */
+.mode-hybrid { background:#CBD5C0 !important; color:#3f4a30 !important; border:1px solid #9CAF88 !important; }
+.mode-bm25   { background:#DFE6DA !important; color:#4d5842 !important; border:1px solid #CBD5C0 !important; }
+.mode-vector { background:#dbe3d2 !important; color:#45543a !important; border:1px solid #9CAF88 !important; }
+
+/* Bong bóng chat */
+.chat-user-bubble {
+    background: linear-gradient(135deg,#758467,#819171) !important;
+    color:#ffffff !important;
+    box-shadow: 0 3px 12px rgba(117,132,103,0.30) !important;
+}
+.chat-bot-bubble {
+    background:#ffffff !important;
+    border:1px solid #CBD5C0 !important;
+    color:#2f3826 !important;
+    box-shadow: 0 2px 10px rgba(60,70,50,0.07) !important;
+    backdrop-filter: none !important;
+}
+.chat-bot-bubble strong { color:#5c6b4c !important; }
+.chat-bot-bubble em { color:#66735a !important; }
+
+/* Badge độ trễ (giữ ý nghĩa nhanh/chậm) + mode tag */
+.badge-green  { background:#e4edd6 !important; color:#3d5a14 !important; border:1px solid #bcd39a !important; }
+.badge-yellow { background:#f6efc9 !important; color:#7a5310 !important; border:1px solid #e6d692 !important; }
+.badge-red    { background:#f3ddd7 !important; color:#8a331f !important; border:1px solid #e2b6a9 !important; }
+.mode-tag { background:#CBD5C0 !important; color:#3f4a30 !important; border:1px solid #9CAF88 !important; }
+
+/* Thẻ trích dẫn */
+.citation-label { color:#6a7360 !important; }
+.citation-card {
+    background:#ffffff !important;
+    border:1px solid #CBD5C0 !important;
+    backdrop-filter: none !important;
+}
+.citation-card:hover {
+    border-color:#758467 !important;
+    background:#eef2e8 !important;
+    box-shadow:0 6px 18px rgba(117,132,103,0.16) !important;
+}
+.citation-num { color:#3f4a30 !important; background:#CBD5C0 !important; }
+.citation-title { color:#45543a !important; }
+.citation-author { color:#5c6650 !important; }
+.citation-score { color:#94a08a !important; }
+.citation-snippet { color:#66735a !important; border-top:1px solid #d3ddc7 !important; }
+.cit-cover { box-shadow:0 3px 8px rgba(60,70,50,0.18) !important; }
+.genre-chip { background:#dbe3d2 !important; color:#45543a !important; border:1px solid #9CAF88 !important; }
+.year-chip  { background:#CBD5C0 !important; color:#3f4a30 !important; border:1px solid #9CAF88 !important; }
+.cit-bar { background:#d9e1cf !important; }
+.cit-bar-fill { background:linear-gradient(90deg,#9CAF88,#758467) !important; }
+
+/* Gợi ý + welcome + stats */
+.suggest-label { color:#6a7360 !important; }
+.welcome-card {
+    background:#d5ddca !important;
+    border:1px solid #9CAF88 !important;
+}
+.welcome-card h3 { color:#3f4a30 !important; }
+.welcome-card p { color:#4d5842 !important; }
+.stat-chip { background:#ffffff !important; border:1px solid #CBD5C0 !important; color:#4d5842 !important; }
+.stat-chip span { color:#5c6b4c !important; }
+
+/* Ô nhập */
+[data-testid="stChatInput"] textarea {
+    background:#ffffff !important;
+    border:1px solid #CBD5C0 !important;
+    color:#23291d !important;
+}
+[data-testid="stChatInput"] textarea::placeholder { color:#8f9a80 !important; opacity:1 !important; }
+[data-testid="stChatInput"] textarea:focus {
+    border-color:#758467 !important;
+    box-shadow:0 0 0 3px rgba(117,132,103,0.18) !important;
+}
+
+/* Nút (khu chính) */
+.stButton button {
+    background:#DFE6DA !important;
+    border:1px solid #9CAF88 !important;
+    color:#45543a !important;
+}
+.stButton button:hover {
+    background:#CBD5C0 !important;
+    border-color:#758467 !important;
+}
+/* Nút trong sidebar tối: chữ sáng */
+[data-testid="stSidebar"] .stButton button {
+    background:rgba(156,175,136,0.16) !important;
+    border:1px solid rgba(156,175,136,0.34) !important;
+    color:#cbd8bd !important;
+}
+[data-testid="stSidebar"] .stButton button:hover {
+    background:rgba(156,175,136,0.28) !important;
+    border-color:rgba(156,175,136,0.55) !important;
+}
+
+/* Loading + phụ trợ */
+.loading-text { color:#5c6b4c !important; }
+.dots span { background:#758467 !important; }
+hr { border-color:#CBD5C0 !important; }
+::-webkit-scrollbar-thumb { background:#9CAF88 !important; }
+</style>
+""", unsafe_allow_html=True)
 
 
 # ============================================================

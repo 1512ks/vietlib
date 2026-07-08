@@ -355,28 +355,78 @@ class GeminiClient:
         self.model = genai.GenerativeModel(model)
         self.model_name = model
 
+    # Câu trả lời dự phòng khi Gemini trả về rỗng (finish_reason=1, không có Part)
+    _EMPTY_FALLBACK = (
+        "Xin lỗi, mình chưa tạo được câu trả lời cho câu hỏi này. "
+        "Bạn thử diễn đạt lại rõ hơn (đúng tên tác phẩm/tác giả) giúp mình nhé."
+    )
+
+    @staticmethod
+    def _safe_text(response) -> str:
+        """Trích text an toàn — tránh crash khi response rỗng.
+
+        gemini-2.5-flash đôi khi trả về response STOP nhưng không có Part nào
+        (vd với câu hỏi gõ sai/vô nghĩa). Khi đó `response.text` ném ValueError.
+        Hàm này thử accessor nhanh, nếu lỗi thì gom text thủ công từ candidates/parts.
+        """
+        try:
+            t = response.text
+            if t:
+                return t
+        except Exception:
+            pass
+        try:
+            collected = []
+            for cand in (getattr(response, "candidates", None) or []):
+                content = getattr(cand, "content", None)
+                for part in (getattr(content, "parts", None) or []):
+                    pt = getattr(part, "text", "")
+                    if pt:
+                        collected.append(pt)
+            return "".join(collected)
+        except Exception:
+            return ""
+
     def generate(self, prompt: str, temperature: float = 0.2) -> str:
-        """Gọi Gemini API và trả về văn bản phản hồi."""
-        response = self.model.generate_content(
-            prompt,
-            generation_config={"temperature": temperature},
-        )
-        return response.text.strip()
+        """Gọi Gemini API và trả về văn bản phản hồi (chống rỗng: thử lại 1 lần)."""
+        for _ in range(2):
+            response = self.model.generate_content(
+                prompt,
+                generation_config={"temperature": temperature},
+            )
+            text = self._safe_text(response).strip()
+            if text:
+                return text
+        return self._EMPTY_FALLBACK
 
     def generate_stream(self, prompt: str, temperature: float = 0.2):
         """Gọi Gemini API ở chế độ streaming — yield từng đoạn text khi sẵn sàng.
 
         Giảm mạnh độ trễ cảm nhận: chữ hiện dần thay vì chờ toàn bộ câu trả lời.
+        Chống crash khi chunk rỗng; nếu cả luồng không ra chữ nào thì fallback
+        sang gọi non-stream (kèm thử lại) để không bao giờ hiện traceback cho người dùng.
         """
-        response = self.model.generate_content(
-            prompt,
-            generation_config={"temperature": temperature},
-            stream=True,
-        )
-        for chunk in response:
-            text = getattr(chunk, "text", "")
-            if text:
-                yield text
+        emitted = False
+        try:
+            response = self.model.generate_content(
+                prompt,
+                generation_config={"temperature": temperature},
+                stream=True,
+            )
+            for chunk in response:
+                try:
+                    text = chunk.text
+                except Exception:
+                    text = self._safe_text(chunk)
+                if text:
+                    emitted = True
+                    yield text
+        except Exception as e:
+            logger.warning(f"Lỗi streaming Gemini, chuyển sang non-stream: {e}")
+
+        if not emitted:
+            # Luồng rỗng → gọi lại non-stream (đã có retry + fallback bên trong)
+            yield self.generate(prompt, temperature)
 
 
 # ============================================================
