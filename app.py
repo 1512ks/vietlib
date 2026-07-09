@@ -430,13 +430,16 @@ st.markdown("""
 }
 [data-testid="stSidebar"] * { color: #dbe4d3 !important; }
 [data-testid="stSidebar"] label { color: #a7b79d !important; }
+/* Selectbox: nền sáng CỐ ĐỊNH + chữ tối — bền vững cả local lẫn Cloud
+   (không phụ thuộc DOM baseweb vốn khác nhau giữa các phiên bản Streamlit) */
 [data-testid="stSidebar"] [data-baseweb="select"] > div {
-    background: rgba(255,255,255,0.12) !important;
-    border-color: rgba(156,175,136,0.5) !important;
+    background:#eef2ea !important;
+    border-color: rgba(122,156,138,0.7) !important;
 }
 [data-testid="stSidebar"] [data-baseweb="select"] div,
-[data-testid="stSidebar"] [data-baseweb="select"] span { color:#eef3ea !important; }
-[data-testid="stSidebar"] [data-baseweb="select"] svg { fill:#cbd8bd !important; }
+[data-testid="stSidebar"] [data-baseweb="select"] span,
+[data-testid="stSidebar"] [data-baseweb="select"] input { color:#243b32 !important; }
+[data-testid="stSidebar"] [data-baseweb="select"] svg { fill:#4a6b57 !important; }
 
 /* Header — khung teal đậm hơn, tiêu đề tương phản cao */
 .app-header {
