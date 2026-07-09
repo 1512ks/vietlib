@@ -260,15 +260,6 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
     font-size: 0.72rem;
     margin-top: 3px;
 }
-.citation-snippet {
-    color: #64748b;
-    font-size: 0.78rem;
-    margin-top: 4px;
-    line-height: 1.4;
-    border-top: 1px solid rgba(255,255,255,0.05);
-    padding-top: 4px;
-}
-
 /* ── Suggestion chips ── */
 .suggest-label {
     color: #64748b;
@@ -500,7 +491,6 @@ st.markdown("""
 .citation-title { color:#45543a !important; }
 .citation-author { color:#5c6650 !important; }
 .citation-score { color:#94a08a !important; }
-.citation-snippet { color:#66735a !important; border-top:1px solid #d3ddc7 !important; }
 .cit-cover { box-shadow:0 3px 8px rgba(60,70,50,0.18) !important; }
 .genre-chip { background:#dbe3d2 !important; color:#45543a !important; border:1px solid #9CAF88 !important; }
 .year-chip  { background:#CBD5C0 !important; color:#3f4a30 !important; border:1px solid #9CAF88 !important; }
@@ -677,11 +667,6 @@ with st.sidebar:
 
     st.divider()
 
-    show_snippets = st.checkbox("📄 Hiện trích đoạn văn bản", value=False,
-                                 help="Hiện đoạn text ngắn trong citation card")
-
-    st.divider()
-
     # Export
     if st.session_state.messages:
         st.markdown("**💾 Xuất lịch sử chat**")
@@ -849,18 +834,7 @@ def show_loading(placeholder):
         )
 
 
-def _clean_snippet(text: str, limit: int = 150) -> str:
-    """Bỏ phần metadata đã chèn, lấy đoạn nội dung sạch để hiển thị."""
-    body = text or ""
-    if "Nội dung chi tiết:" in body:
-        body = body.split("Nội dung chi tiết:", 1)[1]
-    elif "\n\n" in body:
-        body = body.split("\n\n", 1)[1]
-    body = body.strip()
-    return (body[:limit] + "…") if len(body) > limit else body
-
-
-def render_citations(contexts: list, show_snip: bool):
+def render_citations(contexts: list):
     """Hiển thị thẻ trích dẫn: bìa sách gradient + chip thể loại + thanh liên quan."""
     if not contexts:
         return
@@ -897,12 +871,6 @@ def render_citations(contexts: list, show_snip: bool):
                     if year:
                         chips += f'<span class="year-chip">📅 {year}</span>'
 
-                    snippet = _clean_snippet(text)
-                    snip_html = (
-                        f'<div class="citation-snippet">{snippet}</div>'
-                        if show_snip and snippet else ''
-                    )
-
                     st.markdown(
                         f"""
                         <div class="citation-card">
@@ -916,7 +884,6 @@ def render_citations(contexts: list, show_snip: bool):
                             </div>
                             <div class="cit-bar"><div class="cit-bar-fill" style="width:{bar_pct(score)}%"></div></div>
                             <div class="citation-score">Score: {score:.4f}</div>
-                            {snip_html}
                         </div>
                         """,
                         unsafe_allow_html=True,
@@ -926,7 +893,7 @@ def render_citations(contexts: list, show_snip: bool):
 # ============================================================
 #  Render message
 # ============================================================
-def render_message(msg: dict, show_snip: bool = False):
+def render_message(msg: dict):
     role    = msg["role"]
     content = msg["content"]
 
@@ -960,7 +927,7 @@ def render_message(msg: dict, show_snip: bool = False):
 
         # Citation cards — đã ẩn khỏi giao diện theo yêu cầu
         # if contexts:
-        #     render_citations(contexts, show_snip)
+        #     render_citations(contexts)
 
         # Suggestion chips — chỉ cho message mới nhất
         if suggestions and msg.get("is_latest", False):
@@ -1014,7 +981,7 @@ with chat_container:
                 and msg["role"] == "assistant"
             )
         for msg in st.session_state.messages:
-            render_message(msg, show_snip=show_snippets)
+            render_message(msg)
 
 
 # ============================================================
