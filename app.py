@@ -579,6 +579,7 @@ def init_session():
     defaults = {
         "messages": [],
         "pending_query": None,
+        "query_queue": [],          # Hàng chờ chống spam (FIFO, tối đa MAX_QUEUE câu)
         "engine_loaded": False,
         "search_mode": "hybrid",
         "use_reranker": True,
@@ -711,10 +712,12 @@ with st.sidebar:
     if st.button("🗑️ Xóa lịch sử chat", use_container_width=True):
         st.session_state.messages = []
         st.session_state.pending_query = None
+        st.session_state.query_queue = []        # xóa luôn hàng chờ
         st.session_state.search_pool = []        # xóa luôn cache search
         st.session_state.from_suggestion = False
         st.session_state.conv_summary = ""       # xóa tóm tắt hội thoại
         st.session_state.summarized_idx = 0
+        st.session_state.context_usage = 0       # reset thanh ngữ cảnh về 0
         st.rerun()
 
     st.divider()
@@ -989,16 +992,44 @@ with chat_container:
 # ============================================================
 user_input = st.chat_input("Nhập câu hỏi về văn học Việt Nam...")
 
+# ============================================================
+#  Hàng chờ chống spam (FIFO, tối đa MAX_QUEUE câu)
+#  Streamlit xử lý tuần tự: mỗi lần rerun chỉ giải quyết 1 câu ở đầu
+#  hàng, sau đó rerun để giải quyết câu kế. Câu hỏi mới (gõ tay hoặc
+#  chip gợi ý) được nạp vào cuối hàng; đầy thì từ chối và báo user.
+# ============================================================
+MAX_QUEUE = 3
+
+def enqueue_query(text: str, is_suggested: bool = False) -> bool:
+    """Đẩy 1 câu hỏi vào cuối hàng chờ. Trả False nếu rỗng hoặc hàng đã đầy."""
+    text = (text or "").strip()
+    if not text:
+        return False
+    q = st.session_state.query_queue
+    if len(q) >= MAX_QUEUE:
+        st.toast(
+            f"⏳ Hàng chờ đã đầy ({MAX_QUEUE} câu). Vui lòng đợi trả lời xong rồi hỏi tiếp.",
+            icon="⚠️",
+        )
+        return False
+    q.append({"content": text, "is_suggested": bool(is_suggested)})
+    return True
+
+# Nạp câu hỏi mới vào hàng chờ (chip gợi ý / starter đi qua pending_query; gõ tay qua chat_input)
+if st.session_state.pending_query:
+    enqueue_query(st.session_state.pending_query, st.session_state.from_suggestion)
+    st.session_state.pending_query = None
+    st.session_state.from_suggestion = False
+if user_input:
+    enqueue_query(user_input, is_suggested=False)
+
+# Lấy câu ở đầu hàng chờ để xử lý trong lượt rerun này
 query = None
 is_suggested = False
-if st.session_state.pending_query:
-    query = st.session_state.pending_query
-    st.session_state.pending_query = None
-    is_suggested = bool(st.session_state.from_suggestion)
-    st.session_state.from_suggestion = False
-elif user_input:
-    query = user_input.strip()
-    is_suggested = False   # gõ tay = câu hỏi mới
+if st.session_state.query_queue:
+    _head = st.session_state.query_queue.pop(0)
+    query = _head["content"]
+    is_suggested = _head["is_suggested"]
 
 
 # ============================================================
@@ -1020,6 +1051,12 @@ if query:
         )
         loading_ph = st.empty()
         answer_ph  = st.empty()
+
+        # Các câu còn chờ trong hàng → hiển thị mờ để user biết đang xếp hàng
+        _waiting = st.session_state.query_queue
+        if _waiting:
+            st.caption(f"⏳ Đang chờ ({len(_waiting)}): "
+                       + " · ".join(w["content"] for w in _waiting))
 
     def _bot_bubble(text: str) -> str:
         return (
