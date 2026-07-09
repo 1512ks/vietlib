@@ -418,9 +418,9 @@ hr { border-color: rgba(255,255,255,0.06) !important; }
 # ── GIAO DIỆN 1 CHẾ ĐỘ — khu thư viện nền sáng sage, sidebar nền teal đậm ──
 st.markdown("""
 <style>
-/* Khu thư viện: nền động dịu tông sage sáng */
+/* Khu thư viện: nền động dịu, tông sage ngả teal đậm hơn chút */
 .stApp {
-    background: linear-gradient(135deg,#DFE6DA 0%,#d2ddc7 38%,#e3e9dc 68%,#dfe6da 100%) !important;
+    background: linear-gradient(135deg,#d3e0d7 0%,#c4d8cb 38%,#d7e2d9 68%,#d3e0d7 100%) !important;
 }
 /* Sidebar (Cài đặt): nền teal đậm, chữ sáng */
 [data-testid="stSidebar"] {
@@ -431,25 +431,28 @@ st.markdown("""
 [data-testid="stSidebar"] * { color: #dbe4d3 !important; }
 [data-testid="stSidebar"] label { color: #a7b79d !important; }
 [data-testid="stSidebar"] [data-baseweb="select"] > div {
-    background: rgba(255,255,255,0.07) !important;
-    border-color: rgba(156,175,136,0.35) !important;
+    background: rgba(255,255,255,0.12) !important;
+    border-color: rgba(156,175,136,0.5) !important;
 }
+[data-testid="stSidebar"] [data-baseweb="select"] div,
+[data-testid="stSidebar"] [data-baseweb="select"] span { color:#eef3ea !important; }
+[data-testid="stSidebar"] [data-baseweb="select"] svg { fill:#cbd8bd !important; }
 
-/* Header — hiệu ứng pulse, quầng sáng sage (khu sáng) */
+/* Header — khung teal đậm hơn, tiêu đề tương phản cao */
 .app-header {
-    background: #d5ddca !important;
-    border: 1px solid #9CAF88 !important;
+    background: #bcd0c5 !important;
+    border: 1px solid #7fa08e !important;
 }
 .app-header::before {
-    background: radial-gradient(circle, rgba(117,132,103,0.16) 0%, transparent 60%) !important;
+    background: radial-gradient(circle, rgba(46,84,74,0.14) 0%, transparent 60%) !important;
 }
 .app-header h1 {
-    background: linear-gradient(135deg,#758467,#9CAF88,#819171) !important;
+    background: linear-gradient(135deg,#234b41,#356050,#2b564a) !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
 }
-.app-header p { color: #4d5842 !important; }
+.app-header p { color: #33463b !important; }
 
 /* Mode badge */
 .mode-hybrid { background:#CBD5C0 !important; color:#3f4a30 !important; border:1px solid #9CAF88 !important; }
@@ -504,11 +507,11 @@ st.markdown("""
 /* Gợi ý + welcome + stats */
 .suggest-label { color:#6a7360 !important; }
 .welcome-card {
-    background:#d5ddca !important;
-    border:1px solid #9CAF88 !important;
+    background:#bcd0c5 !important;
+    border:1px solid #7fa08e !important;
 }
-.welcome-card h3 { color:#3f4a30 !important; }
-.welcome-card p { color:#4d5842 !important; }
+.welcome-card h3 { color:#234b41 !important; }
+.welcome-card p { color:#38493d !important; }
 .stat-chip { background:#ffffff !important; border:1px solid #CBD5C0 !important; color:#4d5842 !important; }
 .stat-chip span { color:#5c6b4c !important; }
 
