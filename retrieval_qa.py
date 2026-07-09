@@ -722,10 +722,16 @@ class RetrievalQA:
         use_reranker: Optional[bool] = None,
         pool: Optional[List[dict]] = None,
         verbose: bool = False,
+        bypass_gate: bool = False,
     ) -> dict:
         """
         Lấy context cho câu hỏi. Nếu có `pool` (cache search từ lượt trước, do
         người dùng chọn câu hỏi đề xuất) thì gộp + re-rank cùng kết quả mới.
+
+        bypass_gate=True: bỏ qua cổng lọc ngưỡng relevance (dùng cho câu hỏi đến
+        từ nút starter / chip gợi ý — đã được kiểm duyệt là in-scope, không nên
+        bị chặn "không tìm thấy" chỉ vì câu mơ hồ/cảm xúc điểm relevance thấp).
+        Vẫn chặn nếu tuyệt đối không có kết quả tìm kiếm nào.
 
         Returns dict:
             contexts       : List[dict] top_k đưa vào prompt
@@ -749,8 +755,9 @@ class RetrievalQA:
                 "blocked_answer": "Xin lỗi, tôi không tìm thấy tài liệu liên quan đến câu hỏi này trong thư viện.",
             }
 
-        # Gate relevance chỉ khi đây là câu hỏi mới (không có pool tích lũy)
-        if results and not pool:
+        # Gate relevance chỉ khi đây là câu hỏi mới (không có pool tích lũy) VÀ
+        # không phải câu đến từ nút starter/chip (bypass_gate)
+        if results and not pool and not bypass_gate:
             top_score = results[0].rerank_score if results[0].rerank_score else results[0].score
             if top_score < RELEVANCE_THRESHOLD:
                 return {

@@ -1000,8 +1000,12 @@ user_input = st.chat_input("Nhập câu hỏi về văn học Việt Nam...")
 # ============================================================
 MAX_QUEUE = 3
 
-def enqueue_query(text: str, is_suggested: bool = False) -> bool:
-    """Đẩy 1 câu hỏi vào cuối hàng chờ. Trả False nếu rỗng hoặc hàng đã đầy."""
+def enqueue_query(text: str, is_suggested: bool = False, curated: bool = False) -> bool:
+    """Đẩy 1 câu hỏi vào cuối hàng chờ. Trả False nếu rỗng hoặc hàng đã đầy.
+
+    curated=True cho câu đến từ nút starter / chip gợi ý (đã kiểm duyệt in-scope)
+    → sẽ bỏ qua cổng lọc ngưỡng relevance khi truy hồi.
+    """
     text = (text or "").strip()
     if not text:
         return False
@@ -1012,24 +1016,27 @@ def enqueue_query(text: str, is_suggested: bool = False) -> bool:
             icon="⚠️",
         )
         return False
-    q.append({"content": text, "is_suggested": bool(is_suggested)})
+    q.append({"content": text, "is_suggested": bool(is_suggested), "curated": bool(curated)})
     return True
 
-# Nạp câu hỏi mới vào hàng chờ (chip gợi ý / starter đi qua pending_query; gõ tay qua chat_input)
+# Nạp câu hỏi mới vào hàng chờ. pending_query CHỈ do nút starter/chip đặt → curated=True;
+# câu gõ tay qua chat_input → curated=False (vẫn chịu cổng lọc relevance).
 if st.session_state.pending_query:
-    enqueue_query(st.session_state.pending_query, st.session_state.from_suggestion)
+    enqueue_query(st.session_state.pending_query, st.session_state.from_suggestion, curated=True)
     st.session_state.pending_query = None
     st.session_state.from_suggestion = False
 if user_input:
-    enqueue_query(user_input, is_suggested=False)
+    enqueue_query(user_input, is_suggested=False, curated=False)
 
 # Lấy câu ở đầu hàng chờ để xử lý trong lượt rerun này
 query = None
 is_suggested = False
+curated = False
 if st.session_state.query_queue:
     _head = st.session_state.query_queue.pop(0)
     query = _head["content"]
     is_suggested = _head["is_suggested"]
+    curated = _head.get("curated", False)
 
 
 # ============================================================
@@ -1103,6 +1110,7 @@ if query:
                 mode=search_mode,
                 use_reranker=_rr,
                 pool=st.session_state.search_pool,   # tận dụng cache search nếu là follow-up
+                bypass_gate=curated,                 # starter/chip: bỏ cổng lọc ngưỡng relevance
             )
             st.session_state.search_pool = retr["pool"]   # cập nhật cache (≤ 1000 đầu sách)
             contexts = retr["contexts"]
