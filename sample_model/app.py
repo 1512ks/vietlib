@@ -195,8 +195,26 @@ div[data-testid="stButton"] > button:active{ transform:scale(.98); }
 div[data-testid="stChatInput"] textarea{ font-size:15px; }
 div[data-testid="stChatInput"]{ border-color:var(--input-bd) !important; }
 div[data-testid="stChatInput"] button{ background:var(--accent) !important; }
+
+/* ── Trang trí lá eucalyptus 2 góc (lấp khoảng trống 2 bên màn rộng) ── */
+.leafy{ position:fixed; z-index:0; pointer-events:none; opacity:.82;
+  width:min(23vw,330px); }
+.leafy svg{ width:100%; height:auto; display:block; }
+.leafy-tl{ top:-6px; left:-6px; }
+.leafy-br{ bottom:-6px; right:-6px; transform:rotate(180deg); }
+/* Màn hẹp không có chỗ trống → ẩn để không che nội dung */
+@media (max-width:1150px){ .leafy{ display:none; } }
+.block-container{ position:relative; z-index:1; }
 </style>
 """, unsafe_allow_html=True)
+
+# ── Lá trang trí 2 góc (SVG tự chứa) ──
+try:
+    _GREENERY = (Path(__file__).resolve().parent / "assets" / "greenery.svg").read_text(encoding="utf-8")
+    st.markdown(f'<div class="leafy leafy-tl">{_GREENERY}</div>'
+                f'<div class="leafy leafy-br">{_GREENERY}</div>', unsafe_allow_html=True)
+except Exception:
+    pass
 
 
 # ══════════════════════════════════════════════════════════════════
