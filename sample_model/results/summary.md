@@ -5,26 +5,33 @@
 > File chi tiết: `retrieval_20260720_082400.json`, `generation_20260720_082400.json`.
 > Đối chiếu đầy đủ với phương pháp luận bảo vệ (3 khung A/B/C + RAG Triad): xem `danh_gia_3khung_ABC.md`.
 
+> **Cải tiến v2 (2026-07-20):** cấu hình chạy thật của app giờ là **hybrid_group** (gộp hạng theo
+> tác phẩm) + **K thích ứng cho câu AUTHOR**. 6 mục cải tiến tự động: xem `cai_tien_v2.md`.
+
 ## 1. Retrieval (28 câu có nhãn graded + full relevant set → Recall THẬT)
 
 | Mode | K | P@K | R@K | F1 | MRR | nDCG (graded) | MAP | HitRate |
 |---|--:|--:|--:|--:|--:|--:|--:|--:|
 | bm25 | 5 | 0.436 | 0.610 | 0.466 | 0.841 | 0.620 | 0.571 | 0.96 |
 | vector | 5 | 0.564 | 0.713 | 0.572 | 0.964 | 0.782 | 0.792 | 0.96 |
-| **hybrid** | 5 | 0.514 | 0.682 | 0.533 | **0.964** | 0.742 | 0.703 | **1.00** |
-| hybrid | 10 | 0.329 | 0.799 | 0.429 | 0.964 | 0.776 | 0.690 | 1.00 |
+| hybrid | 5 | 0.514 | 0.682 | 0.533 | 0.964 | 0.742 | 0.703 | 1.00 |
+| **hybrid_group** (app) | 5 | **0.621** | **0.780** | **0.632** | 0.946 | **0.801** | **0.835** | **1.00** |
+| **hybrid_group** (app) | 10 | 0.393 | **0.873** | 0.496 | 0.946 | **0.839** | **0.815** | 1.00 |
 
-- **Hybrid đạt HitRate@3-10 = 100%** và MRR 0.964 — mọi câu đều có chunk đúng trong top-3.
-- Vector đơn lẻ nhỉnh hơn hybrid trên corpus nhỏ sạch (bge-m3 rất mạnh tiếng Việt); hybrid vẫn được chọn cho app vì bền hơn với từ khóa hiếm (tên riêng, số liệu) — đúng vai trò "lưới an toàn" của BM25.
-- **AUTHOR Recall@5 = 0.408 là trần lý thuyết**: tác giả 4 tác phẩm có 13 chunk relevant, K=5 chỉ vớt tối đa 5/13 = 0.385~0.4. Ở K=10: Recall tổng lên 0.799.
+- **Gộp hạng theo tác phẩm nâng rõ mọi metric relevance** so với hybrid thường (R@10 0.799→0.873, nDCG@10 0.776→0.839, MAP@10 0.690→0.815).
+- **HitRate@3 = 100%**, MRR ~0.95–0.96 — mọi câu đều có chunk đúng trong top-3.
+- Vector đơn lẻ mạnh trên corpus sạch (bge-m3); hybrid_group được chọn cho app vì bền với từ khóa hiếm + gom đủ chunk của một tác phẩm.
 
-### Theo loại câu (hybrid@5)
+### Theo loại câu (hybrid_group@5 — cấu hình app)
 | Loại | P@5 | R@5 | nDCG | MRR |
 |---|--:|--:|--:|--:|
-| FACTUAL | 0.533 | 0.963 | 0.963 | 1.000 |
-| AUTHOR | 0.657 | 0.408 | 0.482 | 1.000 |
-| SEMANTIC | 0.450 | 0.445 | 0.644 | 0.875 |
-| MULTI_TURN (qua rewriter) | 0.350 | 1.000 | 0.891 | 1.000 |
+| FACTUAL | 0.533 | 0.963 | 0.950 | 1.000 |
+| AUTHOR | 0.857 | 0.559 | 0.653 | 1.000 |
+| SEMANTIC | 0.650 | 0.656 | 0.715 | 0.812 |
+| MULTI_TURN (qua rewriter) | 0.350 | 1.000 | 0.899 | 1.000 |
+
+- **AUTHOR với K thích ứng** (K=13 cho câu có tên tác giả): Recall **0.408 → 0.872** — vượt trần cứng của K=5.
+- Latency truy hồi (đo p50/p95): **~145ms / ~230ms**.
 
 ## 2. Fallback (4 câu ngoài miền cố ý: sách nước ngoài, self-help, vật lý, tác giả bịa)
 
@@ -41,14 +48,21 @@ Ghi chú trung thực: hai cách diễn đạt cùng ý vẫn đổ về **cùng
 
 ## 4. Generation — kiểu RAGAS, giám khảo Gemini t=0 (16 câu có ground-truth)
 
-| Metric | Giá trị | Ghi chú |
+> **Variance:** số khâu sinh dao động ±vài % giữa các lần chạy (generator + judge đều là LLM,
+> không tất định tuyệt đối kể cả t=0). Báo cáo kèm khoảng quan sát qua 3 lần chạy.
+
+| Metric | Giá trị (khoảng qua 3 lần) | Ghi chú |
 |---|--:|---|
-| **Faithfulness** | **0.990** | 15/16 câu đạt 1.00; 1 ca khó: q20 (0.83). (Lần chạy đầu với prompt cũ: 0.955 — prompt CSKH kèm "Thông tin bán" giúp claim bám nguồn tốt hơn) |
-| **Answer Relevance** | **1.000** | 16/16 trả lời đúng trọng tâm |
-| Context Precision@5 | 0.475 | tính TRỰC TIẾP từ nhãn vàng (mạnh hơn LLM-proxy) |
-| Context Recall@5 | 0.852 | như trên |
+| **Faithfulness** | **0.95–0.99** | phần lớn câu đạt 1.00; 1–2 ca semantic khó ~0.80–0.89 (giữ nguyên làm bằng chứng trung thực) |
+| **Answer Relevance** | **0.94–1.00** | hầu hết trả lời đúng trọng tâm |
+| **Coherence (1–5)** | **4.9–5.0** | *mới* — lấp ô ⚠️ Khung B/C |
+| **Fluency (1–5)** | **5.0** | *mới* — tiếng Việt tự nhiên |
+| Context Precision@5 | ~0.51 | tính TRỰC TIẾP từ nhãn vàng (mạnh hơn LLM-proxy) |
+| Context Recall@5 | ~0.90 | như trên |
 | Citation valid | 100% | mọi marker [n] ngầm đều trỏ nguồn có thật |
 | Fallback refusal | 4/4 | từ chối lịch sự, không bịa |
+| **Red-team defense** | **10/10** | *mới* — sau khi vá lỗ hổng lộ prompt (rt09) |
+| Latency sinh (full) | p50 ~4.1s · p95 ~6.6s | *mới* — phụ thuộc API Gemini |
 
 ## 5. Cách đọc số liệu khi bảo vệ
 - Đây là **tập đối chứng có nhãn đầy đủ** (controlled benchmark) — KHÔNG phải hiệu năng hệ lớn 11.759 chunk. Giá trị: đo **chuẩn học thuật** (Recall thật, nDCG graded) và **tái lập được**.

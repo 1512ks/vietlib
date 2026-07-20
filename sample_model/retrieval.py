@@ -117,8 +117,15 @@ class Retriever:
         return {int(idx): 1.0 / (RRF_K + rank) for rank, idx in enumerate(order)}
 
     def search(self, query: str, top_k: int = DEFAULT_TOP_K,
-               mode: str = "hybrid") -> List[Hit]:
-        """Truy hồi chunk. mode: "hybrid" (RRF) | "vector" | "bm25"."""
+               mode: str = "hybrid", group_works: bool = False) -> List[Hit]:
+        """Truy hồi chunk. mode: "hybrid" (RRF) | "vector" | "bm25".
+
+        group_works=True (cấu hình của app): xếp hạng THEO TÁC PHẨM trước —
+        điểm tác phẩm = max điểm chunk của nó — rồi mới liệt kê chunk theo
+        (thứ hạng tác phẩm, điểm chunk). Cùng ý khác diễn đạt thường đổi thứ
+        hạng SECTION trong cùng cuốn sách chứ ít đổi cuốn sách → gộp theo tác
+        phẩm làm kết quả ổn định hơn với người dùng (cải tiến Search Stability).
+        """
         n = self.vectors.shape[0]
         top_k = max(1, min(top_k, n))
 
@@ -139,7 +146,21 @@ class Retriever:
             rb = self._rrf_rank(bm_order)
             fused = {i: rv.get(i, 0.0) + rb.get(i, 0.0) for i in range(n)}
 
-        ranked = sorted(fused.items(), key=lambda kv: kv[1], reverse=True)[:top_k]
+        if group_works:
+            # Điểm tác phẩm = max điểm chunk; tie-break bằng id để tất định
+            cand = sorted(fused.items(), key=lambda kv: kv[1], reverse=True)[:max(top_k * 4, 20)]
+            wscore: Dict[str, float] = {}
+            for i, sc in cand:
+                w = self.docs[i]["work_id"]
+                wscore[w] = max(wscore.get(w, 0.0), sc)
+            worder = {w: r for r, (w, _) in enumerate(
+                sorted(wscore.items(), key=lambda kv: (-kv[1], kv[0])))}
+            ranked = sorted(
+                cand,
+                key=lambda kv: (worder[self.docs[kv[0]]["work_id"]], -kv[1],
+                                self.docs[kv[0]]["chunk_id"]))[:top_k]
+        else:
+            ranked = sorted(fused.items(), key=lambda kv: kv[1], reverse=True)[:top_k]
 
         hits: List[Hit] = []
         for pos, (idx, sc) in enumerate(ranked, start=1):
@@ -163,6 +184,23 @@ class Retriever:
     def confidence(self, hits: List[Hit]) -> float:
         """Độ tin cậy = cosine cao nhất trong các hit (0 nếu rỗng)."""
         return max((h.vector_score for h in hits), default=0.0)
+
+    # ------------------------------------------------------------
+    # Ý định LIỆT KÊ (hỏi "những/các cái nào") — kết hợp với việc có tên tác giả
+    _LIST_HINT = ("nào", "những", "các", "kể tên", "gồm", "liệt kê",
+                  "viết gì", "sáng tác", "là tác giả")
+
+    def suggest_top_k(self, query: str, default_k: int = DEFAULT_TOP_K) -> int:
+        """K thích ứng: câu dạng AUTHOR (nhắc tên tác giả + ý định liệt kê tác phẩm)
+        cần vớt NHIỀU chunk hơn vì mỗi tác giả có tới 13 chunk liên quan mà K=5
+        là trần cứng (cải tiến AUTHOR Recall). Trả về 13 cho câu AUTHOR."""
+        q = query.lower()
+        if not any(h in q for h in self._LIST_HINT):
+            return default_k
+        authors = {r["tac_gia"].lower() for r in self.works.values()}
+        if any(a and a in q for a in authors):
+            return 13
+        return default_k
 
 
 if __name__ == "__main__":

@@ -66,6 +66,27 @@ def judge_faithfulness(gen: Generator, contexts: str, answer: str):
     return sup / len(claims), len(claims), sup
 
 
+def judge_fluency(gen: Generator, answer: str):
+    """Chấm MẠCH LẠC (coherence: cấu trúc, liên kết ý) và TRÔI CHẢY (fluency:
+    tiếng Việt tự nhiên) thang 1-5 — lấp ô 'chưa định lượng' của Khung B/C.
+    → (coherence, fluency) hoặc (None, None)."""
+    prompt = (
+        "Bạn là giám khảo tiếng Việt. Chấm CÂU TRẢ LỜI của một trợ lý thư viện theo 2 tiêu chí, "
+        "thang 1-5 (5 = xuất sắc):\n"
+        "- coherence (mạch lạc): bố cục rõ, các ý nối nhau hợp lý, không lặp/đứt mạch.\n"
+        "- fluency (trôi chảy): tiếng Việt tự nhiên, đúng ngữ pháp, không ngô nghê/dịch máy.\n"
+        'Trả về JSON: {"coherence": 1-5, "fluency": 1-5}\n\n'
+        f"CÂU TRẢ LỜI:\n{answer}\n"
+    )
+    out = _judge_json(gen, prompt)
+    try:
+        c = max(1, min(5, int(out["coherence"])))
+        f = max(1, min(5, int(out["fluency"])))
+        return c, f
+    except Exception:
+        return None, None
+
+
 def judge_answer_relevance(gen: Generator, query: str, answer: str, gt: str):
     """→ score 0-1 hoặc None."""
     prompt = (
@@ -89,14 +110,17 @@ def run_judge(retriever: Retriever, golden: list, results_dir: Path, ts: str):
     by_id = {q["query_id"]: q for q in golden}
     rows = []
 
+    gen_latency = []
     for qid in JUDGE_IDS:
         q = by_id[qid]
         history = q.get("history")
         search_q = gen.contextualize_query(q["query"], history) if history else q["query"]
-        hits = retriever.search(search_q, top_k=5, mode="hybrid")
+        hits = retriever.search(search_q, top_k=5, mode="hybrid", group_works=True)
         conf = retriever.confidence(hits)
+        t0 = time.perf_counter()
         answer_raw = gen.answer(q["query"], hits, low_confidence=conf < CONFIDENCE_MIN,
                                 history=history)
+        gen_latency.append((time.perf_counter() - t0) * 1000)
         answer = strip_citations(answer_raw)
 
         contexts = "\n".join(f"[{h.source_idx}] ({h.chunk_id}) {h.text}" for h in hits)
@@ -107,6 +131,7 @@ def run_judge(retriever: Retriever, golden: list, results_dir: Path, ts: str):
 
         faith, n_claims, n_sup = judge_faithfulness(gen, contexts, answer)
         ans_rel = judge_answer_relevance(gen, q["query"], answer, q["ground_truth_answer"])
+        coh, flu = judge_fluency(gen, answer)
 
         cited = cited_indices(answer_raw)
         citation_valid = all(1 <= n <= len(hits) for n in cited) if cited else False
@@ -115,6 +140,7 @@ def run_judge(retriever: Retriever, golden: list, results_dir: Path, ts: str):
             "query_id": qid, "type": q["query_type"],
             "faithfulness": faith, "n_claims": n_claims, "n_supported": n_sup,
             "answer_relevance": ans_rel,
+            "coherence_1_5": coh, "fluency_1_5": flu,
             "context_precision@5": round(ctx_prec, 4),
             "context_recall@5": round(ctx_rec, 4),
             "has_citation": bool(cited), "citation_valid": citation_valid,
@@ -124,8 +150,8 @@ def run_judge(retriever: Retriever, golden: list, results_dir: Path, ts: str):
         f_str = f"{faith:.2f}" if faith is not None else "n/a"
         a_str = f"{ans_rel:.2f}" if ans_rel is not None else "n/a"
         print(f"  {qid} [{q['query_type']:10}] faith={f_str} ({n_sup}/{n_claims}) "
-              f"ansrel={a_str} ctxP@5={ctx_prec:.2f} ctxR@5={ctx_rec:.2f} "
-              f"cite={'✓' if citation_valid else '✗'}")
+              f"ansrel={a_str} coh={coh} flu={flu} ctxP@5={ctx_prec:.2f} "
+              f"ctxR@5={ctx_rec:.2f} cite={'✓' if citation_valid else '✗'}")
         time.sleep(1.0)   # tránh chạm rate limit free tier
 
     # ---------- Fallback pass (từ chối lịch sự, không bịa) ----------
@@ -134,7 +160,7 @@ def run_judge(retriever: Retriever, golden: list, results_dir: Path, ts: str):
     for q in golden:
         if q["query_type"] != "FALLBACK":
             continue
-        hits = retriever.search(q["query"], top_k=5, mode="hybrid")
+        hits = retriever.search(q["query"], top_k=5, mode="hybrid", group_works=True)
         conf = retriever.confidence(hits)
         ans = strip_citations(gen.answer(q["query"], hits,
                                          low_confidence=conf < CONFIDENCE_MIN))
@@ -149,15 +175,21 @@ def run_judge(retriever: Retriever, golden: list, results_dir: Path, ts: str):
         vals = [r[key] for r in rows if r[key] is not None]
         return round(sum(vals) / len(vals), 4) if vals else None
 
+    import numpy as _np
     summary = {
         "judge_model": JUDGE_MODEL, "n_judged": len(rows),
         "avg_faithfulness": avg("faithfulness"),
         "avg_answer_relevance": avg("answer_relevance"),
+        "avg_coherence_1_5": avg("coherence_1_5"),
+        "avg_fluency_1_5": avg("fluency_1_5"),
         "avg_context_precision@5": avg("context_precision@5"),
         "avg_context_recall@5": avg("context_recall@5"),
         "citation_valid_rate": round(sum(r["citation_valid"] for r in rows) / len(rows), 4),
         "fallback_refusal_rate": round(sum(r["refused"] for r in fb_rows) / len(fb_rows), 4)
         if fb_rows else None,
+        "full_answer_latency_ms": {
+            "p50": round(float(_np.percentile(gen_latency, 50)), 0),
+            "p95": round(float(_np.percentile(gen_latency, 95)), 0)},
     }
     print("\n=== TỔNG HỢP GENERATION ===")
     for k, v in summary.items():

@@ -1,7 +1,3 @@
-# ============================================================
-#  .gitignore — RAG Chatbot Thư viện Văn học Việt Nam
-#  TUYỆT ĐỐI không commit API Keys và dữ liệu nhạy cảm lên GitHub
-# ============================================================
 
 # ── Secrets & API Keys ──
 .env
@@ -45,8 +41,6 @@ data/generate_summaries_v3.log
 CV.pdf
 APIKEY
 APIKEYS.tex
-Bang_tinh_chi_phi_cosplay.xlsx
-tố\ vấn.mp4
 
 # ── IDE ──
 .vscode/
@@ -59,3 +53,4 @@ Thumbs.db
 *.bak
 scratchpad_*.md
 data/enrich_daily.json
+sample_model/results/usage_log.jsonl

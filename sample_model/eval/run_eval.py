@@ -38,7 +38,11 @@ from sample_model.retrieval import Retriever, CONFIDENCE_MIN   # noqa: E402
 GOLDEN = ROOT / "golden" / "queries.json"
 RESULTS = ROOT / "results"
 KS = [1, 3, 5, 10]
-MODES = ["bm25", "vector", "hybrid"]
+# hybrid_group = hybrid + gộp hạng theo tác phẩm (cấu hình chạy thật của app — cải tiến #1)
+MODES = ["bm25", "vector", "hybrid", "hybrid_group"]
+MODE_KW = {"bm25": {"mode": "bm25"}, "vector": {"mode": "vector"},
+           "hybrid": {"mode": "hybrid"},
+           "hybrid_group": {"mode": "hybrid", "group_works": True}}
 
 
 # ------------------------------------------------------------------
@@ -144,12 +148,18 @@ def main():
               "confidence_min": CONFIDENCE_MIN, "modes": {}, "by_type": {},
               "multi_turn_rewrites": [n for (_, _, n) in eval_queries if n],
               }
+    import time as _time
+    import numpy as _np
+    report["latency_ms"] = {}
     for mode in MODES:
         agg = {k: {m: [] for m in ["precision", "recall", "f1", "mrr", "ndcg", "map", "hit"]}
                for k in KS}
         per_type = {}
+        lat = []
         for q, sq, _ in eval_queries:
-            hits = retriever.search(sq, top_k=max(KS), mode=mode)
+            t0 = _time.perf_counter()
+            hits = retriever.search(sq, top_k=max(KS), **MODE_KW[mode])
+            lat.append((_time.perf_counter() - t0) * 1000)
             ranked = [h.chunk_id for h in hits]
             grades = {k: int(v) for k, v in q["relevant_grades"].items()}
             full = set(q["full_relevant_ids"])
@@ -162,11 +172,30 @@ def main():
         report["modes"][mode] = {
             k: {name: round(sum(vals) / len(vals), 4) for name, vals in agg[k].items()}
             for k in KS}
-        if mode == "hybrid":
+        report["latency_ms"][mode] = {
+            "p50": round(float(_np.percentile(lat, 50)), 1),
+            "p95": round(float(_np.percentile(lat, 95)), 1)}
+        if mode == "hybrid_group":
             report["by_type"] = {
                 t: {name: round(sum(x[name] for x in ms) / len(ms), 4)
                     for name in ms[0]}
                 for t, ms in per_type.items()}
+
+    # ---------- 1b) AUTHOR với K thích ứng (cải tiến #2 — cấu hình app) ----------
+    author_rec = []
+    for q, sq, _ in eval_queries:
+        if q["query_type"] != "AUTHOR":
+            continue
+        k = retriever.suggest_top_k(sq)
+        hits = retriever.search(sq, top_k=k, mode="hybrid", group_works=True)
+        full = set(q["full_relevant_ids"])
+        got = len({h.chunk_id for h in hits} & full)
+        author_rec.append({"query_id": q["query_id"], "adaptive_k": k,
+                          "recall": round(got / len(full), 4)})
+    report["author_adaptive_k"] = {
+        "detail": author_rec,
+        "avg_recall": round(sum(x["recall"] for x in author_rec) / len(author_rec), 4)
+        if author_rec else None}
 
     # ---------- 2) Fallback ----------
     fb = []
@@ -187,48 +216,78 @@ def main():
     for q in golden:
         if q.get("stability_group"):
             groups.setdefault(q["stability_group"], []).append(q)
-    stab = []
-    for gname, qs in groups.items():
-        chunk_tops, work_tops = [], []
-        for q in qs:
-            hits = retriever.search(q["query"], top_k=5, mode="hybrid")
-            chunk_tops.append([h.chunk_id for h in hits])
-            work_tops.append([h.work_id for h in hits])
-        cj = len(set(chunk_tops[0]) & set(chunk_tops[1])) / len(set(chunk_tops[0]) | set(chunk_tops[1]))
-        wj = len(set(work_tops[0]) & set(work_tops[1])) / len(set(work_tops[0]) | set(work_tops[1]))
-        stab.append({"group": gname,
-                     "jaccard_chunk_top5": round(cj, 4),
-                     "jaccard_work_top5": round(wj, 4),      # mức người dùng cảm nhận (thẻ sách)
-                     "same_top1_chunk": chunk_tops[0][0] == chunk_tops[1][0],
-                     "same_top1_work": work_tops[0][0] == work_tops[1][0]})
-    report["stability"] = {
-        "detail": stab,
-        "avg_jaccard_chunk_top5": round(sum(s["jaccard_chunk_top5"] for s in stab) / len(stab), 4),
-        "avg_jaccard_work_top5": round(sum(s["jaccard_work_top5"] for s in stab) / len(stab), 4),
-        "same_top1_work_rate": round(sum(s["same_top1_work"] for s in stab) / len(stab), 4)}
+    def _dedup_works(hits, k):
+        seen, out = set(), []
+        for h in hits:
+            if h.work_id not in seen:
+                seen.add(h.work_id); out.append(h.work_id)
+            if len(out) >= k:
+                break
+        return out
+
+    def _stability(group_works: bool) -> dict:
+        stab = []
+        for gname, qs in groups.items():
+            chunk_tops, work_tops, card_tops = [], [], []
+            for q in qs:
+                hits = retriever.search(q["query"], top_k=5, mode="hybrid",
+                                        group_works=group_works)
+                chunk_tops.append([h.chunk_id for h in hits])
+                work_tops.append([h.work_id for h in hits])
+                card_tops.append(_dedup_works(hits, 3))   # 3 thẻ sách người dùng thấy
+            cj = len(set(chunk_tops[0]) & set(chunk_tops[1])) / len(set(chunk_tops[0]) | set(chunk_tops[1]))
+            wj = len(set(work_tops[0]) & set(work_tops[1])) / len(set(work_tops[0]) | set(work_tops[1]))
+            dj = len(set(card_tops[0]) & set(card_tops[1])) / len(set(card_tops[0]) | set(card_tops[1]))
+            stab.append({"group": gname,
+                         "jaccard_chunk_top5": round(cj, 4),
+                         "jaccard_work_top5": round(wj, 4),
+                         "jaccard_card_top3": round(dj, 4),  # THẺ SÁCH thực tế
+                         "same_top1_work": work_tops[0][0] == work_tops[1][0]})
+        return {
+            "detail": stab,
+            "avg_jaccard_chunk_top5": round(sum(s["jaccard_chunk_top5"] for s in stab) / len(stab), 4),
+            "avg_jaccard_work_top5": round(sum(s["jaccard_work_top5"] for s in stab) / len(stab), 4),
+            "avg_jaccard_card_top3": round(sum(s["jaccard_card_top3"] for s in stab) / len(stab), 4),
+            "same_top1_work_rate": round(sum(s["same_top1_work"] for s in stab) / len(stab), 4)}
+
+    # So sánh TRƯỚC (hybrid thường) vs SAU cải tiến #1 (gộp theo tác phẩm — cấu hình app)
+    report["stability"] = _stability(group_works=True)
+    report["stability_baseline_no_group"] = _stability(group_works=False)
 
     # ---------- in bảng ----------
     print(f"\n=== RETRIEVAL (n={len(eval_queries)} câu, graded + full relevant) ===")
-    header = f"{'mode':8} {'K':>3} {'P@K':>7} {'R@K':>7} {'F1':>7} {'MRR':>7} {'nDCG':>7} {'MAP':>7} {'Hit':>6}"
+    header = f"{'mode':13} {'K':>3} {'P@K':>7} {'R@K':>7} {'F1':>7} {'MRR':>7} {'nDCG':>7} {'MAP':>7} {'Hit':>6}"
     print(header)
     for mode in MODES:
         for k in KS:
             m = report["modes"][mode][k]
-            print(f"{mode:8} {k:>3} {m['precision']:>7.3f} {m['recall']:>7.3f} {m['f1']:>7.3f} "
+            print(f"{mode:13} {k:>3} {m['precision']:>7.3f} {m['recall']:>7.3f} {m['f1']:>7.3f} "
                   f"{m['mrr']:>7.3f} {m['ndcg']:>7.3f} {m['map']:>7.3f} {m['hit']:>6.2f}")
-    print("\n=== HYBRID @5 THEO LOẠI CÂU ===")
+    print("\n=== LATENCY TRUY HỒI (ms) ===")
+    for mode, l in report["latency_ms"].items():
+        print(f"  {mode:13} p50={l['p50']:>7.1f}  p95={l['p95']:>7.1f}")
+    print("\n=== HYBRID_GROUP @5 THEO LOẠI CÂU (cấu hình app) ===")
     for t, m in report["by_type"].items():
         print(f"{t:11} P={m['precision']:.3f} R={m['recall']:.3f} nDCG={m['ndcg']:.3f} MRR={m['mrr']:.3f}")
+    aa = report["author_adaptive_k"]
+    print(f"\n=== AUTHOR VỚI K THÍCH ỨNG (cải tiến #2) ===  Recall TB = {aa['avg_recall']:.3f} "
+          f"(so với trần 0.408 tại K=5)")
+    for x in aa["detail"]:
+        print(f"  {x['query_id']} K={x['adaptive_k']} recall={x['recall']:.3f}")
     print(f"\n=== FALLBACK ===  phát hiện ngoài miền: "
           f"{sum(x['detected_out_of_corpus'] for x in fb)}/{len(fb)} "
           f"(ngưỡng cosine {CONFIDENCE_MIN})")
     for x in fb:
         print(f"  {x['query_id']} conf={x['confidence']:.3f} -> {'✓ từ chối' if x['detected_out_of_corpus'] else '✗ LỌT'}")
-    print(f"\n=== STABILITY (cặp paraphrase) ===")
-    print(f"  Mức chunk : Jaccard top-5 TB = {report['stability']['avg_jaccard_chunk_top5']:.3f}")
-    print(f"  Mức tác phẩm (người dùng thấy): Jaccard top-5 TB = "
-          f"{report['stability']['avg_jaccard_work_top5']:.3f} | "
-          f"trùng sách top-1: {report['stability']['same_top1_work_rate']:.0%}")
+    print(f"\n=== STABILITY (cặp paraphrase) — TRƯỚC vs SAU cải tiến gộp tác phẩm ===")
+    b, a = report["stability_baseline_no_group"], report["stability"]
+    print(f"  {'':22} {'chunk J@5':>10} {'work J@5':>10} {'CARD J@3':>10} {'top1-work':>10}")
+    print(f"  {'baseline (no group)':22} {b['avg_jaccard_chunk_top5']:>10.3f} "
+          f"{b['avg_jaccard_work_top5']:>10.3f} {b['avg_jaccard_card_top3']:>10.3f} "
+          f"{b['same_top1_work_rate']:>10.0%}")
+    print(f"  {'app (group_works)':22} {a['avg_jaccard_chunk_top5']:>10.3f} "
+          f"{a['avg_jaccard_work_top5']:>10.3f} {a['avg_jaccard_card_top3']:>10.3f} "
+          f"{a['same_top1_work_rate']:>10.0%}")
 
     out = RESULTS / f"retrieval_{ts}.json"
     json.dump(report, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=2)

@@ -11,6 +11,7 @@ Chạy:  .venv/Scripts/streamlit run sample_model/app.py
 """
 from __future__ import annotations
 
+import json
 import os
 import re
 import sys
@@ -18,6 +19,23 @@ from html import escape
 from pathlib import Path
 
 import streamlit as st
+
+USAGE_LOG = Path(__file__).resolve().parent / "results" / "usage_log.jsonl"
+
+
+def log_event(kind: str, **fields) -> None:
+    """Ghi 1 dòng JSON vào usage_log.jsonl để đo các chỉ số vận hành Khung A
+    (tương tác, phản hồi 👍/👎, click chip, click Mua Tiki). Best-effort — lỗi bỏ qua.
+    Không dùng datetime.now() (bị chặn trong môi trường này) → dùng bộ đếm phiên."""
+    try:
+        st.session_state.evt_seq = st.session_state.get("evt_seq", 0) + 1
+        rec = {"seq": st.session_state.evt_seq,
+               "session": st.session_state.get("sid", "?"), "kind": kind, **fields}
+        USAGE_LOG.parent.mkdir(exist_ok=True)
+        with open(USAGE_LOG, "a", encoding="utf-8") as f:
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
 
 # Cho phép chạy cả `streamlit run sample_model/app.py` lẫn `-m`.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -162,6 +180,13 @@ div[data-testid="stButton"] > button{
 div[data-testid="stButton"] > button:hover{ background:#E0E4FF; color:var(--accent-d); }
 .chips-label{ font-size:12.5px; color:#9CA3AF; margin:2px 0 6px; font-weight:500; }
 
+/* ── Nút phản hồi 👍/👎 (nhỏ, kín đáo, canh theo bubble AI) ── */
+.fb-row div[data-testid="stButton"] > button{
+  background:transparent; color:#9CA3AF; border:1px solid #ECEAF6; border-radius:8px;
+  min-height:30px; padding:2px 10px; font-size:14px; }
+.fb-row div[data-testid="stButton"] > button:hover{ background:#F5F3FF; color:var(--accent-d); }
+.fb-thanks{ font-size:12px; color:#10B981; padding:4px 0 0 40px; }
+
 /* ── Input pill ── */
 div[data-testid="stChatInput"] textarea{ font-size:15px; }
 div[data-testid="stChatInput"]{ border-color:var(--input-bd) !important; }
@@ -271,14 +296,43 @@ def render_assistant(content: str, cards_html: str = ""):
 
 
 def render_followup_chips(followups: list, key_prefix: str):
-    """Chip câu hỏi gợi ý tiếp theo — bấm là hỏi luôn."""
+    """Chip câu hỏi gợi ý tiếp theo — bấm là hỏi luôn (có log)."""
     if not followups:
         return
     cols = st.columns(len(followups))
     for i, s in enumerate(followups):
         if cols[i].button(s, key=f"{key_prefix}_{i}", use_container_width=True):
+            log_event("chip_click", text=s)
             st.session_state.pending = s
             st.rerun()
+
+
+def render_feedback(mi: int, msg: dict):
+    """Nút 👍/👎 dưới câu trả lời — thu tín hiệu hài lòng (Khung A tiêu chí 2)."""
+    fb = st.session_state.get("feedback", {})
+    if mi in fb:
+        st.markdown(f'<div class="fb-thanks">Cảm ơn phản hồi của bạn'
+                    f'{" 👍" if fb[mi]=="up" else " 👎"}</div>', unsafe_allow_html=True)
+        return
+    st.markdown('<div class="fb-row">', unsafe_allow_html=True)
+    c = st.columns([1, 1, 10])
+    if c[0].button("👍", key=f"up_{mi}", help="Hữu ích"):
+        st.session_state.setdefault("feedback", {})[mi] = "up"
+        log_event("feedback", value="up", query=_prev_user(mi))
+        st.rerun()
+    if c[1].button("👎", key=f"down_{mi}", help="Chưa hữu ích"):
+        st.session_state.setdefault("feedback", {})[mi] = "down"
+        log_event("feedback", value="down", query=_prev_user(mi))
+        st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+def _prev_user(mi: int) -> str:
+    """Câu hỏi của người dùng ngay trước tin nhắn trợ lý thứ mi (để gắn vào log)."""
+    for j in range(mi - 1, -1, -1):
+        if st.session_state.messages[j]["role"] == "user":
+            return st.session_state.messages[j]["content"]
+    return ""
 
 
 # ══════════════════════════════════════════════════════════════════
@@ -303,6 +357,9 @@ if "messages" not in st.session_state:
     st.session_state.messages = []          # {role, content, cards, followups}
 if "pending" not in st.session_state:
     st.session_state.pending = None
+if "sid" not in st.session_state:
+    # id phiên ẩn danh (không dùng thời gian/random bị chặn) — theo số widget nội bộ
+    st.session_state.sid = f"s{id(st.session_state) % 100000}"
 
 # Lời chào khi phòng chat trống
 if not st.session_state.messages:
@@ -315,6 +372,7 @@ for mi, m in enumerate(st.session_state.messages):
         render_user(m["content"])
     else:
         render_assistant(m["content"], m.get("cards", ""))
+        render_feedback(mi, m)
         # Chip gợi ý tiếp theo — chỉ ở tin nhắn cuối cùng, khi không có câu đang chờ
         if (mi == len(st.session_state.messages) - 1
                 and st.session_state.pending is None):
@@ -327,6 +385,7 @@ if len(st.session_state.messages) < 2 and st.session_state.pending is None:
     cols = st.columns(2)
     for i, s in enumerate(SUGGESTIONS):
         if cols[i % 2].button(s, key=f"sug_{i}", use_container_width=True):
+            log_event("starter_click", text=s)
             st.session_state.pending = s
             st.rerun()
 
@@ -361,7 +420,9 @@ if st.session_state.pending:
     # Multi-turn: viết lại câu hỏi nối tiếp thành câu độc lập rồi mới truy hồi
     search_query = generator.contextualize_query(query, history)
 
-    hits = retriever.search(search_query, top_k=5)
+    # K thích ứng (câu AUTHOR cần vớt nhiều chunk hơn) + gộp hạng theo tác phẩm (ổn định)
+    top_k = retriever.suggest_top_k(search_query)
+    hits = retriever.search(search_query, top_k=top_k, group_works=True)
     conf = retriever.confidence(hits)
     low_conf = conf < CONFIDENCE_MIN
 
@@ -384,6 +445,9 @@ if st.session_state.pending:
         cards_html = "".join(book_card_html(h) for h in picked)
         followups = generator.suggest_followups(query, acc, hits=picked or hits)
 
+    log_event("turn", query=query, refused=bool(refused),
+              confidence=round(conf, 3), n_cards=0 if refused else len(picked),
+              books=[h.title for h in ([] if refused else picked)])
     placeholder.empty()
     render_assistant(acc, cards_html)
     st.session_state.messages.append(

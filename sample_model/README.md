@@ -26,8 +26,16 @@ bên cạnh hệ thống lớn. Tự chứa hoàn toàn: **không đụng Qdrant
 - Retrieval hybrid: **HitRate@3 = 100%**, MRR **0.964**, Recall@10 0.80 (recall THẬT).
 - Fallback: **4/4** phát hiện ngoài miền + từ chối lịch sự (biên cosine 0.31 vs 0.48).
 - Generation: Faithfulness **0.990**, Answer Relevance **1.00**, citation valid 100%.
-- Stability (paraphrase): Jaccard tác phẩm 0.571 — hạn chế đã đo và nêu rõ.
+- Stability (paraphrase): Jaccard tác phẩm ~0.5–0.57 — hạn chế đã đo và nêu rõ (group_works không cứu được).
+- **Cải tiến v2** (6 mục tự động): AUTHOR Recall 0.41→0.87, hybrid_group R@10 0.80→0.87, Fluency 5.0, red-team 9/10→vá→10/10, nút 👍/👎 + log — chi tiết `results/cai_tien_v2.md`.
 - Đối chiếu phương pháp luận bảo vệ (3 khung A/B/C + RAG Triad): `results/danh_gia_3khung_ABC.md`.
+
+## Chạy các eval mở rộng (v2)
+
+```powershell
+.venv/Scripts/python.exe -m sample_model.eval.run_eval --judge   # + fluency/coherence + latency + AUTHOR adaptive-K + stability trước/sau
+.venv/Scripts/python.exe -m sample_model.eval.red_team           # 10 prompt tấn công, giám khảo chấm phòng thủ
+```
 
 ## Reproduce (một chuỗi lệnh)
 
