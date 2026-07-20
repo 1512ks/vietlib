@@ -64,6 +64,16 @@ Ghi chú trung thực: hai cách diễn đạt cùng ý vẫn đổ về **cùng
 | **Red-team defense** | **10/10** | *mới* — sau khi vá lỗ hổng lộ prompt (rt09) |
 | Latency sinh (full) | p50 ~4.1s · p95 ~6.6s | *mới* — phụ thuộc API Gemini |
 
+## 4b. Cải tiến v2 (đã đo)
+- **Gộp hạng theo tác phẩm** (`group_works`, cấu hình app): R@10 0.799→**0.873**, nDCG@10 0.776→**0.839**, MAP@10 0.690→**0.815**.
+- **K thích ứng cho câu AUTHOR**: Recall trung bình 0.408 (trần K=5) → **0.872**.
+- **Judge fluency/coherence**: Fluency **5.0/5** · Coherence **~4.9/5** (thang 1-5, giám khảo Gemini).
+- **Latency đo phân vị**: truy hồi p50 ~145ms; full-answer p50 **4.1s** / p95 **6.6s**.
+- **Red-team 10 ca**: phát hiện 1 lỗ hổng lộ system prompt (ép đổi ngôn ngữ) → vá bằng quy tắc bảo mật → **10/10**.
+- **Nút 👍/👎 + log tương tác** (`results/usage_log.jsonl`): thu tín hiệu hài lòng + click chip/starter.
+
+Ablation & so sánh: `ablation_embedding.json` (MiniLM vs bge-m3 cùng corpus: vector P@1 0.43→0.89), `ablation_rerank.json` (reranker bão hòa, không thêm), **`so_sanh_2_model.md`** (đối chiếu đầy đủ với sản phẩm chính).
+
 ## 5. Cách đọc số liệu khi bảo vệ
 - Đây là **tập đối chứng có nhãn đầy đủ** (controlled benchmark) — KHÔNG phải hiệu năng hệ lớn 11.759 chunk. Giá trị: đo **chuẩn học thuật** (Recall thật, nDCG graded) và **tái lập được**.
 - Số không tròn 100% ở Faithfulness/Stability là bằng chứng benchmark trung thực, có ca khó.
