@@ -58,10 +58,10 @@ st.set_page_config(page_title="Trợ lý Thư viện Văn học", page_icon="�
 ACCENT = "#6366F1"
 
 SUGGESTIONS = [
-    "Nam Cao có những tác phẩm nào?",
-    "Gợi ý sách về thân phận người phụ nữ trong xã hội phong kiến",
-    "Vì sao lão Hạc chọn cái chết?",
-    "Thơ Mới 1930–1945 có những bài nào tiêu biểu?",
+    "Gợi ý một cuốn sách hay để đọc cuối tuần",
+    "Có sách nào về tình yêu và tuổi trẻ không?",
+    "Tóm tắt truyện Chí Phèo giúp mình",
+    "Giá cuốn Số đỏ bao nhiêu?",
 ]
 
 # ══════════════════════════════════════════════════════════════════
@@ -95,27 +95,27 @@ html, body, [class*="css"]{ font-family:'Inter',-apple-system,'Segoe UI',sans-se
 .bc-cover svg{ width:22px; height:22px; } .bc-collect svg{ width:14px; height:14px; }
 .tiki-btn svg{ width:14px; height:14px; }
 
-/* Ẩn chrome mặc định Streamlit, thu gọn khung */
+/* Ẩn chrome mặc định Streamlit + nền dịu mắt */
 #MainMenu, header[data-testid="stHeader"], footer{ visibility:hidden; }
-.block-container{ padding-top:1rem; padding-bottom:6rem; max-width:720px; }
+.stApp{ background:linear-gradient(180deg,#F7F8FC 0%,#F2F3FA 100%); }
+.block-container{ padding-top:1.1rem; padding-bottom:6rem; max-width:720px; }
 
 /* ── Header ── */
 .app-header{
-  display:flex; align-items:center; gap:12px;
-  background:var(--accent); color:#fff;
-  padding:14px 18px; border-radius:14px; margin-bottom:18px;
-  box-shadow:0 6px 20px rgba(99,102,241,.28);
+  display:flex; align-items:center; gap:13px;
+  background:linear-gradient(135deg,#6366F1 0%,#7C7CF5 55%,#8B5CF6 100%); color:#fff;
+  padding:15px 20px; border-radius:16px; margin-bottom:18px;
+  box-shadow:0 10px 28px rgba(99,102,241,.30);
 }
 .hd-avatar{
-  width:40px; height:40px; border-radius:11px; flex:none;
-  background:rgba(255,255,255,.18); display:flex; align-items:center;
+  width:42px; height:42px; border-radius:12px; flex:none;
+  background:rgba(255,255,255,.20); display:flex; align-items:center;
   justify-content:center; font-size:22px;
 }
-.hd-title{ font-weight:700; font-size:16px; line-height:1.2; }
-.hd-sub{ font-size:12px; color:#C7D2FE; display:flex; align-items:center; gap:6px; margin-top:2px;}
+.hd-title{ font-weight:700; font-size:16.5px; line-height:1.2; letter-spacing:.2px; }
+.hd-sub{ font-size:12.5px; color:#DCE0FF; display:flex; align-items:center; gap:6px; margin-top:3px;}
 .hd-dot{ width:8px; height:8px; border-radius:50%; background:var(--online);
   box-shadow:0 0 0 3px rgba(16,185,129,.25); display:inline-block; }
-.hd-actions{ margin-left:auto; display:flex; gap:14px; font-size:18px; opacity:.85; }
 
 /* ── Bubbles ── */
 .turn{ margin-bottom:16px; }
@@ -141,7 +141,9 @@ html, body, [class*="css"]{ font-family:'Inter',-apple-system,'Segoe UI',sans-se
 .book-card{
   display:flex; gap:12px; background:#fff;
   border:1px solid var(--card-bd); border-left:3px solid var(--accent);
-  border-radius:8px; padding:11px 13px; margin:9px 0; }
+  border-radius:10px; padding:12px 14px; margin:10px 0;
+  box-shadow:0 1px 3px rgba(79,70,229,.05); transition:box-shadow .18s, transform .18s; }
+.book-card:hover{ box-shadow:0 8px 22px rgba(99,102,241,.14); transform:translateY(-1px); }
 .bc-cover{
   width:42px; height:56px; flex:none; border-radius:6px;
   background:linear-gradient(135deg,#EEF0FF,#E0E7FF); color:var(--accent);
@@ -174,11 +176,13 @@ html, body, [class*="css"]{ font-family:'Inter',-apple-system,'Segoe UI',sans-se
 
 /* ── Suggested chips = Streamlit buttons ── */
 div[data-testid="stButton"] > button{
-  background:var(--chip-bg); color:var(--chip-fg); border:none;
-  border-radius:16px; padding:7px 15px; font-size:13px; font-weight:500;
-  min-height:36px; line-height:1.3; transition:background .15s; }
-div[data-testid="stButton"] > button:hover{ background:#E0E4FF; color:var(--accent-d); }
-.chips-label{ font-size:12.5px; color:#9CA3AF; margin:2px 0 6px; font-weight:500; }
+  background:var(--chip-bg); color:var(--chip-fg); border:1px solid #E4E7FF;
+  border-radius:14px; padding:9px 16px; font-size:13.5px; font-weight:500;
+  min-height:44px; line-height:1.35; transition:background .15s, border-color .15s, transform .1s; }
+div[data-testid="stButton"] > button:hover{ background:#E4E7FF; color:var(--accent-d);
+  border-color:#C7CCFF; }
+div[data-testid="stButton"] > button:active{ transform:scale(.98); }
+.chips-label{ font-size:13px; color:#8B90A0; margin:4px 0 8px; font-weight:500; }
 
 /* ── Nút phản hồi 👍/👎 (nhỏ, kín đáo, canh theo bubble AI) ── */
 .fb-row div[data-testid="stButton"] > button{
@@ -342,10 +346,9 @@ st.markdown(f"""
 <div class="app-header">
   <div class="hd-avatar">{SVG_BOOKS}</div>
   <div>
-    <div class="hd-title">Trợ lý Thư viện Văn học</div>
-    <div class="hd-sub"><span class="hd-dot"></span> Trực tuyến · Trợ lý AI</div>
+    <div class="hd-title">Thư viện Văn học Việt Nam</div>
+    <div class="hd-sub"><span class="hd-dot"></span> Tìm sách · hiểu tác phẩm · gợi ý theo sở thích</div>
   </div>
-  <div class="hd-actions"><span>&#8211;</span><span>&#10005;</span></div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -361,11 +364,12 @@ if "sid" not in st.session_state:
     # id phiên ẩn danh (không dùng thời gian/random bị chặn) — theo số widget nội bộ
     st.session_state.sid = f"s{id(st.session_state) % 100000}"
 
-# Lời chào khi phòng chat trống
+# Lời chào khi phòng chat trống — ấm áp, mời gọi hành động
 if not st.session_state.messages:
     render_assistant(
-        "Xin chào! Mình là trợ lý thư viện, có thể giúp bạn tìm và tìm hiểu các tác phẩm "
-        "văn học Việt Nam. Bạn muốn hỏi về tác phẩm, tác giả hay chủ đề nào?")
+        "Chào bạn 👋 Mình ở đây để giúp bạn **tìm và hiểu sách văn học Việt Nam**.\n\n"
+        "Bạn có thể hỏi mình kiểu như: *tóm tắt một tác phẩm*, *một tác giả có sách gì*, "
+        "*gợi ý sách theo tâm trạng hay chủ đề*, hay *giá một cuốn sách*. Cứ hỏi tự nhiên nhé!")
 
 for mi, m in enumerate(st.session_state.messages):
     if m["role"] == "user":
@@ -381,7 +385,7 @@ for mi, m in enumerate(st.session_state.messages):
 
 # ── Suggested chips (hiện khi mới bắt đầu) ──
 if len(st.session_state.messages) < 2 and st.session_state.pending is None:
-    st.markdown('<div class="chips-label">💡 Gợi ý câu hỏi</div>', unsafe_allow_html=True)
+    st.markdown('<div class="chips-label">Thử bắt đầu với:</div>', unsafe_allow_html=True)
     cols = st.columns(2)
     for i, s in enumerate(SUGGESTIONS):
         if cols[i % 2].button(s, key=f"sug_{i}", use_container_width=True):
@@ -391,7 +395,7 @@ if len(st.session_state.messages) < 2 and st.session_state.pending is None:
 
 
 # ── Input ──
-typed = st.chat_input("Nhập câu hỏi về văn học Việt Nam…")
+typed = st.chat_input("Nhắn cho mình một câu hỏi về sách…")
 if typed:
     st.session_state.pending = typed
     st.rerun()
