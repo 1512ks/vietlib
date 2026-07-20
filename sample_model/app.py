@@ -85,8 +85,8 @@ st.markdown("""
 
 :root{
   --accent:#6366F1; --accent-d:#4F46E5; --online:#10B981;
-  --u-bg:#E0E7FF; --u-fg:#3730A3;
-  --ai-bg:#F9FAFB; --ai-bd:#EEECF6; --ai-fg:#1F2937;
+  --u-bg:rgba(224,231,255,.92); --u-fg:#3730A3;
+  --ai-bg:rgba(250,250,252,.88); --ai-bd:#EEECF6; --ai-fg:#1F2937;
   --card-bd:#ECEAF6; --collect:#8B5CF6;
   --chip-bg:#EEF0FF; --chip-fg:#4F46E5; --input-bd:#E5E3F0;
 }
@@ -207,9 +207,13 @@ div[data-testid="stChatInput"] button{ background:var(--accent) !important; }
 /* Màn hẹp không có chỗ trống → ẩn để không che nội dung */
 @media (max-width:1150px){ .leafy{ display:none; } }
 
-/* Vùng nội dung thành thẻ trắng bo tròn có viền (như tấm thiệp) */
+/* Vùng nội dung thành thẻ trắng bo tròn có viền (như tấm thiệp).
+   Viền nâu vàng nhẹ + đường viền đôi lùi vào trong (outline) kiểu thiệp mời.
+   Nền trắng ở đây là fallback — lớp hoa chìm + ombre + 2 góc hoa dây leo
+   được chồng lên bằng khối CSS động phía dưới (cần data-URI của SVG). */
 .block-container{ position:relative; z-index:1;
-  background:#FFFFFF; border:1px solid #E4EAE1; border-radius:22px;
+  background:#FFFFFF; border:1.5px solid #C9AE84; border-radius:22px;
+  outline:1px solid rgba(201,174,132,.55); outline-offset:-8px;
   padding:24px 28px 84px !important; margin-top:1.3rem;
   box-shadow:0 14px 44px rgba(70,90,70,.09), 0 2px 8px rgba(70,90,70,.05); }
 </style>
@@ -220,6 +224,35 @@ try:
     _GREENERY = (Path(__file__).resolve().parent / "assets" / "greenery.svg").read_text(encoding="utf-8")
     st.markdown("".join(f'<div class="leafy leafy-{c}">{_GREENERY}</div>'
                         for c in ("tl", "tr", "bl", "br")), unsafe_allow_html=True)
+except Exception:
+    pass
+
+# ── Hoa chìm + ombre GIỮA nền thẻ chat (background nhiều lớp → luôn nằm dưới chữ)
+# + hoa dây leo ôm 2 góc khung bằng ::before/::after (z-index:-1 nên không che chữ).
+# floral_wm.svg lặp dọc (repeat-y) nên chat dài bao nhiêu hoa vẫn rải đều.
+try:
+    from urllib.parse import quote as _q
+    _ASSETS = Path(__file__).resolve().parent / "assets"
+    _FLORAL = _q((_ASSETS / "floral_wm.svg").read_text(encoding="utf-8"))
+    _VINE = _q((_ASSETS / "vine_corner.svg").read_text(encoding="utf-8"))
+    st.markdown(f"""
+<style>
+.block-container{{
+  background:
+    url("data:image/svg+xml;utf8,{_FLORAL}") center top / 100% auto repeat-y,
+    radial-gradient(120% 42% at 88% 0%, rgba(246,199,211,.32), rgba(246,199,211,0) 62%),
+    radial-gradient(110% 38% at 0% 100%, rgba(186,205,238,.26), rgba(186,205,238,0) 58%),
+    linear-gradient(180deg,#FFFDFE 0%,#FFF9FB 100%);
+}}
+.block-container::before, .block-container::after{{
+  content:""; position:absolute; z-index:-1; pointer-events:none;
+  width:min(46%,320px); aspect-ratio:1;
+  background:url("data:image/svg+xml;utf8,{_VINE}") no-repeat center/contain;
+}}
+.block-container::before{{ top:-12px; left:-12px; }}
+.block-container::after{{ bottom:-12px; right:-12px; transform:rotate(180deg); }}
+</style>
+""", unsafe_allow_html=True)
 except Exception:
     pass
 
