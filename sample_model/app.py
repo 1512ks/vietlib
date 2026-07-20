@@ -1,0 +1,391 @@
+"""
+app.py -- Chatbot Thư viện Văn học (sample model, style AI-Native).
+
+Triển khai đúng mockup v2 đã duyệt trong UI_SPEC.md:
+  Header · message thread · thẻ sách (giá + Mua trên Tiki + note tuyển tập) ·
+  trích dẫn nguồn · suggested chips · typing indicator · pill input.
+
+Backend: hybrid retrieval bge-m3 (sample_model/index) + generation Gemini + citations.
+
+Chạy:  .venv/Scripts/streamlit run sample_model/app.py
+"""
+from __future__ import annotations
+
+import os
+import re
+import sys
+from html import escape
+from pathlib import Path
+
+import streamlit as st
+
+# Cho phép chạy cả `streamlit run sample_model/app.py` lẫn `-m`.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from sample_model.retrieval import Retriever, Hit, CONFIDENCE_MIN       # noqa: E402
+from sample_model.generate import (                                     # noqa: E402
+    Generator, strip_citations, cited_indices)
+
+# ── Nạp secret → env (Streamlit Cloud dùng st.secrets; local dùng env/.env) ──
+# EMBED_DTYPE=bfloat16 trên Cloud để model bge-m3 lọt RAM free tier (xem retrieval._embed)
+for _k in ("GEMINI_API_KEY", "EMBED_DTYPE"):
+    try:
+        if _k in st.secrets and not os.environ.get(_k):
+            os.environ[_k] = str(st.secrets[_k])
+    except Exception:
+        pass
+
+st.set_page_config(page_title="Trợ lý Thư viện Văn học", page_icon="📚",
+                   layout="centered", initial_sidebar_state="collapsed")
+
+ACCENT = "#6366F1"
+
+SUGGESTIONS = [
+    "Nam Cao có những tác phẩm nào?",
+    "Gợi ý sách về thân phận người phụ nữ trong xã hội phong kiến",
+    "Vì sao lão Hạc chọn cái chết?",
+    "Thơ Mới 1930–1945 có những bài nào tiêu biểu?",
+]
+
+# ══════════════════════════════════════════════════════════════════
+#  CSS — design tokens AI-Native (UI_SPEC.md)
+# ══════════════════════════════════════════════════════════════════
+# ── Inline SVG icons (tự chứa — không phụ thuộc webfont, chạy ổn trên Streamlit Cloud) ──
+SVG_BOOKS = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" '
+             'stroke-linecap="round" stroke-linejoin="round"><path d="M3 19a2 2 0 0 1 2-2h6V5a2 '
+             '2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/><path d="M11 17h6a2 2 0 0 1 2 2M11 5a2 2 0 0 1 '
+             '2-2h4a2 2 0 0 1 2 2v14"/><path d="M11 5v14"/></svg>')
+SVG_BOOK = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" '
+            'stroke-linecap="round" stroke-linejoin="round"><path d="M4 4a2 2 0 0 1 2-2h13a1 1 0 '
+            '0 1 1 1v17a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2z"/><path d="M4 18a2 2 0 0 1 2-2h13"/></svg>')
+SVG_CART = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
+            'stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"/>'
+            '<circle cx="18" cy="20" r="1"/><path d="M2 3h2l2.4 12.3a1 1 0 0 0 1 .7h9.7a1 1 0 0 0 '
+            '1-.8L21 6H5.1"/></svg>')
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --accent:#6366F1; --accent-d:#4F46E5; --online:#10B981;
+  --u-bg:#E0E7FF; --u-fg:#3730A3;
+  --ai-bg:#F9FAFB; --ai-bd:#EEECF6; --ai-fg:#1F2937;
+  --card-bd:#ECEAF6; --collect:#8B5CF6;
+  --chip-bg:#EEF0FF; --chip-fg:#4F46E5; --input-bd:#E5E3F0;
+}
+html, body, [class*="css"]{ font-family:'Inter',-apple-system,'Segoe UI',sans-serif; }
+.hd-avatar svg{ width:22px; height:22px; } .ai-avatar svg{ width:16px; height:16px; }
+.bc-cover svg{ width:22px; height:22px; } .bc-collect svg{ width:14px; height:14px; }
+.tiki-btn svg{ width:14px; height:14px; }
+
+/* Ẩn chrome mặc định Streamlit, thu gọn khung */
+#MainMenu, header[data-testid="stHeader"], footer{ visibility:hidden; }
+.block-container{ padding-top:1rem; padding-bottom:6rem; max-width:720px; }
+
+/* ── Header ── */
+.app-header{
+  display:flex; align-items:center; gap:12px;
+  background:var(--accent); color:#fff;
+  padding:14px 18px; border-radius:14px; margin-bottom:18px;
+  box-shadow:0 6px 20px rgba(99,102,241,.28);
+}
+.hd-avatar{
+  width:40px; height:40px; border-radius:11px; flex:none;
+  background:rgba(255,255,255,.18); display:flex; align-items:center;
+  justify-content:center; font-size:22px;
+}
+.hd-title{ font-weight:700; font-size:16px; line-height:1.2; }
+.hd-sub{ font-size:12px; color:#C7D2FE; display:flex; align-items:center; gap:6px; margin-top:2px;}
+.hd-dot{ width:8px; height:8px; border-radius:50%; background:var(--online);
+  box-shadow:0 0 0 3px rgba(16,185,129,.25); display:inline-block; }
+.hd-actions{ margin-left:auto; display:flex; gap:14px; font-size:18px; opacity:.85; }
+
+/* ── Bubbles ── */
+.turn{ margin-bottom:16px; }
+.msg-user{ display:flex; justify-content:flex-end; }
+.bubble-user{
+  background:var(--u-bg); color:var(--u-fg);
+  padding:11px 15px; border-radius:16px 16px 4px 16px;
+  max-width:78%; font-size:15px; line-height:1.55; }
+.msg-ai{ display:flex; gap:10px; align-items:flex-start; }
+.ai-avatar{
+  width:30px; height:30px; border-radius:9px; flex:none; margin-top:2px;
+  background:linear-gradient(135deg,#6366F1,#8B5CF6); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:15px; }
+.bubble-ai{
+  background:var(--ai-bg); border:1px solid var(--ai-bd); color:var(--ai-fg);
+  padding:12px 16px; border-radius:4px 16px 16px 16px;
+  max-width:88%; font-size:15px; line-height:1.6; }
+.bubble-ai p{ margin:0 0 8px; } .bubble-ai p:last-child{ margin-bottom:0; }
+.bubble-ai ul{ margin:6px 0; padding-left:20px; } .bubble-ai li{ margin:3px 0; }
+.bubble-ai strong{ color:#111827; }
+
+/* ── Thẻ sách ── */
+.book-card{
+  display:flex; gap:12px; background:#fff;
+  border:1px solid var(--card-bd); border-left:3px solid var(--accent);
+  border-radius:8px; padding:11px 13px; margin:9px 0; }
+.bc-cover{
+  width:42px; height:56px; flex:none; border-radius:6px;
+  background:linear-gradient(135deg,#EEF0FF,#E0E7FF); color:var(--accent);
+  display:flex; align-items:center; justify-content:center; font-size:22px; }
+.bc-body{ flex:1; min-width:0; }
+.bc-title{ font-weight:600; font-size:14.5px; color:#111827; }
+.bc-meta{ font-size:12.5px; color:#6B7280; margin-top:1px; }
+.bc-collect{ font-size:12.5px; color:var(--collect); margin-top:5px;
+  display:flex; align-items:center; gap:5px; }
+.bc-foot{ display:flex; align-items:center; gap:10px; margin-top:8px; flex-wrap:wrap; }
+.bc-price{ color:var(--accent); font-size:15px; font-weight:500; }
+.bc-price.na{ color:#9CA3AF; font-size:13px; font-weight:400; }
+.tiki-btn{
+  background:var(--accent); color:#fff !important; text-decoration:none;
+  font-size:12.5px; font-weight:500; padding:6px 12px; border-radius:8px;
+  display:inline-flex; align-items:center; gap:5px; transition:background .15s; }
+.tiki-btn:hover{ background:var(--accent-d); }
+
+/* ── Typing indicator ── */
+.typing{ display:inline-flex; gap:5px; padding:14px 16px;
+  background:var(--ai-bg); border:1px solid var(--ai-bd);
+  border-radius:4px 16px 16px 16px; }
+.typing span{ width:8px; height:8px; border-radius:50%; background:var(--accent);
+  animation:pulse 1.2s infinite ease-in-out; }
+.typing span:nth-child(2){ animation-delay:.2s; }
+.typing span:nth-child(3){ animation-delay:.4s; }
+@keyframes pulse{ 0%,80%,100%{ transform:scale(.5); opacity:.4; }
+  40%{ transform:scale(1); opacity:1; } }
+@media (prefers-reduced-motion:reduce){ .typing span{ animation:none; opacity:.7; } }
+
+/* ── Suggested chips = Streamlit buttons ── */
+div[data-testid="stButton"] > button{
+  background:var(--chip-bg); color:var(--chip-fg); border:none;
+  border-radius:16px; padding:7px 15px; font-size:13px; font-weight:500;
+  min-height:36px; line-height:1.3; transition:background .15s; }
+div[data-testid="stButton"] > button:hover{ background:#E0E4FF; color:var(--accent-d); }
+.chips-label{ font-size:12.5px; color:#9CA3AF; margin:2px 0 6px; font-weight:500; }
+
+/* ── Input pill ── */
+div[data-testid="stChatInput"] textarea{ font-size:15px; }
+div[data-testid="stChatInput"]{ border-color:var(--input-bd) !important; }
+div[data-testid="stChatInput"] button{ background:var(--accent) !important; }
+</style>
+""", unsafe_allow_html=True)
+
+
+# ══════════════════════════════════════════════════════════════════
+#  Backend (cache resource — nạp 1 lần / phiên)
+# ══════════════════════════════════════════════════════════════════
+@st.cache_resource(show_spinner="⏳ Đang nạp mô hình tìm kiếm (bge-m3)…")
+def load_retriever() -> Retriever:
+    r = Retriever.load()
+    r.warm_up()
+    return r
+
+
+@st.cache_resource(show_spinner=False)
+def load_generator() -> Generator:
+    return Generator()
+
+
+# ══════════════════════════════════════════════════════════════════
+#  Render helpers
+# ══════════════════════════════════════════════════════════════════
+def fmt_price(h: Hit) -> str:
+    n = h.price_int
+    if n is None:
+        return '<span class="bc-price na">Chưa có giá bán rời</span>'
+    s = f"{n:,}".replace(",", ".")
+    return f'<span class="bc-price">{s}đ</span>'
+
+
+def book_card_html(h: Hit) -> str:
+    collect = ""
+    if h.in_collection and h.edition:
+        collect = (f'<div class="bc-collect">{SVG_BOOKS}'
+                   f'Trong tuyển tập: “{escape(h.edition)}”</div>')
+    tiki = ""
+    if h.tiki:
+        tiki = (f'<a class="tiki-btn" href="{escape(h.tiki)}" target="_blank" '
+                f'rel="noopener">{SVG_CART}Mua trên Tiki</a>')
+    return (
+        f'<div class="book-card">'
+        f'<div class="bc-cover">{SVG_BOOK}</div>'
+        f'<div class="bc-body">'
+        f'<div class="bc-title">{escape(h.title)}</div>'
+        f'<div class="bc-meta">{escape(h.author)} · {escape(h.year)} · {escape(h.genre)}</div>'
+        f'{collect}'
+        f'<div class="bc-foot">{fmt_price(h)}{tiki}</div>'
+        f'</div></div>'
+    )
+
+
+_MD_BOLD = re.compile(r"\*\*(.+?)\*\*")
+
+
+def answer_to_html(text: str) -> str:
+    """Chuyển câu trả lời (markdown nhẹ, ĐÃ strip marker [n]) → HTML an toàn cho bubble."""
+    text = escape(strip_citations(text))
+    text = _MD_BOLD.sub(r"<strong>\1</strong>", text)
+    html, in_ul = [], False
+    for raw in text.split("\n"):
+        line = raw.strip()
+        if not line:
+            continue
+        if line.startswith(("* ", "- ", "• ")):
+            if not in_ul:
+                html.append("<ul>"); in_ul = True
+            html.append(f"<li>{line[2:].strip()}</li>")
+        else:
+            if in_ul:
+                html.append("</ul>"); in_ul = False
+            html.append(f"<p>{line}</p>")
+    if in_ul:
+        html.append("</ul>")
+    return "".join(html)
+
+
+def picked_cards(answer: str, hits: list[Hit], max_cards: int = 3) -> list[Hit]:
+    """Chọn thẻ sách: ưu tiên tác phẩm được trích ngầm [n], dedupe theo work_id
+    (nhiều chunk cùng tác phẩm → 1 thẻ), tối đa max_cards thẻ."""
+    used = cited_indices(answer)
+    picked = [h for h in hits if h.source_idx in used] or hits
+    seen, out = set(), []
+    for h in picked:
+        if h.work_id not in seen:
+            seen.add(h.work_id)
+            out.append(h)
+        if len(out) >= max_cards:
+            break
+    return out
+
+
+def render_user(content: str):
+    st.markdown(
+        f'<div class="turn msg-user"><div class="bubble-user">{escape(content)}</div></div>',
+        unsafe_allow_html=True)
+
+
+def render_assistant(content: str, cards_html: str = ""):
+    st.markdown(
+        f'<div class="turn msg-ai"><div class="ai-avatar">{SVG_BOOKS}</div>'
+        f'<div class="bubble-ai">{answer_to_html(content)}{cards_html}</div></div>',
+        unsafe_allow_html=True)
+
+
+def render_followup_chips(followups: list, key_prefix: str):
+    """Chip câu hỏi gợi ý tiếp theo — bấm là hỏi luôn."""
+    if not followups:
+        return
+    cols = st.columns(len(followups))
+    for i, s in enumerate(followups):
+        if cols[i].button(s, key=f"{key_prefix}_{i}", use_container_width=True):
+            st.session_state.pending = s
+            st.rerun()
+
+
+# ══════════════════════════════════════════════════════════════════
+#  Header
+# ══════════════════════════════════════════════════════════════════
+st.markdown(f"""
+<div class="app-header">
+  <div class="hd-avatar">{SVG_BOOKS}</div>
+  <div>
+    <div class="hd-title">Trợ lý Thư viện Văn học</div>
+    <div class="hd-sub"><span class="hd-dot"></span> Trực tuyến · Trợ lý AI</div>
+  </div>
+  <div class="hd-actions"><span>&#8211;</span><span>&#10005;</span></div>
+</div>
+""", unsafe_allow_html=True)
+
+
+# ══════════════════════════════════════════════════════════════════
+#  State + lịch sử
+# ══════════════════════════════════════════════════════════════════
+if "messages" not in st.session_state:
+    st.session_state.messages = []          # {role, content, cards, followups}
+if "pending" not in st.session_state:
+    st.session_state.pending = None
+
+# Lời chào khi phòng chat trống
+if not st.session_state.messages:
+    render_assistant(
+        "Xin chào! Mình là trợ lý thư viện, có thể giúp bạn tìm và tìm hiểu các tác phẩm "
+        "văn học Việt Nam. Bạn muốn hỏi về tác phẩm, tác giả hay chủ đề nào?")
+
+for mi, m in enumerate(st.session_state.messages):
+    if m["role"] == "user":
+        render_user(m["content"])
+    else:
+        render_assistant(m["content"], m.get("cards", ""))
+        # Chip gợi ý tiếp theo — chỉ ở tin nhắn cuối cùng, khi không có câu đang chờ
+        if (mi == len(st.session_state.messages) - 1
+                and st.session_state.pending is None):
+            render_followup_chips(m.get("followups") or [], key_prefix=f"fu{mi}")
+
+
+# ── Suggested chips (hiện khi mới bắt đầu) ──
+if len(st.session_state.messages) < 2 and st.session_state.pending is None:
+    st.markdown('<div class="chips-label">💡 Gợi ý câu hỏi</div>', unsafe_allow_html=True)
+    cols = st.columns(2)
+    for i, s in enumerate(SUGGESTIONS):
+        if cols[i % 2].button(s, key=f"sug_{i}", use_container_width=True):
+            st.session_state.pending = s
+            st.rerun()
+
+
+# ── Input ──
+typed = st.chat_input("Nhập câu hỏi về văn học Việt Nam…")
+if typed:
+    st.session_state.pending = typed
+    st.rerun()
+
+
+# ══════════════════════════════════════════════════════════════════
+#  Xử lý câu hỏi đang chờ
+# ══════════════════════════════════════════════════════════════════
+if st.session_state.pending:
+    query = st.session_state.pending
+    st.session_state.pending = None
+    st.session_state.messages.append({"role": "user", "content": query})
+    render_user(query)
+
+    # Typing indicator hiện NGAY (kể cả trong lúc nạp model) để không có khoảng chờ câm
+    placeholder = st.empty()
+    placeholder.markdown(
+        f'<div class="turn msg-ai"><div class="ai-avatar">{SVG_BOOKS}</div>'
+        '<div class="typing"><span></span><span></span><span></span></div></div>',
+        unsafe_allow_html=True)
+
+    retriever = load_retriever()
+    generator = load_generator()
+    history = st.session_state.messages[:-1]
+
+    # Multi-turn: viết lại câu hỏi nối tiếp thành câu độc lập rồi mới truy hồi
+    search_query = generator.contextualize_query(query, history)
+
+    hits = retriever.search(search_query, top_k=5)
+    conf = retriever.confidence(hits)
+    low_conf = conf < CONFIDENCE_MIN
+
+    # Stream câu trả lời vào bubble (marker [n] được strip khi hiển thị)
+    acc = ""
+    for chunk in generator.answer_stream(query, hits, low_confidence=low_conf, history=history):
+        acc += chunk
+        placeholder.markdown(
+            f'<div class="turn msg-ai"><div class="ai-avatar">{SVG_BOOKS}</div>'
+            f'<div class="bubble-ai">{answer_to_html(acc)}</div></div>',
+            unsafe_allow_html=True)
+
+    # Câu từ chối (ngoài kho) → không thẻ sách, không chip gợi ý theo tác phẩm
+    refused = low_conf and ("tiếc quá" in acc.lower() or "xin lỗi" in acc.lower()
+                            or "chưa giúp" in acc.lower() or "không tìm thấy" in acc.lower())
+    if refused:
+        cards_html, followups = "", []
+    else:
+        picked = picked_cards(acc, hits)
+        cards_html = "".join(book_card_html(h) for h in picked)
+        followups = generator.suggest_followups(query, acc, hits=picked or hits)
+
+    placeholder.empty()
+    render_assistant(acc, cards_html)
+    st.session_state.messages.append(
+        {"role": "assistant", "content": acc, "cards": cards_html, "followups": followups})
+    st.rerun()

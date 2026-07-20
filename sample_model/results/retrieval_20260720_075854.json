@@ -1,0 +1,235 @@
+{
+  "timestamp": "20260720_075854",
+  "n_queries": 28,
+  "ks": [
+    1,
+    3,
+    5,
+    10
+  ],
+  "confidence_min": 0.4,
+  "modes": {
+    "bm25": {
+      "1": {
+        "precision": 0.75,
+        "recall": 0.2386,
+        "f1": 0.3306,
+        "mrr": 0.75,
+        "ndcg": 0.6071,
+        "map": 0.75,
+        "hit": 0.75
+      },
+      "3": {
+        "precision": 0.5476,
+        "recall": 0.4861,
+        "f1": 0.4717,
+        "mrr": 0.8333,
+        "ndcg": 0.5911,
+        "map": 0.5734,
+        "hit": 0.9286
+      },
+      "5": {
+        "precision": 0.4357,
+        "recall": 0.6096,
+        "f1": 0.4664,
+        "mrr": 0.8405,
+        "ndcg": 0.6195,
+        "map": 0.5705,
+        "hit": 0.9643
+      },
+      "10": {
+        "precision": 0.2679,
+        "recall": 0.6928,
+        "f1": 0.3573,
+        "mrr": 0.8449,
+        "ndcg": 0.6451,
+        "map": 0.5499,
+        "hit": 1.0
+      }
+    },
+    "vector": {
+      "1": {
+        "precision": 0.9643,
+        "recall": 0.3068,
+        "f1": 0.4276,
+        "mrr": 0.9643,
+        "ndcg": 0.869,
+        "map": 0.9643,
+        "hit": 0.9643
+      },
+      "3": {
+        "precision": 0.7619,
+        "recall": 0.6365,
+        "f1": 0.634,
+        "mrr": 0.9643,
+        "ndcg": 0.7925,
+        "map": 0.8313,
+        "hit": 0.9643
+      },
+      "5": {
+        "precision": 0.5643,
+        "recall": 0.7126,
+        "f1": 0.5723,
+        "mrr": 0.9643,
+        "ndcg": 0.7824,
+        "map": 0.7923,
+        "hit": 0.9643
+      },
+      "10": {
+        "precision": 0.3643,
+        "recall": 0.8236,
+        "f1": 0.4615,
+        "mrr": 0.9679,
+        "ndcg": 0.8274,
+        "map": 0.7821,
+        "hit": 1.0
+      }
+    },
+    "hybrid": {
+      "1": {
+        "precision": 0.9286,
+        "recall": 0.3024,
+        "f1": 0.4196,
+        "mrr": 0.9286,
+        "ndcg": 0.8095,
+        "map": 0.9286,
+        "hit": 0.9286
+      },
+      "3": {
+        "precision": 0.6905,
+        "recall": 0.5668,
+        "f1": 0.5693,
+        "mrr": 0.9643,
+        "ndcg": 0.7421,
+        "map": 0.7381,
+        "hit": 1.0
+      },
+      "5": {
+        "precision": 0.5143,
+        "recall": 0.6817,
+        "f1": 0.533,
+        "mrr": 0.9643,
+        "ndcg": 0.7416,
+        "map": 0.7029,
+        "hit": 1.0
+      },
+      "10": {
+        "precision": 0.3286,
+        "recall": 0.7986,
+        "f1": 0.4295,
+        "mrr": 0.9643,
+        "ndcg": 0.776,
+        "map": 0.6902,
+        "hit": 1.0
+      }
+    }
+  },
+  "by_type": {
+    "FACTUAL": {
+      "precision": 0.5333,
+      "recall": 0.963,
+      "f1": 0.6715,
+      "mrr": 1.0,
+      "ndcg": 0.9628,
+      "map": 0.9204,
+      "hit": 1.0
+    },
+    "AUTHOR": {
+      "precision": 0.6571,
+      "recall": 0.4084,
+      "f1": 0.4898,
+      "mrr": 1.0,
+      "ndcg": 0.4825,
+      "map": 0.6138,
+      "hit": 1.0
+    },
+    "SEMANTIC": {
+      "precision": 0.45,
+      "recall": 0.4452,
+      "f1": 0.4255,
+      "mrr": 0.875,
+      "ndcg": 0.6443,
+      "map": 0.4774,
+      "hit": 1.0
+    },
+    "MULTI_TURN": {
+      "precision": 0.35,
+      "recall": 1.0,
+      "f1": 0.5119,
+      "mrr": 1.0,
+      "ndcg": 0.8915,
+      "map": 0.8208,
+      "hit": 1.0
+    }
+  },
+  "multi_turn_rewrites": [
+    "rewritten: Truyện Chí Phèo của Nam Cao kết thúc ra sao?",
+    "rewritten: Truyện Kiều của Nguyễn Du thuộc thể thơ gì và dài bao nhiêu câu?",
+    "rewritten: Bài thơ Sóng của Xuân Quỳnh được sáng tác năm nào, trong hoàn cảnh nào?",
+    "rewritten: Cuốn Mắt biếc của Nguyễn Nhật Ánh nói về điều gì?"
+  ],
+  "fallback": {
+    "detail": [
+      {
+        "query_id": "q25",
+        "query": "Tóm tắt nội dung truyện Harry Potter và Hòn đá Phù thủy",
+        "confidence": 0.225,
+        "detected_out_of_corpus": true
+      },
+      {
+        "query_id": "q26",
+        "query": "Gợi ý sách self-help dạy quản lý thời gian hiệu quả",
+        "confidence": 0.254,
+        "detected_out_of_corpus": true
+      },
+      {
+        "query_id": "q27",
+        "query": "Định luật vạn vật hấp dẫn của Newton phát biểu thế nào?",
+        "confidence": 0.197,
+        "detected_out_of_corpus": true
+      },
+      {
+        "query_id": "q28",
+        "query": "Tiểu thuyết Vầng trăng máu của nhà văn Trần Văn Đô nói về điều gì?",
+        "confidence": 0.299,
+        "detected_out_of_corpus": true
+      }
+    ],
+    "accuracy": 1.0
+  },
+  "stability": {
+    "detail": [
+      {
+        "group": "lao_hac_death",
+        "jaccard_chunk_top5": 0.4286,
+        "jaccard_work_top5": 0.2,
+        "same_top1_chunk": true,
+        "same_top1_work": true
+      },
+      {
+        "group": "nam_cao_works",
+        "jaccard_chunk_top5": 0.4286,
+        "jaccard_work_top5": 0.75,
+        "same_top1_chunk": false,
+        "same_top1_work": false
+      },
+      {
+        "group": "phu_nu_phong_kien",
+        "jaccard_chunk_top5": 0.25,
+        "jaccard_work_top5": 0.3333,
+        "same_top1_chunk": false,
+        "same_top1_work": false
+      },
+      {
+        "group": "co_don_thien_nhien",
+        "jaccard_chunk_top5": 0.4286,
+        "jaccard_work_top5": 1.0,
+        "same_top1_chunk": false,
+        "same_top1_work": true
+      }
+    ],
+    "avg_jaccard_chunk_top5": 0.384,
+    "avg_jaccard_work_top5": 0.5708,
+    "same_top1_work_rate": 0.5
+  }
+}
