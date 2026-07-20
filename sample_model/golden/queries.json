@@ -165,9 +165,9 @@
       "query_id": "q17",
       "query": "Tác phẩm nào viết về nỗi đau và vết thương tinh thần mà chiến tranh để lại?",
       "query_type": "SEMANTIC",
-      "relevant_grades": {"noi_buon_chien_tranh_tomtat": 2, "noi_buon_chien_tranh_chude": 2, "noi_buon_chien_tranh_tacgia": 1, "chiec_luoc_nga_chude": 1},
-      "full_relevant_ids": ["noi_buon_chien_tranh_tomtat", "noi_buon_chien_tranh_chude", "noi_buon_chien_tranh_tacgia", "chiec_luoc_nga_chude"],
-      "ground_truth_answer": "Tiêu biểu nhất là Nỗi buồn chiến tranh của Bảo Ninh — dòng hồi ức ám ảnh của người lính Kiên về những mất mát và bi kịch tình yêu; Chiếc lược ngà của Nguyễn Quang Sáng cũng cho thấy chiến tranh chia lìa tình cha con.",
+      "relevant_grades": {"ben_khong_chong_tomtat": 2, "ben_khong_chong_chude": 2, "ben_khong_chong_tacgia": 1, "chiec_luoc_nga_chude": 1},
+      "full_relevant_ids": ["ben_khong_chong_tomtat", "ben_khong_chong_chude", "ben_khong_chong_tacgia", "chiec_luoc_nga_chude"],
+      "ground_truth_answer": "Tiêu biểu là Bến không chồng của Dương Hướng — bi kịch làng Đông với những người phụ nữ mòn mỏi chờ chồng con đi chiến tranh không về và nỗi cô đơn, mặc cảm của người lính Nguyễn Vạn thời hậu chiến; Chiếc lược ngà của Nguyễn Quang Sáng cũng cho thấy chiến tranh chia lìa tình cha con.",
       "expect_fallback": false
     },
     {

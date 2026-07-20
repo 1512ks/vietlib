@@ -59,7 +59,7 @@
     {"work_id": "mua_la_rung_trong_vuon", "title": "Mùa lá rụng trong vườn", "author": "Ma Văn Kháng", "year": 1985, "genre": "Tiểu thuyết", "period": "P5"},
     {"work_id": "thoi_xa_vang", "title": "Thời xa vắng", "author": "Lê Lựu", "year": 1986, "genre": "Tiểu thuyết", "period": "P5"},
     {"work_id": "tuong_ve_huu", "title": "Tướng về hưu", "author": "Nguyễn Huy Thiệp", "year": 1987, "genre": "Truyện ngắn", "period": "P5"},
-    {"work_id": "noi_buon_chien_tranh", "title": "Nỗi buồn chiến tranh", "author": "Bảo Ninh", "year": 1990, "genre": "Tiểu thuyết", "period": "P5", "note_year": "Tên đầu 'Thân phận của tình yêu'."},
+    {"work_id": "ben_khong_chong", "title": "Bến không chồng", "author": "Dương Hướng", "year": 1990, "genre": "Tiểu thuyết", "period": "P5", "note_year": "Giải thưởng Hội Nhà văn Việt Nam 1991."},
     {"work_id": "mat_biec", "title": "Mắt biếc", "author": "Nguyễn Nhật Ánh", "year": 1990, "genre": "Truyện dài", "period": "P5", "movement": "Văn học thiếu nhi đương đại"},
     {"work_id": "canh_dong_bat_tan", "title": "Cánh đồng bất tận", "author": "Nguyễn Ngọc Tư", "year": 2005, "genre": "Truyện vừa", "period": "P5"},
     {"work_id": "hoa_vang_co_xanh", "title": "Tôi thấy hoa vàng trên cỏ xanh", "author": "Nguyễn Nhật Ánh", "year": 2010, "genre": "Truyện dài", "period": "P5", "movement": "Văn học thiếu nhi đương đại"}
