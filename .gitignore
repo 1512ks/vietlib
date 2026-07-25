@@ -54,3 +54,5 @@ Thumbs.db
 scratchpad_*.md
 data/enrich_daily.json
 sample_model/results/usage_log.jsonl
+hf_space/
+.hf_token

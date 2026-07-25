@@ -6,7 +6,7 @@ So sánh 3 chiến lược:
     2. Vector only
     3. Hybrid + Cross-Encoder Rerank
 
-Metrics: Precision@K, Recall@K, F1@K, MRR với K ∈ {1, 3, 5, 10}
+Metrics: Precision@K, Recall@K, F1@K, MRR, nDCG@K, MAP@K, HitRate@K với K ∈ {1, 3, 5, 10}
 Kết quả lưu ra: data/evaluation_results/
 
 Chạy:
@@ -82,7 +82,13 @@ def print_comparison_table(reports: dict):
     print(f"{'='*75}")
 
     # Bảng Precision@K
-    for metric_name, attr in [("Precision@K", "avg_precision"), ("MRR", "avg_mrr")]:
+    for metric_name, attr in [
+        ("Precision@K", "avg_precision"),
+        ("MRR", "avg_mrr"),
+        ("nDCG@K", "avg_ndcg"),
+        ("MAP@K", "avg_map"),
+        ("HitRate@K", "avg_hit"),
+    ]:
         print(f"\n  {metric_name}:")
         ks = sorted(next(iter(reports.values())).ks)
         headers = ["Mode"] + [f"@{k}" for k in ks]
@@ -205,7 +211,11 @@ def main():
                 mode: {
                     "avg_precision": r.avg_precision,
                     "avg_recall": r.avg_recall,
+                    "avg_f1": r.avg_f1,
                     "avg_mrr": r.avg_mrr,
+                    "avg_ndcg": r.avg_ndcg,
+                    "avg_map": r.avg_map,
+                    "avg_hit": r.avg_hit,
                     "avg_latency_ms": r.avg_latency_ms,
                 }
                 for mode, r in reports.items()

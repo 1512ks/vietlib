@@ -1,0 +1,769 @@
+{
+  "db_total": 11900,
+  "canon_total": 81,
+  "present": [
+    {
+      "canon_title": "Truyện Kiều",
+      "canon_author": "Nguyễn Du",
+      "db_title": "Truyện Kiều",
+      "db_author": "Nguyễn Du",
+      "summary_chars": 334,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Chinh phụ ngâm",
+      "canon_author": "Đặng Trần Côn / Đoàn Thị Điểm dịch",
+      "db_title": "Chinh Phụ Ngâm",
+      "db_author": "Đặng Trần Côn",
+      "summary_chars": 580,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Cung oán ngâm khúc",
+      "canon_author": "Nguyễn Gia Thiều",
+      "db_title": "Cung oán ngâm khúc",
+      "db_author": "Ôn-như Hầu Nguyễn gia Thiều",
+      "summary_chars": 362,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Lục Vân Tiên",
+      "canon_author": "Nguyễn Đình Chiểu",
+      "db_title": "Lục Vân Tiên",
+      "db_author": "",
+      "summary_chars": 2959,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Văn tế nghĩa sĩ Cần Giuộc",
+      "canon_author": "Nguyễn Đình Chiểu",
+      "db_title": "Văn tế nghĩa sĩ Cần Giuộc",
+      "db_author": "",
+      "summary_chars": 2946,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Quốc âm thi tập",
+      "canon_author": "Nguyễn Trãi",
+      "db_title": "Quốc âm thi tập",
+      "db_author": "",
+      "summary_chars": 956,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Bình Ngô đại cáo",
+      "canon_author": "Nguyễn Trãi",
+      "db_title": "Bình Ngô Đại Cáo",
+      "db_author": "Nguyễn Trãi",
+      "summary_chars": 317,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Truyền kỳ mạn lục",
+      "canon_author": "Nguyễn Dữ",
+      "db_title": "Truyền kỳ mạn lục",
+      "db_author": "",
+      "summary_chars": 2954,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Hoàng Lê nhất thống chí",
+      "canon_author": "Ngô gia văn phái",
+      "db_title": "Hoàng Lê nhất thống chí",
+      "db_author": "Ngô gia văn phái",
+      "summary_chars": 332,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Thượng kinh ký sự",
+      "canon_author": "Lê Hữu Trác",
+      "db_title": "Thượng Kinh Ký Sự",
+      "db_author": "Hải Thượng Lãn Ông",
+      "summary_chars": 558,
+      "missing_author": false,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Số đỏ",
+      "canon_author": "Vũ Trọng Phụng",
+      "db_title": "Số Đỏ",
+      "db_author": "Vũ Trọng Phụng",
+      "summary_chars": 456,
+      "missing_author": false,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Giông tố",
+      "canon_author": "Vũ Trọng Phụng",
+      "db_title": "GIÔNG TỐ",
+      "db_author": "Vũ Trọng Phụng",
+      "summary_chars": 293,
+      "missing_author": false,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Tắt đèn",
+      "canon_author": "Ngô Tất Tố",
+      "db_title": "Tắt đèn",
+      "db_author": "Ngô Tất Tố",
+      "summary_chars": 485,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Chí Phèo",
+      "canon_author": "Nam Cao",
+      "db_title": "Chí Phèo",
+      "db_author": "",
+      "summary_chars": 2963,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Lão Hạc",
+      "canon_author": "Nam Cao",
+      "db_title": "Lão Hạc",
+      "db_author": "",
+      "summary_chars": 2964,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Đời thừa",
+      "canon_author": "Nam Cao",
+      "db_title": "Đời Thừa",
+      "db_author": "Nam Cao",
+      "summary_chars": 423,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Sống mòn",
+      "canon_author": "Nam Cao",
+      "db_title": "Sống",
+      "db_author": "Dư Hoa",
+      "summary_chars": 584,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Bỉ vỏ",
+      "canon_author": "Nguyên Hồng",
+      "db_title": "Bỉ vỏ",
+      "db_author": "Nguyên Hồng",
+      "summary_chars": 566,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Những ngày thơ ấu",
+      "canon_author": "Nguyên Hồng",
+      "db_title": "Những ngày thơ ấu",
+      "db_author": "Nguyên Hồng",
+      "summary_chars": 435,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Bước đường cùng",
+      "canon_author": "Nguyễn Công Hoan",
+      "db_title": "Bước đường cùng",
+      "db_author": "Nguyễn Công Hoan",
+      "summary_chars": 320,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Kép Tư Bền",
+      "canon_author": "Nguyễn Công Hoan",
+      "db_title": "Kép Tư Bền",
+      "db_author": "Nguyễn Công Hoan",
+      "summary_chars": 327,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Lều chõng",
+      "canon_author": "Ngô Tất Tố",
+      "db_title": "Lều chõng",
+      "db_author": "",
+      "summary_chars": 1109,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Trúng số độc đắc",
+      "canon_author": "Vũ Trọng Phụng",
+      "db_title": "Sợ",
+      "db_author": "Xuân Diệu",
+      "summary_chars": 302,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Làm đĩ",
+      "canon_author": "Vũ Trọng Phụng",
+      "db_title": "Làm   đĩ",
+      "db_author": "Nguyễn Thế Duyên",
+      "summary_chars": 387,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Đoạn tuyệt",
+      "canon_author": "Nhất Linh",
+      "db_title": "Đoạn Tuyệt",
+      "db_author": "Nhất Linh",
+      "summary_chars": 406,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Lạnh lùng",
+      "canon_author": "Nhất Linh",
+      "db_title": "Sương sa lạnh lùng",
+      "db_author": "Huân Long",
+      "summary_chars": 393,
+      "missing_author": false,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Đôi bạn",
+      "canon_author": "Nhất Linh",
+      "db_title": "ĐÔI BẠN",
+      "db_author": "Nhất Linh",
+      "summary_chars": 506,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Nửa chừng xuân",
+      "canon_author": "Khái Hưng",
+      "db_title": "Nửa chừng xuân",
+      "db_author": "Khái Hưng",
+      "summary_chars": 547,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Hồn bướm mơ tiên",
+      "canon_author": "Khái Hưng",
+      "db_title": "Hồn Bướm Mơ Tiên",
+      "db_author": "Nhất Linh , Khái Hưng",
+      "summary_chars": 398,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Gánh hàng hoa",
+      "canon_author": "Khái Hưng & Nhất Linh",
+      "db_title": "GÁNH HÀNG HOA",
+      "db_author": "Khái Hưng và Nhất Linh",
+      "summary_chars": 432,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Trống mái",
+      "canon_author": "Khái Hưng",
+      "db_title": "Trống Mái",
+      "db_author": "Khái Hưng",
+      "summary_chars": 592,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Hai đứa trẻ",
+      "canon_author": "Thạch Lam",
+      "db_title": "Hai đứa trẻ",
+      "db_author": "Yến Khương",
+      "summary_chars": 428,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Gió đầu mùa",
+      "canon_author": "Thạch Lam",
+      "db_title": "Giổ",
+      "db_author": "Lê Minh Hà",
+      "summary_chars": 542,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Gió lạnh đầu mùa",
+      "canon_author": "Thạch Lam",
+      "db_title": "Gió Lạnh Đầu Mùa",
+      "db_author": "Thạch Lam",
+      "summary_chars": 369,
+      "missing_author": false,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Dưới bóng hoàng lan",
+      "canon_author": "Thạch Lam",
+      "db_title": "Dưới Bóng Hoàng Lan",
+      "db_author": "Thạch Lam",
+      "summary_chars": 462,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Dế mèn phiêu lưu ký",
+      "canon_author": "Tô Hoài",
+      "db_title": "Dế mèn phiêu lưu ký",
+      "db_author": "Tô Hoài",
+      "summary_chars": 437,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Đất rừng phương Nam",
+      "canon_author": "Đoàn Giỏi",
+      "db_title": "Đất rừng phương Nam",
+      "db_author": "",
+      "summary_chars": 2952,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Hà Nội băm sáu phố phường",
+      "canon_author": "Thạch Lam",
+      "db_title": "Phượng",
+      "db_author": "Mầu Hoa Khế",
+      "summary_chars": 484,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Quê mẹ",
+      "canon_author": "Thanh Tịnh",
+      "db_title": "Quê mẹ",
+      "db_author": "Thanh Tịnh",
+      "summary_chars": 376,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Tôi đi học",
+      "canon_author": "Thanh Tịnh",
+      "db_title": "Tôi Đi Học",
+      "db_author": "Thanh Tịnh",
+      "summary_chars": 416,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Thơ thơ",
+      "canon_author": "Xuân Diệu",
+      "db_title": "Thơ thơ",
+      "db_author": "",
+      "summary_chars": 287,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Gửi hương cho gió",
+      "canon_author": "Xuân Diệu",
+      "db_title": "Gửi hương cho gió",
+      "db_author": "",
+      "summary_chars": 207,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Lửa thiêng",
+      "canon_author": "Huy Cận",
+      "db_title": "Lụa",
+      "db_author": "Alessandro Baricco",
+      "summary_chars": 466,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Tiếng thu",
+      "canon_author": "Lưu Trọng Lư",
+      "db_title": "Tiếng Thu",
+      "db_author": "Nguyễn Nam Trân",
+      "summary_chars": 348,
+      "missing_author": false,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Đau thương",
+      "canon_author": "Hàn Mặc Tử",
+      "db_title": "Một Đời Đau Thương",
+      "db_author": "Nguyễn Thị Huế Xưa",
+      "summary_chars": 376,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Tâm hồn tôi",
+      "canon_author": "Nguyễn Bính",
+      "db_title": "Tâm",
+      "db_author": "Phan Khoa Nam",
+      "summary_chars": 337,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Nhật ký trong tù",
+      "canon_author": "Hồ Chí Minh",
+      "db_title": "Nhật ký trong tù",
+      "db_author": "",
+      "summary_chars": 2955,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Từ ấy",
+      "canon_author": "Tố Hữu",
+      "db_title": "Từ ấy (tập thơ)",
+      "db_author": "",
+      "summary_chars": 2956,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Việt Bắc",
+      "canon_author": "Tố Hữu",
+      "db_title": "Việt Bắc (tập thơ)",
+      "db_author": "",
+      "summary_chars": 2463,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Ra trận",
+      "canon_author": "Tố Hữu",
+      "db_title": "Tình yêu ra trận",
+      "db_author": "Rafael Sabatini",
+      "summary_chars": 382,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Tây Tiến",
+      "canon_author": "Quang Dũng",
+      "db_title": "Tây Tiến",
+      "db_author": "",
+      "summary_chars": 2963,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Đồng chí",
+      "canon_author": "Chính Hữu",
+      "db_title": "Đồng chí",
+      "db_author": "Lê văn thảo",
+      "summary_chars": 372,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Bên kia sông Đuống",
+      "canon_author": "Hoàng Cầm",
+      "db_title": "Sống",
+      "db_author": "Dư Hoa",
+      "summary_chars": 584,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Đất nước đứng lên",
+      "canon_author": "Nguyên Ngọc",
+      "db_title": "Đất nước đứng lên",
+      "db_author": "",
+      "summary_chars": 1535,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Rừng xà nu",
+      "canon_author": "Nguyễn Trung Thành",
+      "db_title": "Rừng xà nu",
+      "db_author": "",
+      "summary_chars": 2961,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Mảnh trăng cuối rừng",
+      "canon_author": "Nguyễn Minh Châu",
+      "db_title": "Mảnh trăng cuối rừng",
+      "db_author": "Nguyễn Minh Châu",
+      "summary_chars": 413,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Hòn Đất",
+      "canon_author": "Anh Đức",
+      "db_title": "Hồn đất",
+      "db_author": "Trầm Nguyên Ý Anh",
+      "summary_chars": 341,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Người mẹ cầm súng",
+      "canon_author": "Nguyễn Thi",
+      "db_title": "Người mẹ",
+      "db_author": "Marcia Zina Mager",
+      "summary_chars": 408,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Vợ chồng A Phủ",
+      "canon_author": "Tô Hoài",
+      "db_title": "Vợ chồng A Phủ",
+      "db_author": "Tô Hoài",
+      "summary_chars": 397,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Vợ nhặt",
+      "canon_author": "Kim Lân",
+      "db_title": "Vợ nhặt",
+      "db_author": "Kim Lân",
+      "summary_chars": 479,
+      "missing_author": false,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Làng",
+      "canon_author": "Kim Lân",
+      "db_title": "Làng",
+      "db_author": "Thanh Tịnh",
+      "summary_chars": 462,
+      "missing_author": false,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Mùa lạc",
+      "canon_author": "Nguyễn Khải",
+      "db_title": "Mùa lạc",
+      "db_author": "Nguyễn Khải",
+      "summary_chars": 441,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Chiếc lược ngà",
+      "canon_author": "Nguyễn Quang Sáng",
+      "db_title": "Chiếc lược ngà",
+      "db_author": "Nguyễn Quang Sáng",
+      "summary_chars": 338,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Nỗi buồn chiến tranh",
+      "canon_author": "Bảo Ninh",
+      "db_title": "Nỗi buồn chiến tranh",
+      "db_author": "",
+      "summary_chars": 2951,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Thời xa vắng",
+      "canon_author": "Lê Lựu",
+      "db_title": "Thời xa vắng",
+      "db_author": "Lê Lựu",
+      "summary_chars": 519,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Mùa lá rụng trong vườn",
+      "canon_author": "Ma Văn Kháng",
+      "db_title": "Mùa lá rụng trong vườn",
+      "db_author": "",
+      "summary_chars": 2949,
+      "missing_author": true,
+      "missing_year": false,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Đám cưới không có giấy giá thú",
+      "canon_author": "Ma Văn Kháng",
+      "db_title": "Cỏ",
+      "db_author": "Ý Nhi",
+      "summary_chars": 436,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Những thiên đường mù",
+      "canon_author": "Dương Thu Hương",
+      "db_title": "Những thiên đường mù",
+      "db_author": "Dương thu Hương",
+      "summary_chars": 443,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Bên không có chồng",
+      "canon_author": "Dương Hướng",
+      "db_title": "Cỏ",
+      "db_author": "Ý Nhi",
+      "summary_chars": 436,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Tướng về hưu",
+      "canon_author": "Nguyễn Huy Thiệp",
+      "db_title": "Tướng về hưu",
+      "db_author": "Nguyễn Huy Thiệp",
+      "summary_chars": 398,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Không có vua",
+      "canon_author": "Nguyễn Huy Thiệp",
+      "db_title": "KHôNG Có VUA",
+      "db_author": "Nguyễn Huy Thiệp",
+      "summary_chars": 392,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    },
+    {
+      "canon_title": "Cánh đồng bất tận",
+      "canon_author": "Nguyễn Ngọc Tư",
+      "db_title": "Cánh đồng bất tận",
+      "db_author": "Nguyễn Ngọc Tư",
+      "summary_chars": 644,
+      "missing_author": false,
+      "missing_year": true,
+      "junk_summary": false
+    }
+  ],
+  "missing": [
+    {
+      "title": "Vũ trung tùy bút",
+      "author": "Phạm Đình Hổ"
+    },
+    {
+      "title": "Đoạn trường tân thanh",
+      "author": "Nguyễn Du"
+    },
+    {
+      "title": "Vũ trụ ca",
+      "author": "Huy Cận"
+    },
+    {
+      "title": "Mấy vần thơ",
+      "author": "Thế Lữ"
+    },
+    {
+      "title": "Điêu tàn",
+      "author": "Chế Lan Viên"
+    },
+    {
+      "title": "Thơ say",
+      "author": "Vũ Hoàng Chương"
+    },
+    {
+      "title": "Lỡ bước sang ngang",
+      "author": "Nguyễn Bính"
+    },
+    {
+      "title": "Dấu chân người lính",
+      "author": "Nguyễn Minh Châu"
+    },
+    {
+      "title": "Gào thét",
+      "author": "Nguyễn Ngọc Tư"
+    }
+  ],
+  "db_field_completeness": {
+    "empty_author": 1485,
+    "no_year": 8965,
+    "junk_summary": 2
+  }
+}

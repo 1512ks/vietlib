@@ -3,5 +3,7 @@
 streamlit==1.57.0
 sentence-transformers>=2.2.2
 rank-bm25>=0.2.2
+pyvi>=0.1.1          # tách TỪ tiếng Việt cho BM25 — BẮT BUỘC: index bm25.pkl đã build bằng pyvi,
+                    # thiếu nó query sẽ cắt theo âm tiết và lệch với index → BM25 hỏng
 numpy>=1.24.0
 google-generativeai>=0.3.0

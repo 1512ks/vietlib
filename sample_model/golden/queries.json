@@ -1,333 +1,1040 @@
 {
-  "_note": "Phase 2 — Golden set ĐẦY ĐỦ: 32 truy vấn = 28 câu lõi (8 FACTUAL, 6 AUTHOR, 6 SEMANTIC, 4 MULTI_TURN, 4 FALLBACK) + 4 câu paraphrase đo Search Stability. Nhãn gán ở mức CHUNK trên corpus 163 chunk (corpus/chunks.json).",
-  "_schema": {
-    "query_id": "mã",
-    "query": "câu hỏi",
-    "query_type": "FACTUAL | AUTHOR | SEMANTIC | MULTI_TURN | FALLBACK",
-    "history": "chỉ MULTI_TURN: các lượt hội thoại trước (giả lập) để rewriter viết lại câu hỏi",
-    "stability_group": "các câu cùng nhóm = cùng ý, khác diễn đạt -> đo độ ổn định top-K",
-    "relevant_grades": "chunk_id -> mức liên quan (2=trả lời trực tiếp, 1=liên quan một phần). Dùng cho nDCG/MAP graded.",
-    "full_relevant_ids": "TẤT CẢ chunk liên quan trong corpus -> Recall THẬT",
-    "ground_truth_answer": "câu trả lời chuẩn -> judge Faithfulness/Answer Relevance (kiểu RAGAS)",
-    "expect_fallback": "true nếu câu ngoài miền, hệ thống phải từ chối"
+ "_note": "Phase 2 — Golden set ĐẦY ĐỦ: 32 truy vấn = 28 câu lõi (8 FACTUAL, 6 AUTHOR, 6 SEMANTIC, 4 MULTI_TURN, 4 FALLBACK) + 4 câu paraphrase đo Search Stability. Nhãn gán ở mức CHUNK trên corpus 163 chunk (corpus/chunks.json).",
+ "_schema": {
+  "query_id": "mã",
+  "query": "câu hỏi",
+  "query_type": "FACTUAL | AUTHOR | SEMANTIC | MULTI_TURN | FALLBACK",
+  "history": "chỉ MULTI_TURN: các lượt hội thoại trước (giả lập) để rewriter viết lại câu hỏi",
+  "stability_group": "các câu cùng nhóm = cùng ý, khác diễn đạt -> đo độ ổn định top-K",
+  "relevant_grades": "chunk_id -> mức liên quan (2=trả lời trực tiếp, 1=liên quan một phần). Dùng cho nDCG/MAP graded.",
+  "full_relevant_ids": "TẤT CẢ chunk liên quan trong corpus -> Recall THẬT",
+  "ground_truth_answer": "câu trả lời chuẩn -> judge Faithfulness/Answer Relevance (kiểu RAGAS)",
+  "expect_fallback": "true nếu câu ngoài miền, hệ thống phải từ chối"
+ },
+ "queries": [
+  {
+   "query_id": "q01",
+   "query": "Truyện Chí Phèo của Nam Cao kết thúc như thế nào?",
+   "query_type": "FACTUAL",
+   "relevant_grades": {
+    "chi_pheo_tomtat": 2,
+    "chi_pheo_chude": 1
+   },
+   "full_relevant_ids": [
+    "chi_pheo_tomtat",
+    "chi_pheo_chude"
+   ],
+   "ground_truth_answer": "Ở phần kết, sau khi bị Thị Nở cự tuyệt và tuyệt vọng vì không thể trở lại làm người lương thiện, Chí Phèo đã đến nhà giết Bá Kiến rồi tự kết liễu đời mình.",
+   "expect_fallback": false
   },
-  "queries": [
+  {
+   "query_id": "q02",
+   "query": "Vì sao lão Hạc chọn cái chết?",
+   "query_type": "FACTUAL",
+   "stability_group": "lao_hac_death",
+   "relevant_grades": {
+    "lao_hac_tomtat": 2,
+    "lao_hac_chude": 2,
+    "lao_hac_nhanvat": 1
+   },
+   "full_relevant_ids": [
+    "lao_hac_tomtat",
+    "lao_hac_chude",
+    "lao_hac_nhanvat"
+   ],
+   "ground_truth_answer": "Lão Hạc chọn ăn bả chó tự tử để giữ trọn lòng tự trọng và nhân cách, không muốn tiêu vào số tiền dành dụm và mảnh vườn mà lão muốn để lại trọn vẹn cho con trai.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q03",
+   "query": "Truyện Kiều gồm bao nhiêu câu thơ và viết theo thể thơ gì?",
+   "query_type": "FACTUAL",
+   "relevant_grades": {
+    "truyen_kieu_hinhthuc": 2
+   },
+   "full_relevant_ids": [
+    "truyen_kieu_hinhthuc"
+   ],
+   "ground_truth_answer": "Truyện Kiều gồm 3254 câu thơ, được viết bằng chữ Nôm theo thể thơ lục bát.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q04",
+   "query": "Ai viết Bình Ngô đại cáo và viết trong hoàn cảnh nào?",
+   "query_type": "FACTUAL",
+   "relevant_grades": {
+    "binh_ngo_dai_cao_tacgia": 2,
+    "binh_ngo_dai_cao_tomtat": 2,
+    "binh_ngo_dai_cao_chude": 1,
+    "binh_ngo_dai_cao_noidung": 1
+   },
+   "full_relevant_ids": [
+    "binh_ngo_dai_cao_tacgia",
+    "binh_ngo_dai_cao_tomtat",
+    "binh_ngo_dai_cao_chude",
+    "binh_ngo_dai_cao_noidung"
+   ],
+   "ground_truth_answer": "Bình Ngô đại cáo do Nguyễn Trãi thừa lệnh Lê Lợi viết, công bố đầu năm 1428 để tuyên cáo thắng lợi của khởi nghĩa Lam Sơn sau khi đánh đuổi quân Minh, chấm dứt hai mươi năm đô hộ.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q05",
+   "query": "Trong truyện Làng, ông Hai phản ứng ra sao khi nghe tin làng Chợ Dầu theo giặc?",
+   "query_type": "FACTUAL",
+   "relevant_grades": {
+    "lang_kim_lan_tomtat": 2,
+    "lang_kim_lan_nhanvat": 2,
+    "lang_kim_lan_chude": 1
+   },
+   "full_relevant_ids": [
+    "lang_kim_lan_tomtat",
+    "lang_kim_lan_nhanvat",
+    "lang_kim_lan_chude"
+   ],
+   "ground_truth_answer": "Nghe tin làng Chợ Dầu theo Tây, ông Hai đau đớn tủi hổ, cổ nghẹn ắng, da mặt tê rân rân, mấy ngày không dám ra khỏi nhà và chỉ biết tâm sự với đứa con út; ông dứt khoát 'làng theo Tây mất rồi thì phải thù'. Khi tin được cải chính, ông sung sướng đi khoe khắp nơi.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q06",
+   "query": "Vì sao bé Thu không chịu nhận ông Sáu là cha?",
+   "query_type": "FACTUAL",
+   "relevant_grades": {
+    "chiec_luoc_nga_tomtat": 2,
+    "chiec_luoc_nga_nhanvat": 2,
+    "chiec_luoc_nga_chude": 1
+   },
+   "full_relevant_ids": [
+    "chiec_luoc_nga_tomtat",
+    "chiec_luoc_nga_nhanvat",
+    "chiec_luoc_nga_chude"
+   ],
+   "ground_truth_answer": "Bé Thu không nhận ông Sáu là cha vì vết sẹo trên mặt khiến ông khác với người cha trong tấm ảnh chụp chung với má mà bé hằng tôn thờ; sự bướng bỉnh đó chính là biểu hiện tình yêu cha sâu sắc.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q07",
+   "query": "Hình tượng cây xà nu trong Rừng xà nu tượng trưng cho điều gì?",
+   "query_type": "FACTUAL",
+   "relevant_grades": {
+    "rung_xa_nu_chude": 2,
+    "rung_xa_nu_tomtat": 1,
+    "rung_xa_nu_nhanvat": 1
+   },
+   "full_relevant_ids": [
+    "rung_xa_nu_chude",
+    "rung_xa_nu_tomtat",
+    "rung_xa_nu_nhanvat"
+   ],
+   "ground_truth_answer": "Cây xà nu ham ánh sáng, bị thương vẫn vươn lên là biểu tượng cho sức sống bất diệt và tinh thần quật khởi của con người Tây Nguyên; các thế hệ làng Xô Man nối tiếp nhau như những lớp cây xà nu.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q08",
+   "query": "Trong Chiếc thuyền ngoài xa, nghệ sĩ Phùng chứng kiến điều gì sau khi chụp được bức ảnh đẹp?",
+   "query_type": "FACTUAL",
+   "relevant_grades": {
+    "chiec_thuyen_ngoai_xa_tomtat": 2,
+    "chiec_thuyen_ngoai_xa_chude": 1,
+    "chiec_thuyen_ngoai_xa_nhanvat": 1
+   },
+   "full_relevant_ids": [
+    "chiec_thuyen_ngoai_xa_tomtat",
+    "chiec_thuyen_ngoai_xa_chude",
+    "chiec_thuyen_ngoai_xa_nhanvat"
+   ],
+   "ground_truth_answer": "Ngay sau khi chụp được cảnh chiếc thuyền ngoài xa đẹp như tranh, Phùng chứng kiến cảnh người chồng hàng chài đánh vợ tàn bạo khi thuyền vào bờ, còn đứa con là thằng Phác lao vào bảo vệ mẹ — nghịch lý giữa nghệ thuật và hiện thực cuộc đời.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q09",
+   "query": "Nam Cao đã viết những tác phẩm nào trong thư viện?",
+   "query_type": "AUTHOR",
+   "stability_group": "nam_cao_works",
+   "relevant_grades": {
+    "chi_pheo_tomtat": 2,
+    "lao_hac_tomtat": 2,
+    "doi_thua_tomtat": 2,
+    "doi_mat_tomtat": 2,
+    "chi_pheo_tacgia": 2,
+    "chi_pheo_nhanvat": 1,
+    "chi_pheo_chude": 1,
+    "lao_hac_nhanvat": 1,
+    "lao_hac_chude": 1,
+    "doi_thua_chude": 1,
+    "doi_thua_nhanvat": 1,
+    "doi_mat_nhanvat": 1,
+    "doi_mat_chude": 1
+   },
+   "full_relevant_ids": [
+    "chi_pheo_tomtat",
+    "chi_pheo_nhanvat",
+    "chi_pheo_chude",
+    "chi_pheo_tacgia",
+    "lao_hac_tomtat",
+    "lao_hac_nhanvat",
+    "lao_hac_chude",
+    "doi_thua_tomtat",
+    "doi_thua_chude",
+    "doi_thua_nhanvat",
+    "doi_mat_tomtat",
+    "doi_mat_nhanvat",
+    "doi_mat_chude"
+   ],
+   "ground_truth_answer": "Trong thư viện, Nam Cao có bốn tác phẩm: Chí Phèo (1941), Lão Hạc (1943), Đời thừa (1943) và Đôi mắt (1948) — các truyện ngắn tiêu biểu viết về người nông dân nghèo và người trí thức.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q10",
+   "query": "Nguyễn Minh Châu có những truyện ngắn nào?",
+   "query_type": "AUTHOR",
+   "relevant_grades": {
+    "manh_trang_cuoi_rung_tomtat": 2,
+    "ben_que_tomtat": 2,
+    "chiec_thuyen_ngoai_xa_tomtat": 2,
+    "manh_trang_cuoi_rung_tacgia": 2,
+    "manh_trang_cuoi_rung_chude": 1,
+    "ben_que_chude": 1,
+    "ben_que_tacgia": 1,
+    "chiec_thuyen_ngoai_xa_nhanvat": 1,
+    "chiec_thuyen_ngoai_xa_chude": 1
+   },
+   "full_relevant_ids": [
+    "manh_trang_cuoi_rung_tomtat",
+    "manh_trang_cuoi_rung_chude",
+    "manh_trang_cuoi_rung_tacgia",
+    "ben_que_tomtat",
+    "ben_que_chude",
+    "ben_que_tacgia",
+    "chiec_thuyen_ngoai_xa_tomtat",
+    "chiec_thuyen_ngoai_xa_nhanvat",
+    "chiec_thuyen_ngoai_xa_chude"
+   ],
+   "ground_truth_answer": "Thư viện có ba truyện ngắn của Nguyễn Minh Châu: Mảnh trăng cuối rừng (1970) thời chống Mỹ, cùng Chiếc thuyền ngoài xa (1983) và Bến quê (1985) thuộc chặng sáng tác thế sự sau 1975.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q11",
+   "query": "Kể tên các tác phẩm của Nguyễn Nhật Ánh trong thư viện",
+   "query_type": "AUTHOR",
+   "relevant_grades": {
+    "mat_biec_tomtat": 2,
+    "hoa_vang_co_xanh_tomtat": 2,
+    "mat_biec_tacgia": 2,
+    "mat_biec_chude": 1,
+    "hoa_vang_co_xanh_chude": 1,
+    "hoa_vang_co_xanh_boicanh": 1
+   },
+   "full_relevant_ids": [
+    "mat_biec_tomtat",
+    "mat_biec_chude",
+    "mat_biec_tacgia",
+    "hoa_vang_co_xanh_tomtat",
+    "hoa_vang_co_xanh_chude",
+    "hoa_vang_co_xanh_boicanh"
+   ],
+   "ground_truth_answer": "Thư viện có hai truyện dài của Nguyễn Nhật Ánh: Mắt biếc (1990) và Tôi thấy hoa vàng trên cỏ xanh (2010).",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q12",
+   "query": "Thạch Lam viết những truyện nào?",
+   "query_type": "AUTHOR",
+   "relevant_grades": {
+    "gio_lanh_dau_mua_tomtat": 2,
+    "hai_dua_tre_tomtat": 2,
+    "gio_lanh_dau_mua_tacgia": 2,
+    "gio_lanh_dau_mua_chude": 1,
+    "hai_dua_tre_chude": 1,
+    "hai_dua_tre_nghethuat": 1
+   },
+   "full_relevant_ids": [
+    "gio_lanh_dau_mua_tomtat",
+    "gio_lanh_dau_mua_chude",
+    "gio_lanh_dau_mua_tacgia",
+    "hai_dua_tre_tomtat",
+    "hai_dua_tre_chude",
+    "hai_dua_tre_nghethuat"
+   ],
+   "ground_truth_answer": "Thư viện có hai truyện ngắn của Thạch Lam: Gió lạnh đầu mùa (1937) và Hai đứa trẻ (1938) — đều là truyện ngắn trữ tình, nhẹ nhàng giàu chất thơ.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q13",
+   "query": "Nguyễn Tuân có tác phẩm nào trong thư viện?",
+   "query_type": "AUTHOR",
+   "relevant_grades": {
+    "vang_bong_mot_thoi_tomtat": 2,
+    "chu_nguoi_tu_tu_tomtat": 2,
+    "vang_bong_mot_thoi_tacgia": 2,
+    "vang_bong_mot_thoi_chude": 1,
+    "chu_nguoi_tu_tu_nhanvat": 1,
+    "chu_nguoi_tu_tu_chude": 1
+   },
+   "full_relevant_ids": [
+    "vang_bong_mot_thoi_tomtat",
+    "vang_bong_mot_thoi_chude",
+    "vang_bong_mot_thoi_tacgia",
+    "chu_nguoi_tu_tu_tomtat",
+    "chu_nguoi_tu_tu_nhanvat",
+    "chu_nguoi_tu_tu_chude"
+   ],
+   "ground_truth_answer": "Thư viện có tập truyện Vang bóng một thời (1940) của Nguyễn Tuân và truyện ngắn Chữ người tử tù nằm trong tập đó.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q14",
+   "query": "Tô Hoài là tác giả của những cuốn nào trong thư viện?",
+   "query_type": "AUTHOR",
+   "relevant_grades": {
+    "de_men_tomtat": 2,
+    "vo_chong_a_phu_tomtat": 2,
+    "de_men_chude": 1,
+    "de_men_nhanvat": 1,
+    "vo_chong_a_phu_nhanvat": 1,
+    "vo_chong_a_phu_chude": 1
+   },
+   "full_relevant_ids": [
+    "de_men_tomtat",
+    "de_men_nhanvat",
+    "de_men_chude",
+    "vo_chong_a_phu_tomtat",
+    "vo_chong_a_phu_nhanvat",
+    "vo_chong_a_phu_chude"
+   ],
+   "ground_truth_answer": "Thư viện có hai tác phẩm của Tô Hoài: truyện đồng thoại Dế Mèn phiêu lưu ký (1941) và truyện ngắn Vợ chồng A Phủ (1952).",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q15",
+   "query": "Gợi ý tác phẩm về thân phận bi kịch của người phụ nữ trong xã hội phong kiến",
+   "query_type": "SEMANTIC",
+   "stability_group": "phu_nu_phong_kien",
+   "relevant_grades": {
+    "truyen_kieu_chude": 2,
+    "truyen_kieu_tomtat": 2,
+    "nguoi_con_gai_nam_xuong_chude": 2,
+    "nguoi_con_gai_nam_xuong_tomtat": 2,
+    "truyen_kieu_nhanvat": 1,
+    "nguoi_con_gai_nam_xuong_nhanvat": 1,
+    "chinh_phu_ngam_chude": 1,
+    "chinh_phu_ngam_tomtat": 1
+   },
+   "full_relevant_ids": [
+    "truyen_kieu_chude",
+    "truyen_kieu_tomtat",
+    "truyen_kieu_nhanvat",
+    "nguoi_con_gai_nam_xuong_chude",
+    "nguoi_con_gai_nam_xuong_tomtat",
+    "nguoi_con_gai_nam_xuong_nhanvat",
+    "chinh_phu_ngam_chude",
+    "chinh_phu_ngam_tomtat"
+   ],
+   "ground_truth_answer": "Tiêu biểu có Truyện Kiều của Nguyễn Du — bi kịch mười lăm năm lưu lạc của Thúy Kiều tài hoa bạc mệnh, và Chuyện người con gái Nam Xương của Nguyễn Dữ — nỗi oan khuất của Vũ Nương; ngoài ra Chinh phụ ngâm cũng nói về nỗi sầu muộn của người chinh phụ chờ chồng.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q16",
+   "query": "Có truyện nào về tuổi thơ ở làng quê không?",
+   "query_type": "SEMANTIC",
+   "relevant_grades": {
+    "hoa_vang_co_xanh_tomtat": 2,
+    "hoa_vang_co_xanh_chude": 2,
+    "hoa_vang_co_xanh_boicanh": 1,
+    "mat_biec_tomtat": 1,
+    "mat_biec_chude": 1,
+    "gio_lanh_dau_mua_tomtat": 1,
+    "gio_lanh_dau_mua_chude": 1
+   },
+   "full_relevant_ids": [
+    "hoa_vang_co_xanh_tomtat",
+    "hoa_vang_co_xanh_chude",
+    "hoa_vang_co_xanh_boicanh",
+    "mat_biec_tomtat",
+    "mat_biec_chude",
+    "gio_lanh_dau_mua_tomtat",
+    "gio_lanh_dau_mua_chude"
+   ],
+   "ground_truth_answer": "Phù hợp nhất là Tôi thấy hoa vàng trên cỏ xanh của Nguyễn Nhật Ánh — tuổi thơ hai anh em Thiều, Tường ở làng quê nghèo; Mắt biếc cũng gợi tuổi thơ làng Đo Đo, và Gió lạnh đầu mùa của Thạch Lam kể tình thương giữa những đứa trẻ.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q17",
+   "query": "Tác phẩm nào viết về nỗi đau và vết thương tinh thần mà chiến tranh để lại?",
+   "query_type": "SEMANTIC",
+   "relevant_grades": {
+    "ben_khong_chong_tomtat": 2,
+    "ben_khong_chong_chude": 2,
+    "ben_khong_chong_tacgia": 1,
+    "chiec_luoc_nga_chude": 1
+   },
+   "full_relevant_ids": [
+    "ben_khong_chong_tomtat",
+    "ben_khong_chong_chude",
+    "ben_khong_chong_tacgia",
+    "chiec_luoc_nga_chude"
+   ],
+   "ground_truth_answer": "Tiêu biểu là Bến không chồng của Dương Hướng — bi kịch làng Đông với những người phụ nữ mòn mỏi chờ chồng con đi chiến tranh không về và nỗi cô đơn, mặc cảm của người lính Nguyễn Vạn thời hậu chiến; Chiếc lược ngà của Nguyễn Quang Sáng cũng cho thấy chiến tranh chia lìa tình cha con.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q18",
+   "query": "Gợi ý bài thơ hay về tình yêu đôi lứa",
+   "query_type": "SEMANTIC",
+   "relevant_grades": {
+    "song_xuan_quynh_tomtat": 2,
+    "song_xuan_quynh_chude": 2,
+    "song_xuan_quynh_boicanh": 1,
+    "chinh_phu_ngam_chude": 1
+   },
+   "full_relevant_ids": [
+    "song_xuan_quynh_tomtat",
+    "song_xuan_quynh_chude",
+    "song_xuan_quynh_boicanh",
+    "chinh_phu_ngam_chude"
+   ],
+   "ground_truth_answer": "Bài Sóng của Xuân Quỳnh là lựa chọn tiêu biểu: mượn hình tượng sóng để diễn tả tình yêu người phụ nữ vừa mãnh liệt vừa thủy chung, khát vọng tình yêu vĩnh cửu.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q19",
+   "query": "Truyện nào phản ánh số phận người nông dân bị áp bức trước Cách mạng?",
+   "query_type": "SEMANTIC",
+   "relevant_grades": {
+    "tat_den_tomtat": 2,
+    "tat_den_chude": 2,
+    "chi_pheo_tomtat": 2,
+    "chi_pheo_chude": 2,
+    "buoc_duong_cung_tomtat": 2,
+    "buoc_duong_cung_chude": 2,
+    "tat_den_nhanvat": 1,
+    "buoc_duong_cung_nhanvat": 1,
+    "lao_hac_tomtat": 1,
+    "lao_hac_chude": 1
+   },
+   "full_relevant_ids": [
+    "tat_den_tomtat",
+    "tat_den_chude",
+    "tat_den_nhanvat",
+    "chi_pheo_tomtat",
+    "chi_pheo_chude",
+    "buoc_duong_cung_tomtat",
+    "buoc_duong_cung_chude",
+    "buoc_duong_cung_nhanvat",
+    "lao_hac_tomtat",
+    "lao_hac_chude"
+   ],
+   "ground_truth_answer": "Dòng hiện thực phê phán có nhiều tác phẩm tiêu biểu: Tắt đèn của Ngô Tất Tố (chị Dậu với nạn sưu thuế), Chí Phèo của Nam Cao (người nông dân bị tha hóa), Bước đường cùng của Nguyễn Công Hoan (anh Pha bị địa chủ cho vay nặng lãi cướp ruộng) và Lão Hạc của Nam Cao.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q20",
+   "query": "Bài thơ nào thể hiện nỗi cô đơn của con người trước thiên nhiên rộng lớn?",
+   "query_type": "SEMANTIC",
+   "stability_group": "co_don_thien_nhien",
+   "relevant_grades": {
+    "trang_giang_tomtat": 2,
+    "trang_giang_chude": 2,
+    "trang_giang_hinhthuc": 1
+   },
+   "full_relevant_ids": [
+    "trang_giang_tomtat",
+    "trang_giang_chude",
+    "trang_giang_hinhthuc"
+   ],
+   "ground_truth_answer": "Tràng giang của Huy Cận là bài thơ tiêu biểu: trước sông nước mênh mông, cái tôi thi sĩ thấy mình nhỏ bé, cô đơn, dâng lên nỗi buồn và tình yêu quê hương thầm kín.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q21",
+   "query": "Truyện Chí Phèo của ông ấy kết thúc ra sao?",
+   "query_type": "MULTI_TURN",
+   "history": [
     {
-      "query_id": "q01",
-      "query": "Truyện Chí Phèo của Nam Cao kết thúc như thế nào?",
-      "query_type": "FACTUAL",
-      "relevant_grades": {"chi_pheo_tomtat": 2, "chi_pheo_chude": 1},
-      "full_relevant_ids": ["chi_pheo_tomtat", "chi_pheo_chude"],
-      "ground_truth_answer": "Ở phần kết, sau khi bị Thị Nở cự tuyệt và tuyệt vọng vì không thể trở lại làm người lương thiện, Chí Phèo đã đến nhà giết Bá Kiến rồi tự kết liễu đời mình.",
-      "expect_fallback": false
+     "role": "user",
+     "content": "Nam Cao có những tác phẩm nào trong thư viện?"
     },
     {
-      "query_id": "q02",
-      "query": "Vì sao lão Hạc chọn cái chết?",
-      "query_type": "FACTUAL",
-      "stability_group": "lao_hac_death",
-      "relevant_grades": {"lao_hac_tomtat": 2, "lao_hac_chude": 2, "lao_hac_nhanvat": 1},
-      "full_relevant_ids": ["lao_hac_tomtat", "lao_hac_chude", "lao_hac_nhanvat"],
-      "ground_truth_answer": "Lão Hạc chọn ăn bả chó tự tử để giữ trọn lòng tự trọng và nhân cách, không muốn tiêu vào số tiền dành dụm và mảnh vườn mà lão muốn để lại trọn vẹn cho con trai.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q03",
-      "query": "Truyện Kiều gồm bao nhiêu câu thơ và viết theo thể thơ gì?",
-      "query_type": "FACTUAL",
-      "relevant_grades": {"truyen_kieu_hinhthuc": 2},
-      "full_relevant_ids": ["truyen_kieu_hinhthuc"],
-      "ground_truth_answer": "Truyện Kiều gồm 3254 câu thơ, được viết bằng chữ Nôm theo thể thơ lục bát.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q04",
-      "query": "Ai viết Bình Ngô đại cáo và viết trong hoàn cảnh nào?",
-      "query_type": "FACTUAL",
-      "relevant_grades": {"binh_ngo_dai_cao_tacgia": 2, "binh_ngo_dai_cao_tomtat": 2, "binh_ngo_dai_cao_chude": 1, "binh_ngo_dai_cao_noidung": 1},
-      "full_relevant_ids": ["binh_ngo_dai_cao_tacgia", "binh_ngo_dai_cao_tomtat", "binh_ngo_dai_cao_chude", "binh_ngo_dai_cao_noidung"],
-      "ground_truth_answer": "Bình Ngô đại cáo do Nguyễn Trãi thừa lệnh Lê Lợi viết, công bố đầu năm 1428 để tuyên cáo thắng lợi của khởi nghĩa Lam Sơn sau khi đánh đuổi quân Minh, chấm dứt hai mươi năm đô hộ.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q05",
-      "query": "Trong truyện Làng, ông Hai phản ứng ra sao khi nghe tin làng Chợ Dầu theo giặc?",
-      "query_type": "FACTUAL",
-      "relevant_grades": {"lang_kim_lan_tomtat": 2, "lang_kim_lan_nhanvat": 2, "lang_kim_lan_chude": 1},
-      "full_relevant_ids": ["lang_kim_lan_tomtat", "lang_kim_lan_nhanvat", "lang_kim_lan_chude"],
-      "ground_truth_answer": "Nghe tin làng Chợ Dầu theo Tây, ông Hai đau đớn tủi hổ, cổ nghẹn ắng, da mặt tê rân rân, mấy ngày không dám ra khỏi nhà và chỉ biết tâm sự với đứa con út; ông dứt khoát 'làng theo Tây mất rồi thì phải thù'. Khi tin được cải chính, ông sung sướng đi khoe khắp nơi.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q06",
-      "query": "Vì sao bé Thu không chịu nhận ông Sáu là cha?",
-      "query_type": "FACTUAL",
-      "relevant_grades": {"chiec_luoc_nga_tomtat": 2, "chiec_luoc_nga_nhanvat": 2, "chiec_luoc_nga_chude": 1},
-      "full_relevant_ids": ["chiec_luoc_nga_tomtat", "chiec_luoc_nga_nhanvat", "chiec_luoc_nga_chude"],
-      "ground_truth_answer": "Bé Thu không nhận ông Sáu là cha vì vết sẹo trên mặt khiến ông khác với người cha trong tấm ảnh chụp chung với má mà bé hằng tôn thờ; sự bướng bỉnh đó chính là biểu hiện tình yêu cha sâu sắc.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q07",
-      "query": "Hình tượng cây xà nu trong Rừng xà nu tượng trưng cho điều gì?",
-      "query_type": "FACTUAL",
-      "relevant_grades": {"rung_xa_nu_chude": 2, "rung_xa_nu_tomtat": 1, "rung_xa_nu_nhanvat": 1},
-      "full_relevant_ids": ["rung_xa_nu_chude", "rung_xa_nu_tomtat", "rung_xa_nu_nhanvat"],
-      "ground_truth_answer": "Cây xà nu ham ánh sáng, bị thương vẫn vươn lên là biểu tượng cho sức sống bất diệt và tinh thần quật khởi của con người Tây Nguyên; các thế hệ làng Xô Man nối tiếp nhau như những lớp cây xà nu.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q08",
-      "query": "Trong Chiếc thuyền ngoài xa, nghệ sĩ Phùng chứng kiến điều gì sau khi chụp được bức ảnh đẹp?",
-      "query_type": "FACTUAL",
-      "relevant_grades": {"chiec_thuyen_ngoai_xa_tomtat": 2, "chiec_thuyen_ngoai_xa_chude": 1, "chiec_thuyen_ngoai_xa_nhanvat": 1},
-      "full_relevant_ids": ["chiec_thuyen_ngoai_xa_tomtat", "chiec_thuyen_ngoai_xa_chude", "chiec_thuyen_ngoai_xa_nhanvat"],
-      "ground_truth_answer": "Ngay sau khi chụp được cảnh chiếc thuyền ngoài xa đẹp như tranh, Phùng chứng kiến cảnh người chồng hàng chài đánh vợ tàn bạo khi thuyền vào bờ, còn đứa con là thằng Phác lao vào bảo vệ mẹ — nghịch lý giữa nghệ thuật và hiện thực cuộc đời.",
-      "expect_fallback": false
-    },
-
-    {
-      "query_id": "q09",
-      "query": "Nam Cao đã viết những tác phẩm nào trong thư viện?",
-      "query_type": "AUTHOR",
-      "stability_group": "nam_cao_works",
-      "relevant_grades": {"chi_pheo_tomtat": 2, "lao_hac_tomtat": 2, "doi_thua_tomtat": 2, "doi_mat_tomtat": 2, "chi_pheo_tacgia": 2, "chi_pheo_nhanvat": 1, "chi_pheo_chude": 1, "lao_hac_nhanvat": 1, "lao_hac_chude": 1, "doi_thua_chude": 1, "doi_thua_nhanvat": 1, "doi_mat_nhanvat": 1, "doi_mat_chude": 1},
-      "full_relevant_ids": ["chi_pheo_tomtat", "chi_pheo_nhanvat", "chi_pheo_chude", "chi_pheo_tacgia", "lao_hac_tomtat", "lao_hac_nhanvat", "lao_hac_chude", "doi_thua_tomtat", "doi_thua_chude", "doi_thua_nhanvat", "doi_mat_tomtat", "doi_mat_nhanvat", "doi_mat_chude"],
-      "ground_truth_answer": "Trong thư viện, Nam Cao có bốn tác phẩm: Chí Phèo (1941), Lão Hạc (1943), Đời thừa (1943) và Đôi mắt (1948) — các truyện ngắn tiêu biểu viết về người nông dân nghèo và người trí thức.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q10",
-      "query": "Nguyễn Minh Châu có những truyện ngắn nào?",
-      "query_type": "AUTHOR",
-      "relevant_grades": {"manh_trang_cuoi_rung_tomtat": 2, "ben_que_tomtat": 2, "chiec_thuyen_ngoai_xa_tomtat": 2, "manh_trang_cuoi_rung_tacgia": 2, "manh_trang_cuoi_rung_chude": 1, "ben_que_chude": 1, "ben_que_tacgia": 1, "chiec_thuyen_ngoai_xa_nhanvat": 1, "chiec_thuyen_ngoai_xa_chude": 1},
-      "full_relevant_ids": ["manh_trang_cuoi_rung_tomtat", "manh_trang_cuoi_rung_chude", "manh_trang_cuoi_rung_tacgia", "ben_que_tomtat", "ben_que_chude", "ben_que_tacgia", "chiec_thuyen_ngoai_xa_tomtat", "chiec_thuyen_ngoai_xa_nhanvat", "chiec_thuyen_ngoai_xa_chude"],
-      "ground_truth_answer": "Thư viện có ba truyện ngắn của Nguyễn Minh Châu: Mảnh trăng cuối rừng (1970) thời chống Mỹ, cùng Chiếc thuyền ngoài xa (1983) và Bến quê (1985) thuộc chặng sáng tác thế sự sau 1975.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q11",
-      "query": "Kể tên các tác phẩm của Nguyễn Nhật Ánh trong thư viện",
-      "query_type": "AUTHOR",
-      "relevant_grades": {"mat_biec_tomtat": 2, "hoa_vang_co_xanh_tomtat": 2, "mat_biec_tacgia": 2, "mat_biec_chude": 1, "hoa_vang_co_xanh_chude": 1, "hoa_vang_co_xanh_boicanh": 1},
-      "full_relevant_ids": ["mat_biec_tomtat", "mat_biec_chude", "mat_biec_tacgia", "hoa_vang_co_xanh_tomtat", "hoa_vang_co_xanh_chude", "hoa_vang_co_xanh_boicanh"],
-      "ground_truth_answer": "Thư viện có hai truyện dài của Nguyễn Nhật Ánh: Mắt biếc (1990) và Tôi thấy hoa vàng trên cỏ xanh (2010).",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q12",
-      "query": "Thạch Lam viết những truyện nào?",
-      "query_type": "AUTHOR",
-      "relevant_grades": {"gio_lanh_dau_mua_tomtat": 2, "hai_dua_tre_tomtat": 2, "gio_lanh_dau_mua_tacgia": 2, "gio_lanh_dau_mua_chude": 1, "hai_dua_tre_chude": 1, "hai_dua_tre_nghethuat": 1},
-      "full_relevant_ids": ["gio_lanh_dau_mua_tomtat", "gio_lanh_dau_mua_chude", "gio_lanh_dau_mua_tacgia", "hai_dua_tre_tomtat", "hai_dua_tre_chude", "hai_dua_tre_nghethuat"],
-      "ground_truth_answer": "Thư viện có hai truyện ngắn của Thạch Lam: Gió lạnh đầu mùa (1937) và Hai đứa trẻ (1938) — đều là truyện ngắn trữ tình, nhẹ nhàng giàu chất thơ.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q13",
-      "query": "Nguyễn Tuân có tác phẩm nào trong thư viện?",
-      "query_type": "AUTHOR",
-      "relevant_grades": {"vang_bong_mot_thoi_tomtat": 2, "chu_nguoi_tu_tu_tomtat": 2, "vang_bong_mot_thoi_tacgia": 2, "vang_bong_mot_thoi_chude": 1, "chu_nguoi_tu_tu_nhanvat": 1, "chu_nguoi_tu_tu_chude": 1},
-      "full_relevant_ids": ["vang_bong_mot_thoi_tomtat", "vang_bong_mot_thoi_chude", "vang_bong_mot_thoi_tacgia", "chu_nguoi_tu_tu_tomtat", "chu_nguoi_tu_tu_nhanvat", "chu_nguoi_tu_tu_chude"],
-      "ground_truth_answer": "Thư viện có tập truyện Vang bóng một thời (1940) của Nguyễn Tuân và truyện ngắn Chữ người tử tù nằm trong tập đó.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q14",
-      "query": "Tô Hoài là tác giả của những cuốn nào trong thư viện?",
-      "query_type": "AUTHOR",
-      "relevant_grades": {"de_men_tomtat": 2, "vo_chong_a_phu_tomtat": 2, "de_men_chude": 1, "de_men_nhanvat": 1, "vo_chong_a_phu_nhanvat": 1, "vo_chong_a_phu_chude": 1},
-      "full_relevant_ids": ["de_men_tomtat", "de_men_nhanvat", "de_men_chude", "vo_chong_a_phu_tomtat", "vo_chong_a_phu_nhanvat", "vo_chong_a_phu_chude"],
-      "ground_truth_answer": "Thư viện có hai tác phẩm của Tô Hoài: truyện đồng thoại Dế Mèn phiêu lưu ký (1941) và truyện ngắn Vợ chồng A Phủ (1952).",
-      "expect_fallback": false
-    },
-
-    {
-      "query_id": "q15",
-      "query": "Gợi ý tác phẩm về thân phận bi kịch của người phụ nữ trong xã hội phong kiến",
-      "query_type": "SEMANTIC",
-      "stability_group": "phu_nu_phong_kien",
-      "relevant_grades": {"truyen_kieu_chude": 2, "truyen_kieu_tomtat": 2, "nguoi_con_gai_nam_xuong_chude": 2, "nguoi_con_gai_nam_xuong_tomtat": 2, "truyen_kieu_nhanvat": 1, "nguoi_con_gai_nam_xuong_nhanvat": 1, "chinh_phu_ngam_chude": 1, "chinh_phu_ngam_tomtat": 1},
-      "full_relevant_ids": ["truyen_kieu_chude", "truyen_kieu_tomtat", "truyen_kieu_nhanvat", "nguoi_con_gai_nam_xuong_chude", "nguoi_con_gai_nam_xuong_tomtat", "nguoi_con_gai_nam_xuong_nhanvat", "chinh_phu_ngam_chude", "chinh_phu_ngam_tomtat"],
-      "ground_truth_answer": "Tiêu biểu có Truyện Kiều của Nguyễn Du — bi kịch mười lăm năm lưu lạc của Thúy Kiều tài hoa bạc mệnh, và Chuyện người con gái Nam Xương của Nguyễn Dữ — nỗi oan khuất của Vũ Nương; ngoài ra Chinh phụ ngâm cũng nói về nỗi sầu muộn của người chinh phụ chờ chồng.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q16",
-      "query": "Có truyện nào về tuổi thơ ở làng quê không?",
-      "query_type": "SEMANTIC",
-      "relevant_grades": {"hoa_vang_co_xanh_tomtat": 2, "hoa_vang_co_xanh_chude": 2, "hoa_vang_co_xanh_boicanh": 1, "mat_biec_tomtat": 1, "mat_biec_chude": 1, "gio_lanh_dau_mua_tomtat": 1, "gio_lanh_dau_mua_chude": 1},
-      "full_relevant_ids": ["hoa_vang_co_xanh_tomtat", "hoa_vang_co_xanh_chude", "hoa_vang_co_xanh_boicanh", "mat_biec_tomtat", "mat_biec_chude", "gio_lanh_dau_mua_tomtat", "gio_lanh_dau_mua_chude"],
-      "ground_truth_answer": "Phù hợp nhất là Tôi thấy hoa vàng trên cỏ xanh của Nguyễn Nhật Ánh — tuổi thơ hai anh em Thiều, Tường ở làng quê nghèo; Mắt biếc cũng gợi tuổi thơ làng Đo Đo, và Gió lạnh đầu mùa của Thạch Lam kể tình thương giữa những đứa trẻ.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q17",
-      "query": "Tác phẩm nào viết về nỗi đau và vết thương tinh thần mà chiến tranh để lại?",
-      "query_type": "SEMANTIC",
-      "relevant_grades": {"ben_khong_chong_tomtat": 2, "ben_khong_chong_chude": 2, "ben_khong_chong_tacgia": 1, "chiec_luoc_nga_chude": 1},
-      "full_relevant_ids": ["ben_khong_chong_tomtat", "ben_khong_chong_chude", "ben_khong_chong_tacgia", "chiec_luoc_nga_chude"],
-      "ground_truth_answer": "Tiêu biểu là Bến không chồng của Dương Hướng — bi kịch làng Đông với những người phụ nữ mòn mỏi chờ chồng con đi chiến tranh không về và nỗi cô đơn, mặc cảm của người lính Nguyễn Vạn thời hậu chiến; Chiếc lược ngà của Nguyễn Quang Sáng cũng cho thấy chiến tranh chia lìa tình cha con.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q18",
-      "query": "Gợi ý bài thơ hay về tình yêu đôi lứa",
-      "query_type": "SEMANTIC",
-      "relevant_grades": {"song_xuan_quynh_tomtat": 2, "song_xuan_quynh_chude": 2, "song_xuan_quynh_boicanh": 1, "chinh_phu_ngam_chude": 1},
-      "full_relevant_ids": ["song_xuan_quynh_tomtat", "song_xuan_quynh_chude", "song_xuan_quynh_boicanh", "chinh_phu_ngam_chude"],
-      "ground_truth_answer": "Bài Sóng của Xuân Quỳnh là lựa chọn tiêu biểu: mượn hình tượng sóng để diễn tả tình yêu người phụ nữ vừa mãnh liệt vừa thủy chung, khát vọng tình yêu vĩnh cửu.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q19",
-      "query": "Truyện nào phản ánh số phận người nông dân bị áp bức trước Cách mạng?",
-      "query_type": "SEMANTIC",
-      "relevant_grades": {"tat_den_tomtat": 2, "tat_den_chude": 2, "chi_pheo_tomtat": 2, "chi_pheo_chude": 2, "buoc_duong_cung_tomtat": 2, "buoc_duong_cung_chude": 2, "tat_den_nhanvat": 1, "buoc_duong_cung_nhanvat": 1, "lao_hac_tomtat": 1, "lao_hac_chude": 1},
-      "full_relevant_ids": ["tat_den_tomtat", "tat_den_chude", "tat_den_nhanvat", "chi_pheo_tomtat", "chi_pheo_chude", "buoc_duong_cung_tomtat", "buoc_duong_cung_chude", "buoc_duong_cung_nhanvat", "lao_hac_tomtat", "lao_hac_chude"],
-      "ground_truth_answer": "Dòng hiện thực phê phán có nhiều tác phẩm tiêu biểu: Tắt đèn của Ngô Tất Tố (chị Dậu với nạn sưu thuế), Chí Phèo của Nam Cao (người nông dân bị tha hóa), Bước đường cùng của Nguyễn Công Hoan (anh Pha bị địa chủ cho vay nặng lãi cướp ruộng) và Lão Hạc của Nam Cao.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q20",
-      "query": "Bài thơ nào thể hiện nỗi cô đơn của con người trước thiên nhiên rộng lớn?",
-      "query_type": "SEMANTIC",
-      "stability_group": "co_don_thien_nhien",
-      "relevant_grades": {"trang_giang_tomtat": 2, "trang_giang_chude": 2, "trang_giang_hinhthuc": 1},
-      "full_relevant_ids": ["trang_giang_tomtat", "trang_giang_chude", "trang_giang_hinhthuc"],
-      "ground_truth_answer": "Tràng giang của Huy Cận là bài thơ tiêu biểu: trước sông nước mênh mông, cái tôi thi sĩ thấy mình nhỏ bé, cô đơn, dâng lên nỗi buồn và tình yêu quê hương thầm kín.",
-      "expect_fallback": false
-    },
-
-    {
-      "query_id": "q21",
-      "query": "Truyện Chí Phèo của ông ấy kết thúc ra sao?",
-      "query_type": "MULTI_TURN",
-      "history": [
-        {"role": "user", "content": "Nam Cao có những tác phẩm nào trong thư viện?"},
-        {"role": "assistant", "content": "Nam Cao có các tác phẩm: Chí Phèo (1941), Lão Hạc (1943), Đời thừa (1943) và Đôi mắt (1948). Bạn muốn tìm hiểu cuốn nào?"}
-      ],
-      "relevant_grades": {"chi_pheo_tomtat": 2, "chi_pheo_chude": 1},
-      "full_relevant_ids": ["chi_pheo_tomtat", "chi_pheo_chude"],
-      "ground_truth_answer": "Chí Phèo của Nam Cao kết thúc bằng việc Chí Phèo tuyệt vọng vì bị cự tuyệt quyền làm người, đến giết Bá Kiến rồi tự sát.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q22",
-      "query": "Tác phẩm này thuộc thể thơ gì và dài bao nhiêu câu?",
-      "query_type": "MULTI_TURN",
-      "history": [
-        {"role": "user", "content": "Gợi ý tác phẩm về thân phận người phụ nữ trong xã hội phong kiến"},
-        {"role": "assistant", "content": "Tiêu biểu nhất là Truyện Kiều của Nguyễn Du — bi kịch của Thúy Kiều tài hoa bạc mệnh. Bạn muốn biết thêm gì về tác phẩm này không?"}
-      ],
-      "relevant_grades": {"truyen_kieu_hinhthuc": 2},
-      "full_relevant_ids": ["truyen_kieu_hinhthuc"],
-      "ground_truth_answer": "Truyện Kiều được viết bằng chữ Nôm theo thể thơ lục bát, gồm 3254 câu.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q23",
-      "query": "Bài thơ đó được sáng tác năm nào, trong hoàn cảnh nào?",
-      "query_type": "MULTI_TURN",
-      "history": [
-        {"role": "user", "content": "Gợi ý bài thơ hay về tình yêu"},
-        {"role": "assistant", "content": "Mình gợi ý bài Sóng của Xuân Quỳnh — mượn hình tượng sóng để nói về tình yêu người phụ nữ vừa mãnh liệt vừa thủy chung."}
-      ],
-      "relevant_grades": {"song_xuan_quynh_boicanh": 2, "song_xuan_quynh_tomtat": 1},
-      "full_relevant_ids": ["song_xuan_quynh_boicanh", "song_xuan_quynh_tomtat"],
-      "ground_truth_answer": "Bài Sóng được Xuân Quỳnh sáng tác cuối năm 1967 trong chuyến đi thực tế ở vùng biển Diêm Điền (Thái Bình), in trong tập Hoa dọc chiến hào (1968).",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q24",
-      "query": "Cuốn Mắt biếc của nhà văn ấy nói về điều gì?",
-      "query_type": "MULTI_TURN",
-      "history": [
-        {"role": "user", "content": "Nguyễn Nhật Ánh có những cuốn nào trong thư viện?"},
-        {"role": "assistant", "content": "Nguyễn Nhật Ánh có hai truyện dài: Mắt biếc (1990) và Tôi thấy hoa vàng trên cỏ xanh (2010)."}
-      ],
-      "relevant_grades": {"mat_biec_tomtat": 2, "mat_biec_chude": 1},
-      "full_relevant_ids": ["mat_biec_tomtat", "mat_biec_chude"],
-      "ground_truth_answer": "Mắt biếc kể mối tình đơn phương day dứt của Ngạn dành cho Hà Lan — cô bạn có đôi mắt biếc — từ tuổi thơ ở làng Đo Đo đến khi trưởng thành; Hà Lan bị cuốn theo phố thị và Dũng, còn Ngạn lặng lẽ thủy chung.",
-      "expect_fallback": false
-    },
-
-    {
-      "query_id": "q25",
-      "query": "Tóm tắt nội dung truyện Harry Potter và Hòn đá Phù thủy",
-      "query_type": "FALLBACK",
-      "relevant_grades": {},
-      "full_relevant_ids": [],
-      "ground_truth_answer": "Hệ thống từ chối lịch sự vì tác phẩm nước ngoài này không có trong thư viện, không bịa nội dung.",
-      "expect_fallback": true
-    },
-    {
-      "query_id": "q26",
-      "query": "Gợi ý sách self-help dạy quản lý thời gian hiệu quả",
-      "query_type": "FALLBACK",
-      "relevant_grades": {},
-      "full_relevant_ids": [],
-      "ground_truth_answer": "Hệ thống từ chối lịch sự vì thư viện chỉ có tác phẩm văn học Việt Nam, không có sách self-help.",
-      "expect_fallback": true
-    },
-    {
-      "query_id": "q27",
-      "query": "Định luật vạn vật hấp dẫn của Newton phát biểu thế nào?",
-      "query_type": "FALLBACK",
-      "relevant_grades": {},
-      "full_relevant_ids": [],
-      "ground_truth_answer": "Hệ thống từ chối lịch sự vì câu hỏi thuộc lĩnh vực vật lý, ngoài phạm vi thư viện văn học.",
-      "expect_fallback": true
-    },
-    {
-      "query_id": "q28",
-      "query": "Tiểu thuyết Vầng trăng máu của nhà văn Trần Văn Đô nói về điều gì?",
-      "query_type": "FALLBACK",
-      "relevant_grades": {},
-      "full_relevant_ids": [],
-      "ground_truth_answer": "Hệ thống từ chối vì tác phẩm/tác giả này không tồn tại trong thư viện (câu hỏi bẫy), tuyệt đối không bịa nội dung.",
-      "expect_fallback": true
-    },
-
-    {
-      "query_id": "q29",
-      "query": "Lý do gì khiến lão Hạc tìm đến cái chết?",
-      "query_type": "FACTUAL",
-      "stability_group": "lao_hac_death",
-      "relevant_grades": {"lao_hac_tomtat": 2, "lao_hac_chude": 2, "lao_hac_nhanvat": 1},
-      "full_relevant_ids": ["lao_hac_tomtat", "lao_hac_chude", "lao_hac_nhanvat"],
-      "ground_truth_answer": "Lão Hạc ăn bả chó tự tử để giữ trọn nhân cách, lòng tự trọng và để không phải tiêu vào số tiền cùng mảnh vườn dành cho con trai.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q30",
-      "query": "Sách nào nói về người phụ nữ chịu nhiều oan khổ trong thời phong kiến?",
-      "query_type": "SEMANTIC",
-      "stability_group": "phu_nu_phong_kien",
-      "relevant_grades": {"truyen_kieu_chude": 2, "truyen_kieu_tomtat": 2, "nguoi_con_gai_nam_xuong_chude": 2, "nguoi_con_gai_nam_xuong_tomtat": 2, "truyen_kieu_nhanvat": 1, "nguoi_con_gai_nam_xuong_nhanvat": 1, "chinh_phu_ngam_chude": 1, "chinh_phu_ngam_tomtat": 1},
-      "full_relevant_ids": ["truyen_kieu_chude", "truyen_kieu_tomtat", "truyen_kieu_nhanvat", "nguoi_con_gai_nam_xuong_chude", "nguoi_con_gai_nam_xuong_tomtat", "nguoi_con_gai_nam_xuong_nhanvat", "chinh_phu_ngam_chude", "chinh_phu_ngam_tomtat"],
-      "ground_truth_answer": "Truyện Kiều (Nguyễn Du) và Chuyện người con gái Nam Xương (Nguyễn Dữ) là hai tác phẩm tiêu biểu về nỗi oan khổ của người phụ nữ thời phong kiến; có thể kể thêm Chinh phụ ngâm.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q31",
-      "query": "Trong thư viện có những truyện nào do Nam Cao sáng tác?",
-      "query_type": "AUTHOR",
-      "stability_group": "nam_cao_works",
-      "relevant_grades": {"chi_pheo_tomtat": 2, "lao_hac_tomtat": 2, "doi_thua_tomtat": 2, "doi_mat_tomtat": 2, "chi_pheo_tacgia": 2, "chi_pheo_nhanvat": 1, "chi_pheo_chude": 1, "lao_hac_nhanvat": 1, "lao_hac_chude": 1, "doi_thua_chude": 1, "doi_thua_nhanvat": 1, "doi_mat_nhanvat": 1, "doi_mat_chude": 1},
-      "full_relevant_ids": ["chi_pheo_tomtat", "chi_pheo_nhanvat", "chi_pheo_chude", "chi_pheo_tacgia", "lao_hac_tomtat", "lao_hac_nhanvat", "lao_hac_chude", "doi_thua_tomtat", "doi_thua_chude", "doi_thua_nhanvat", "doi_mat_tomtat", "doi_mat_nhanvat", "doi_mat_chude"],
-      "ground_truth_answer": "Thư viện có bốn truyện của Nam Cao: Chí Phèo, Lão Hạc, Đời thừa và Đôi mắt.",
-      "expect_fallback": false
-    },
-    {
-      "query_id": "q32",
-      "query": "Có bài thơ nào diễn tả cảm giác nhỏ bé, lẻ loi giữa trời nước mênh mông không?",
-      "query_type": "SEMANTIC",
-      "stability_group": "co_don_thien_nhien",
-      "relevant_grades": {"trang_giang_tomtat": 2, "trang_giang_chude": 2, "trang_giang_hinhthuc": 1},
-      "full_relevant_ids": ["trang_giang_tomtat", "trang_giang_chude", "trang_giang_hinhthuc"],
-      "ground_truth_answer": "Tràng giang của Huy Cận diễn tả đúng cảm giác đó: con người nhỏ bé, lẻ loi trước sông nước mênh mông, trời rộng sông dài.",
-      "expect_fallback": false
+     "role": "assistant",
+     "content": "Nam Cao có các tác phẩm: Chí Phèo (1941), Lão Hạc (1943), Đời thừa (1943) và Đôi mắt (1948). Bạn muốn tìm hiểu cuốn nào?"
     }
-  ]
+   ],
+   "relevant_grades": {
+    "chi_pheo_tomtat": 2,
+    "chi_pheo_chude": 1
+   },
+   "full_relevant_ids": [
+    "chi_pheo_tomtat",
+    "chi_pheo_chude"
+   ],
+   "ground_truth_answer": "Chí Phèo của Nam Cao kết thúc bằng việc Chí Phèo tuyệt vọng vì bị cự tuyệt quyền làm người, đến giết Bá Kiến rồi tự sát.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q22",
+   "query": "Tác phẩm này thuộc thể thơ gì và dài bao nhiêu câu?",
+   "query_type": "MULTI_TURN",
+   "history": [
+    {
+     "role": "user",
+     "content": "Gợi ý tác phẩm về thân phận người phụ nữ trong xã hội phong kiến"
+    },
+    {
+     "role": "assistant",
+     "content": "Tiêu biểu nhất là Truyện Kiều của Nguyễn Du — bi kịch của Thúy Kiều tài hoa bạc mệnh. Bạn muốn biết thêm gì về tác phẩm này không?"
+    }
+   ],
+   "relevant_grades": {
+    "truyen_kieu_hinhthuc": 2
+   },
+   "full_relevant_ids": [
+    "truyen_kieu_hinhthuc"
+   ],
+   "ground_truth_answer": "Truyện Kiều được viết bằng chữ Nôm theo thể thơ lục bát, gồm 3254 câu.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q23",
+   "query": "Bài thơ đó được sáng tác năm nào, trong hoàn cảnh nào?",
+   "query_type": "MULTI_TURN",
+   "history": [
+    {
+     "role": "user",
+     "content": "Gợi ý bài thơ hay về tình yêu"
+    },
+    {
+     "role": "assistant",
+     "content": "Mình gợi ý bài Sóng của Xuân Quỳnh — mượn hình tượng sóng để nói về tình yêu người phụ nữ vừa mãnh liệt vừa thủy chung."
+    }
+   ],
+   "relevant_grades": {
+    "song_xuan_quynh_boicanh": 2,
+    "song_xuan_quynh_tomtat": 1
+   },
+   "full_relevant_ids": [
+    "song_xuan_quynh_boicanh",
+    "song_xuan_quynh_tomtat"
+   ],
+   "ground_truth_answer": "Bài Sóng được Xuân Quỳnh sáng tác cuối năm 1967 trong chuyến đi thực tế ở vùng biển Diêm Điền (Thái Bình), in trong tập Hoa dọc chiến hào (1968).",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q24",
+   "query": "Cuốn Mắt biếc của nhà văn ấy nói về điều gì?",
+   "query_type": "MULTI_TURN",
+   "history": [
+    {
+     "role": "user",
+     "content": "Nguyễn Nhật Ánh có những cuốn nào trong thư viện?"
+    },
+    {
+     "role": "assistant",
+     "content": "Nguyễn Nhật Ánh có hai truyện dài: Mắt biếc (1990) và Tôi thấy hoa vàng trên cỏ xanh (2010)."
+    }
+   ],
+   "relevant_grades": {
+    "mat_biec_tomtat": 2,
+    "mat_biec_chude": 1
+   },
+   "full_relevant_ids": [
+    "mat_biec_tomtat",
+    "mat_biec_chude"
+   ],
+   "ground_truth_answer": "Mắt biếc kể mối tình đơn phương day dứt của Ngạn dành cho Hà Lan — cô bạn có đôi mắt biếc — từ tuổi thơ ở làng Đo Đo đến khi trưởng thành; Hà Lan bị cuốn theo phố thị và Dũng, còn Ngạn lặng lẽ thủy chung.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q25",
+   "query": "Tóm tắt nội dung truyện Harry Potter và Hòn đá Phù thủy",
+   "query_type": "FALLBACK",
+   "relevant_grades": {},
+   "full_relevant_ids": [],
+   "ground_truth_answer": "Hệ thống từ chối lịch sự vì tác phẩm nước ngoài này không có trong thư viện, không bịa nội dung.",
+   "expect_fallback": true
+  },
+  {
+   "query_id": "q26",
+   "query": "Gợi ý sách self-help dạy quản lý thời gian hiệu quả",
+   "query_type": "FALLBACK",
+   "relevant_grades": {},
+   "full_relevant_ids": [],
+   "ground_truth_answer": "Hệ thống từ chối lịch sự vì thư viện chỉ có tác phẩm văn học Việt Nam, không có sách self-help.",
+   "expect_fallback": true
+  },
+  {
+   "query_id": "q27",
+   "query": "Định luật vạn vật hấp dẫn của Newton phát biểu thế nào?",
+   "query_type": "FALLBACK",
+   "relevant_grades": {},
+   "full_relevant_ids": [],
+   "ground_truth_answer": "Hệ thống từ chối lịch sự vì câu hỏi thuộc lĩnh vực vật lý, ngoài phạm vi thư viện văn học.",
+   "expect_fallback": true
+  },
+  {
+   "query_id": "q28",
+   "query": "Tiểu thuyết Vầng trăng máu của nhà văn Trần Văn Đô nói về điều gì?",
+   "query_type": "FALLBACK",
+   "relevant_grades": {},
+   "full_relevant_ids": [],
+   "ground_truth_answer": "Hệ thống từ chối vì tác phẩm/tác giả này không tồn tại trong thư viện (câu hỏi bẫy), tuyệt đối không bịa nội dung.",
+   "expect_fallback": true
+  },
+  {
+   "query_id": "q29",
+   "query": "Lý do gì khiến lão Hạc tìm đến cái chết?",
+   "query_type": "FACTUAL",
+   "stability_group": "lao_hac_death",
+   "relevant_grades": {
+    "lao_hac_tomtat": 2,
+    "lao_hac_chude": 2,
+    "lao_hac_nhanvat": 1
+   },
+   "full_relevant_ids": [
+    "lao_hac_tomtat",
+    "lao_hac_chude",
+    "lao_hac_nhanvat"
+   ],
+   "ground_truth_answer": "Lão Hạc ăn bả chó tự tử để giữ trọn nhân cách, lòng tự trọng và để không phải tiêu vào số tiền cùng mảnh vườn dành cho con trai.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q30",
+   "query": "Sách nào nói về người phụ nữ chịu nhiều oan khổ trong thời phong kiến?",
+   "query_type": "SEMANTIC",
+   "stability_group": "phu_nu_phong_kien",
+   "relevant_grades": {
+    "truyen_kieu_chude": 2,
+    "truyen_kieu_tomtat": 2,
+    "nguoi_con_gai_nam_xuong_chude": 2,
+    "nguoi_con_gai_nam_xuong_tomtat": 2,
+    "truyen_kieu_nhanvat": 1,
+    "nguoi_con_gai_nam_xuong_nhanvat": 1,
+    "chinh_phu_ngam_chude": 1,
+    "chinh_phu_ngam_tomtat": 1
+   },
+   "full_relevant_ids": [
+    "truyen_kieu_chude",
+    "truyen_kieu_tomtat",
+    "truyen_kieu_nhanvat",
+    "nguoi_con_gai_nam_xuong_chude",
+    "nguoi_con_gai_nam_xuong_tomtat",
+    "nguoi_con_gai_nam_xuong_nhanvat",
+    "chinh_phu_ngam_chude",
+    "chinh_phu_ngam_tomtat"
+   ],
+   "ground_truth_answer": "Truyện Kiều (Nguyễn Du) và Chuyện người con gái Nam Xương (Nguyễn Dữ) là hai tác phẩm tiêu biểu về nỗi oan khổ của người phụ nữ thời phong kiến; có thể kể thêm Chinh phụ ngâm.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q31",
+   "query": "Trong thư viện có những truyện nào do Nam Cao sáng tác?",
+   "query_type": "AUTHOR",
+   "stability_group": "nam_cao_works",
+   "relevant_grades": {
+    "chi_pheo_tomtat": 2,
+    "lao_hac_tomtat": 2,
+    "doi_thua_tomtat": 2,
+    "doi_mat_tomtat": 2,
+    "chi_pheo_tacgia": 2,
+    "chi_pheo_nhanvat": 1,
+    "chi_pheo_chude": 1,
+    "lao_hac_nhanvat": 1,
+    "lao_hac_chude": 1,
+    "doi_thua_chude": 1,
+    "doi_thua_nhanvat": 1,
+    "doi_mat_nhanvat": 1,
+    "doi_mat_chude": 1
+   },
+   "full_relevant_ids": [
+    "chi_pheo_tomtat",
+    "chi_pheo_nhanvat",
+    "chi_pheo_chude",
+    "chi_pheo_tacgia",
+    "lao_hac_tomtat",
+    "lao_hac_nhanvat",
+    "lao_hac_chude",
+    "doi_thua_tomtat",
+    "doi_thua_chude",
+    "doi_thua_nhanvat",
+    "doi_mat_tomtat",
+    "doi_mat_nhanvat",
+    "doi_mat_chude"
+   ],
+   "ground_truth_answer": "Thư viện có bốn truyện của Nam Cao: Chí Phèo, Lão Hạc, Đời thừa và Đôi mắt.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q32",
+   "query": "Có bài thơ nào diễn tả cảm giác nhỏ bé, lẻ loi giữa trời nước mênh mông không?",
+   "query_type": "SEMANTIC",
+   "stability_group": "co_don_thien_nhien",
+   "relevant_grades": {
+    "trang_giang_tomtat": 2,
+    "trang_giang_chude": 2,
+    "trang_giang_hinhthuc": 1
+   },
+   "full_relevant_ids": [
+    "trang_giang_tomtat",
+    "trang_giang_chude",
+    "trang_giang_hinhthuc"
+   ],
+   "ground_truth_answer": "Tràng giang của Huy Cận diễn tả đúng cảm giác đó: con người nhỏ bé, lẻ loi trước sông nước mênh mông, trời rộng sông dài.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q33",
+   "query_type": "FACTUAL",
+   "query": "Trong Vợ chồng A Phủ, Mị đã được giải thoát như thế nào?",
+   "relevant_grades": {
+    "vo_chong_a_phu_tomtat": 2,
+    "vo_chong_a_phu_nhanvat": 1,
+    "vo_chong_a_phu_chude": 1
+   },
+   "full_relevant_ids": [
+    "vo_chong_a_phu_tomtat",
+    "vo_chong_a_phu_nhanvat",
+    "vo_chong_a_phu_chude"
+   ],
+   "ground_truth_answer": "Mị từ thân phận con dâu gạt nợ bị đày đọa ở nhà thống lí Pá Tra đã cắt dây trói cứu A Phủ, rồi cùng A Phủ bỏ trốn khỏi Hồng Ngài, tự giải phóng và đi theo cách mạng.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q34",
+   "query_type": "FACTUAL",
+   "query": "Nhân vật Xuân Tóc Đỏ trong Số đỏ là người như thế nào?",
+   "relevant_grades": {
+    "so_do_nhanvat": 2,
+    "so_do_tomtat": 2,
+    "so_do_noidung": 1,
+    "so_do_chude": 1
+   },
+   "full_relevant_ids": [
+    "so_do_nhanvat",
+    "so_do_tomtat",
+    "so_do_noidung",
+    "so_do_chude"
+   ],
+   "ground_truth_answer": "Xuân Tóc Đỏ vốn là kẻ lưu manh, hạ lưu, nhờ gặp thời và xã hội 'Âu hóa' lố lăng mà leo lên thành 'nhà cải cách', 'anh hùng cứu quốc' — qua đó Vũ Trọng Phụng châm biếm sự giả dối của xã hội thượng lưu thành thị.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q35",
+   "query_type": "FACTUAL",
+   "query": "Chiếc lược ngà trong truyện cùng tên có ý nghĩa gì?",
+   "relevant_grades": {
+    "chiec_luoc_nga_tomtat": 2,
+    "chiec_luoc_nga_chude": 2,
+    "chiec_luoc_nga_nhanvat": 1
+   },
+   "full_relevant_ids": [
+    "chiec_luoc_nga_tomtat",
+    "chiec_luoc_nga_chude",
+    "chiec_luoc_nga_nhanvat"
+   ],
+   "ground_truth_answer": "Chiếc lược ngà là kỷ vật ông Sáu tự tay làm cho con gái bé Thu nơi chiến trường; nó là biểu tượng cho tình cha con sâu nặng và thiêng liêng không thể bị chiến tranh hủy diệt.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q36",
+   "query_type": "FACTUAL",
+   "query": "Bài thơ Tây Tiến viết về đoàn quân nào và trong hoàn cảnh ra sao?",
+   "relevant_grades": {
+    "tay_tien_tomtat": 2,
+    "tay_tien_boicanh": 2,
+    "tay_tien_chude": 1
+   },
+   "full_relevant_ids": [
+    "tay_tien_tomtat",
+    "tay_tien_boicanh",
+    "tay_tien_chude"
+   ],
+   "ground_truth_answer": "Tây Tiến của Quang Dũng viết về đoàn binh Tây Tiến — những người lính chủ yếu là thanh niên Hà Nội hành quân, chiến đấu ở vùng núi rừng miền Tây Bắc Bộ và Lào trong kháng chiến chống Pháp, khắc họa vẻ hào hùng mà bi tráng, lãng mạn.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q37",
+   "query_type": "FACTUAL",
+   "query": "Huấn Cao trong Chữ người tử tù là người như thế nào?",
+   "relevant_grades": {
+    "chu_nguoi_tu_tu_nhanvat": 2,
+    "chu_nguoi_tu_tu_tomtat": 2,
+    "chu_nguoi_tu_tu_chude": 1
+   },
+   "full_relevant_ids": [
+    "chu_nguoi_tu_tu_nhanvat",
+    "chu_nguoi_tu_tu_tomtat",
+    "chu_nguoi_tu_tu_chude"
+   ],
+   "ground_truth_answer": "Huấn Cao là người tử tù có tài viết chữ đẹp và khí phách hiên ngang, 'thiên lương' trong sáng; dù bị giam cầm vẫn giữ cốt cách, cuối cùng cho chữ viên quản ngục để đáp lại tấm lòng biệt nhỡn liên tài.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q38",
+   "query_type": "AUTHOR",
+   "query": "Vũ Trọng Phụng có những tác phẩm nào trong thư viện?",
+   "relevant_grades": {
+    "so_do_tomtat": 2,
+    "giong_to_tomtat": 2,
+    "so_do_nhanvat": 1,
+    "so_do_chude": 1,
+    "so_do_noidung": 1,
+    "giong_to_nhanvat": 1,
+    "giong_to_chude": 1
+   },
+   "full_relevant_ids": [
+    "so_do_tomtat",
+    "giong_to_tomtat",
+    "so_do_nhanvat",
+    "so_do_chude",
+    "so_do_noidung",
+    "giong_to_nhanvat",
+    "giong_to_chude"
+   ],
+   "ground_truth_answer": "Trong thư viện, Vũ Trọng Phụng có hai tác phẩm: Số đỏ và Giông tố — đều là những sáng tác hiện thực trào phúng phê phán xã hội thành thị trước Cách mạng.",
+   "expect_fallback": false,
+   "stability_group": "vu_trong_phung_works"
+  },
+  {
+   "query_id": "q39",
+   "query_type": "AUTHOR",
+   "query": "Kim Lân viết những truyện nào trong thư viện?",
+   "relevant_grades": {
+    "vo_nhat_tomtat": 2,
+    "lang_kim_lan_tomtat": 2,
+    "vo_nhat_tacgia": 2,
+    "vo_nhat_nhanvat": 1,
+    "vo_nhat_chude": 1,
+    "lang_kim_lan_nhanvat": 1,
+    "lang_kim_lan_chude": 1
+   },
+   "full_relevant_ids": [
+    "vo_nhat_tomtat",
+    "lang_kim_lan_tomtat",
+    "vo_nhat_tacgia",
+    "vo_nhat_nhanvat",
+    "vo_nhat_chude",
+    "lang_kim_lan_nhanvat",
+    "lang_kim_lan_chude"
+   ],
+   "ground_truth_answer": "Kim Lân có hai truyện ngắn trong thư viện: Vợ nhặt và Làng — đều viết về người nông dân Việt Nam, tình người trong nạn đói và lòng yêu làng, yêu nước.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q40",
+   "query_type": "AUTHOR",
+   "query": "Huy Cận có những bài thơ nào trong thư viện?",
+   "relevant_grades": {
+    "trang_giang_tomtat": 2,
+    "doan_thuyen_danh_ca_tomtat": 2,
+    "trang_giang_chude": 1,
+    "doan_thuyen_danh_ca_chude": 1
+   },
+   "full_relevant_ids": [
+    "trang_giang_tomtat",
+    "doan_thuyen_danh_ca_tomtat",
+    "trang_giang_chude",
+    "doan_thuyen_danh_ca_chude"
+   ],
+   "ground_truth_answer": "Huy Cận có hai bài thơ trong thư viện: Tràng giang — nỗi buồn cô đơn của cái tôi trước thiên nhiên rộng lớn, và Đoàn thuyền đánh cá — khúc ca lao động tươi vui của con người làm chủ biển khơi.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q41",
+   "query_type": "AUTHOR",
+   "query": "Trong thư viện có những cuốn nào do Vũ Trọng Phụng viết?",
+   "relevant_grades": {
+    "so_do_tomtat": 2,
+    "giong_to_tomtat": 2,
+    "so_do_nhanvat": 1,
+    "so_do_chude": 1,
+    "so_do_noidung": 1,
+    "giong_to_nhanvat": 1,
+    "giong_to_chude": 1
+   },
+   "full_relevant_ids": [
+    "so_do_tomtat",
+    "giong_to_tomtat",
+    "so_do_nhanvat",
+    "so_do_chude",
+    "so_do_noidung",
+    "giong_to_nhanvat",
+    "giong_to_chude"
+   ],
+   "ground_truth_answer": "Vũ Trọng Phụng có hai tác phẩm trong thư viện là Số đỏ và Giông tố.",
+   "expect_fallback": false,
+   "stability_group": "vu_trong_phung_works"
+  },
+  {
+   "query_id": "q42",
+   "query_type": "SEMANTIC",
+   "query": "Bài thơ nào viết về người lính và tình đồng đội trong kháng chiến?",
+   "relevant_grades": {
+    "dong_chi_tomtat": 2,
+    "dong_chi_chude": 2,
+    "tay_tien_tomtat": 2,
+    "tay_tien_chude": 1,
+    "xe_khong_kinh_chude": 1
+   },
+   "full_relevant_ids": [
+    "dong_chi_tomtat",
+    "dong_chi_chude",
+    "tay_tien_tomtat",
+    "tay_tien_chude",
+    "xe_khong_kinh_chude"
+   ],
+   "ground_truth_answer": "Tiêu biểu có Đồng chí của Chính Hữu — tình đồng đội keo sơn của người lính nông dân, và Tây Tiến của Quang Dũng — vẻ hào hùng bi tráng của đoàn binh Tây Tiến; ngoài ra Bài thơ về tiểu đội xe không kính của Phạm Tiến Duật cũng ca ngợi người lính lái xe Trường Sơn.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q43",
+   "query_type": "SEMANTIC",
+   "query": "Tác phẩm nào ca ngợi vẻ đẹp lao động và thiên nhiên vùng biển?",
+   "relevant_grades": {
+    "doan_thuyen_danh_ca_tomtat": 2,
+    "doan_thuyen_danh_ca_chude": 2,
+    "doan_thuyen_danh_ca_boicanh": 1,
+    "que_huong_te_hanh_chude": 1,
+    "que_huong_te_hanh_tomtat": 1
+   },
+   "full_relevant_ids": [
+    "doan_thuyen_danh_ca_tomtat",
+    "doan_thuyen_danh_ca_chude",
+    "doan_thuyen_danh_ca_boicanh",
+    "que_huong_te_hanh_chude",
+    "que_huong_te_hanh_tomtat"
+   ],
+   "ground_truth_answer": "Đoàn thuyền đánh cá của Huy Cận ca ngợi khí thế lao động hăng say và vẻ đẹp tráng lệ của biển khơi; bài Quê hương của Tế Hanh cũng khắc họa vẻ đẹp của làng chài và người dân miền biển.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q44",
+   "query_type": "SEMANTIC",
+   "query": "Truyện nào viết về tình cha con sâu nặng?",
+   "relevant_grades": {
+    "chiec_luoc_nga_tomtat": 2,
+    "chiec_luoc_nga_chude": 2,
+    "chiec_luoc_nga_nhanvat": 1,
+    "lao_hac_chude": 1
+   },
+   "full_relevant_ids": [
+    "chiec_luoc_nga_tomtat",
+    "chiec_luoc_nga_chude",
+    "chiec_luoc_nga_nhanvat",
+    "lao_hac_chude"
+   ],
+   "ground_truth_answer": "Chiếc lược ngà của Nguyễn Quang Sáng là tác phẩm tiêu biểu về tình cha con thắm thiết giữa ông Sáu và bé Thu trong chiến tranh; ngoài ra tình phụ tử cũng thể hiện qua Lão Hạc của Nam Cao khi lão hi sinh tất cả vì con.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q45",
+   "query_type": "SEMANTIC",
+   "query": "Có tác phẩm thiếu nhi nào viết về thế giới loài vật không?",
+   "relevant_grades": {
+    "de_men_tomtat": 2,
+    "de_men_nhanvat": 2,
+    "de_men_chude": 1
+   },
+   "full_relevant_ids": [
+    "de_men_tomtat",
+    "de_men_nhanvat",
+    "de_men_chude"
+   ],
+   "ground_truth_answer": "Dế Mèn phiêu lưu ký của Tô Hoài là tác phẩm thiếu nhi tiêu biểu viết về thế giới loài vật: qua cuộc phiêu lưu của chú Dế Mèn, tác giả gửi gắm bài học về lòng dũng cảm, tình bạn và khát vọng sống đẹp.",
+   "expect_fallback": false
+  },
+  {
+   "query_id": "q46",
+   "query_type": "MULTI_TURN",
+   "query": "Cuốn Số đỏ ấy châm biếm điều gì?",
+   "relevant_grades": {
+    "so_do_chude": 2,
+    "so_do_noidung": 2,
+    "so_do_tomtat": 1
+   },
+   "full_relevant_ids": [
+    "so_do_chude",
+    "so_do_noidung",
+    "so_do_tomtat"
+   ],
+   "ground_truth_answer": "Số đỏ của Vũ Trọng Phụng châm biếm sâu cay xã hội thượng lưu thành thị 'Âu hóa' lố lăng, giả dối trước Cách mạng, qua bước đường thăng tiến nực cười của Xuân Tóc Đỏ.",
+   "expect_fallback": false,
+   "history": [
+    {
+     "role": "user",
+     "content": "Vũ Trọng Phụng có những tác phẩm nào trong thư viện?"
+    },
+    {
+     "role": "assistant",
+     "content": "Vũ Trọng Phụng có hai tác phẩm: Số đỏ và Giông tố. Bạn muốn tìm hiểu cuốn nào?"
+    }
+   ]
+  },
+  {
+   "query_id": "q47",
+   "query_type": "MULTI_TURN",
+   "query": "Bài thơ đó do ai sáng tác và viết về đoàn quân nào?",
+   "relevant_grades": {
+    "tay_tien_tomtat": 2,
+    "tay_tien_boicanh": 2
+   },
+   "full_relevant_ids": [
+    "tay_tien_tomtat",
+    "tay_tien_boicanh"
+   ],
+   "ground_truth_answer": "Bài thơ Tây Tiến do Quang Dũng sáng tác, viết về đoàn binh Tây Tiến hoạt động ở vùng núi rừng miền Tây trong kháng chiến chống Pháp.",
+   "expect_fallback": false,
+   "history": [
+    {
+     "role": "user",
+     "content": "Gợi ý một bài thơ hào hùng về người lính trong kháng chiến chống Pháp"
+    },
+    {
+     "role": "assistant",
+     "content": "Tiêu biểu là Tây Tiến của Quang Dũng — khắc họa đoàn binh Tây Tiến vừa bi tráng vừa lãng mạn. Bạn muốn biết thêm gì về bài thơ này?"
+    }
+   ]
+  },
+  {
+   "query_id": "q48",
+   "query_type": "MULTI_TURN",
+   "query": "Cuốn Tôi thấy hoa vàng trên cỏ xanh của nhà văn ấy kể về điều gì?",
+   "relevant_grades": {
+    "hoa_vang_co_xanh_tomtat": 2,
+    "hoa_vang_co_xanh_chude": 1
+   },
+   "full_relevant_ids": [
+    "hoa_vang_co_xanh_tomtat",
+    "hoa_vang_co_xanh_chude"
+   ],
+   "ground_truth_answer": "Tôi thấy hoa vàng trên cỏ xanh của Nguyễn Nhật Ánh kể về tuổi thơ nơi làng quê nghèo miền Trung, xoay quanh hai anh em Thiều và Tường cùng những rung động trong trẻo đầu đời và bài học về tình thân, lòng vị tha.",
+   "expect_fallback": false,
+   "history": [
+    {
+     "role": "user",
+     "content": "Nguyễn Nhật Ánh có những tác phẩm nào trong thư viện?"
+    },
+    {
+     "role": "assistant",
+     "content": "Nguyễn Nhật Ánh có Mắt biếc và Tôi thấy hoa vàng trên cỏ xanh. Bạn muốn tìm hiểu cuốn nào?"
+    }
+   ]
+  },
+  {
+   "query_id": "q49",
+   "query_type": "FALLBACK",
+   "query": "Tóm tắt tiểu thuyết Trăm năm cô đơn của Gabriel García Márquez",
+   "relevant_grades": {},
+   "full_relevant_ids": [],
+   "ground_truth_answer": "Hệ thống từ chối lịch sự vì đây là tác phẩm văn học nước ngoài không có trong thư viện, không bịa nội dung.",
+   "expect_fallback": true
+  },
+  {
+   "query_id": "q50",
+   "query_type": "FALLBACK",
+   "query": "Công thức tính diện tích hình tròn là gì?",
+   "relevant_grades": {},
+   "full_relevant_ids": [],
+   "ground_truth_answer": "Hệ thống từ chối lịch sự vì câu hỏi nằm ngoài phạm vi văn học Việt Nam của thư viện.",
+   "expect_fallback": true
+  }
+ ]
 }

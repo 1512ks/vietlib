@@ -38,6 +38,23 @@ DEFAULT_TOP_K = 5
 CONFIDENCE_MIN = 0.40
 
 
+def vi_tokenize(text: str) -> List[str]:
+    """Tách TỪ tiếng Việt cho BM25 (thay vì cắt theo âm tiết bằng .split()).
+
+    Tiếng Việt ~85% từ gồm ≥2 âm tiết, khoảng trắng KHÔNG phải ranh giới từ
+    (research §5, ACL L18-1410). Dùng pyvi.ViTokenizer nối các âm tiết cùng
+    một từ bằng '_' ('thư viện' -> 'thư_viện') rồi tách khoảng trắng → BM25
+    khớp đúng đơn vị nghĩa. PHẢI dùng CÙNG hàm này ở cả index và query.
+
+    Fallback về .split() nếu pyvi không có (giữ hệ vẫn chạy được).
+    """
+    try:
+        from pyvi import ViTokenizer
+        return ViTokenizer.tokenize(text.lower()).split()
+    except Exception:
+        return text.lower().split()
+
+
 @dataclass
 class Hit:
     """Một chunk trả về, kèm đủ metadata cho thẻ sách + đánh giá."""
@@ -133,7 +150,7 @@ class Retriever:
         cos = self.vectors @ qv
         vec_order = np.argsort(-cos)
 
-        tokens = query.lower().split()
+        tokens = vi_tokenize(query)
         bm = np.asarray(self.bm25.get_scores(tokens), dtype=np.float32)
         bm_order = np.argsort(-bm)
 

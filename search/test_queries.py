@@ -254,6 +254,122 @@ TEST_QUERIES: List[TestQuery] = [
         relevant_keywords=["nguyễn công hoan"],
         description="Nhà văn hiện thực châm biếm",
     ),
+
+    # ============================================================
+    #  MỞ RỘNG v2 (+20 câu, nâng 30 -> 50) — bám tác giả/sách THẬT trong corpus
+    # ============================================================
+    # ── FACTUAL (+7) ──
+    TestQuery(
+        query_id="F008", query="Dế Mèn phiêu lưu ký của Tô Hoài",
+        query_type="FACTUAL", relevant_keywords=["dế mèn", "tô hoài"],
+        description="Tác phẩm thiếu nhi kinh điển",
+    ),
+    TestQuery(
+        query_id="F009", query="Cánh đồng bất tận của Nguyễn Ngọc Tư",
+        query_type="FACTUAL", relevant_keywords=["cánh đồng bất tận", "nguyễn ngọc tư"],
+        description="Truyện vừa Nam Bộ đương đại",
+    ),
+    TestQuery(
+        query_id="F010", query="Mắt biếc của Nguyễn Nhật Ánh",
+        query_type="FACTUAL", relevant_keywords=["mắt biếc", "nguyễn nhật ánh"],
+        description="Tiểu thuyết tuổi học trò",
+    ),
+    TestQuery(
+        query_id="F011", query="Lão Hạc là truyện của Nam Cao",
+        query_type="FACTUAL", relevant_keywords=["lão hạc", "nam cao"],
+        description="Truyện ngắn hiện thực",
+    ),
+    TestQuery(
+        query_id="F012", query="Giông tố của Vũ Trọng Phụng",
+        query_type="FACTUAL", relevant_keywords=["giông tố", "vũ trọng phụng"],
+        description="Tiểu thuyết hiện thực phê phán",
+    ),
+    TestQuery(
+        query_id="F013", query="Bước đường cùng Nguyễn Công Hoan viết về nông dân",
+        query_type="FACTUAL", relevant_keywords=["bước đường cùng", "nguyễn công hoan"],
+        description="Tiểu thuyết về nông dân bị áp bức",
+    ),
+    TestQuery(
+        query_id="F014", query="Chữ người tử tù của Nguyễn Tuân",
+        query_type="FACTUAL", relevant_keywords=["chữ người tử tù", "nguyễn tuân"],
+        description="Truyện ngắn lãng mạn tài hoa",
+    ),
+
+    # ── AUTHOR (+6) ── các tác giả có nhiều tác phẩm THẬT trong corpus
+    TestQuery(
+        query_id="A010", query="Các tác phẩm của Nguyễn Ngọc Tư về miền Tây",
+        query_type="AUTHOR", relevant_keywords=["nguyễn ngọc tư"],
+        description="Nhà văn Nam Bộ đương đại (nhiều tác phẩm)",
+    ),
+    TestQuery(
+        query_id="A011", query="Tiểu thuyết của Hồ Biểu Chánh",
+        query_type="AUTHOR", relevant_keywords=["hồ biểu chánh"],
+        description="Nhà văn Nam Bộ đầu thế kỷ 20",
+    ),
+    TestQuery(
+        query_id="A012", query="Truyện kiếm hiệp của Cổ Long",
+        query_type="AUTHOR", relevant_keywords=["cổ long"],
+        description="Tác giả kiếm hiệp (nhiều bộ trong corpus)",
+    ),
+    TestQuery(
+        query_id="A013", query="Tiểu thuyết tình cảm của Quỳnh Dao",
+        query_type="AUTHOR", relevant_keywords=["quỳnh dao"],
+        description="Tác giả ngôn tình Đài Loan",
+    ),
+    TestQuery(
+        query_id="A014", query="Truyện của Duyên Anh viết về tuổi thơ",
+        query_type="AUTHOR", relevant_keywords=["duyên anh"],
+        description="Nhà văn viết về tuổi thơ, tuổi trẻ",
+    ),
+    TestQuery(
+        query_id="A015", query="Tác phẩm của Võ Hồng",
+        query_type="AUTHOR", relevant_keywords=["võ hồng"],
+        description="Nhà văn miền Trung",
+    ),
+
+    # ── SEMANTIC (+7) ── chủ đề, thể loại phản ánh độ rộng corpus
+    TestQuery(
+        query_id="S015", query="Truyện trinh thám điều tra phá án ly kỳ",
+        query_type="SEMANTIC",
+        relevant_keywords=["trinh thám", "phá án", "điều tra", "vụ án", "hung thủ"],
+        description="Thể loại trinh thám",
+    ),
+    TestQuery(
+        query_id="S016", query="Truyện về cuộc sống sông nước miền Tây Nam Bộ",
+        query_type="SEMANTIC",
+        relevant_keywords=["miền tây", "sông nước", "nam bộ", "miệt vườn", "kênh rạch"],
+        description="Không gian Nam Bộ",
+    ),
+    TestQuery(
+        query_id="S017", query="Truyện tuổi học trò tuổi mới lớn ngây thơ trong sáng",
+        query_type="SEMANTIC",
+        relevant_keywords=["tuổi học trò", "học trò", "tuổi mới lớn", "áo trắng", "sân trường"],
+        description="Chủ đề tuổi học trò",
+    ),
+    TestQuery(
+        query_id="S018", query="Tiểu thuyết võ hiệp giang hồ kiếm khách Trung Hoa",
+        query_type="SEMANTIC",
+        relevant_keywords=["võ hiệp", "giang hồ", "kiếm khách", "cao thủ", "võ công"],
+        description="Thể loại võ hiệp",
+    ),
+    TestQuery(
+        query_id="S019", query="Thơ ca cách mạng kháng chiến hào hùng",
+        query_type="SEMANTIC",
+        relevant_keywords=["cách mạng", "kháng chiến", "chiến sĩ", "tổ quốc"],
+        description="Thơ cách mạng",
+    ),
+    TestQuery(
+        query_id="S020", query="Truyện về số phận người phụ nữ nông thôn vất vả",
+        query_type="SEMANTIC",
+        relevant_keywords=["phụ nữ", "nông thôn", "vất vả", "tần tảo", "số phận"],
+        description="Số phận người phụ nữ nông thôn",
+    ),
+    TestQuery(
+        query_id="S021", query="Truyện ngắn trào phúng châm biếm xã hội",
+        query_type="SEMANTIC",
+        relevant_keywords=["trào phúng", "châm biếm", "đả kích", "giễu"],
+        description="Chất trào phúng",
+    ),
 ]
 
 

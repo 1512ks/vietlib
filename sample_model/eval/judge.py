@@ -26,11 +26,30 @@ from sample_model.retrieval import Retriever, CONFIDENCE_MIN
 from sample_model.generate import Generator, cited_indices, strip_citations
 
 JUDGE_MODEL = "gemini-2.5-flash"
-# Tập câu chấm generation: 8 FACTUAL + 4 SEMANTIC + 4 MULTI_TURN = 16 câu có GT
+# Tập câu chấm generation (subset ~30 theo khuyến nghị RAGAS để tiết kiệm API):
+# 13 FACTUAL + 8 SEMANTIC + 7 MULTI_TURN = 28 câu có ground-truth answer.
 JUDGE_IDS = ["q01", "q02", "q03", "q04", "q05", "q06", "q07", "q08",
-             "q15", "q17", "q19", "q20", "q21", "q22", "q23", "q24"]
+             "q33", "q34", "q35", "q36", "q37",
+             "q15", "q17", "q19", "q20", "q42", "q43", "q44", "q45",
+             "q21", "q22", "q23", "q24", "q46", "q47", "q48"]
 REFUSAL_MARKERS = ["tiếc quá", "xin lỗi", "chưa giúp", "không tìm thấy",
                    "chỉ có các tác phẩm văn học việt nam", "ngoài phạm vi"]
+
+
+def context_precision_at_k(ranked: list, relevant: set, k: int) -> float:
+    """Context Precision@K theo ĐÚNG định nghĩa RAGAS (rank-aware):
+        CP@K = Σ_{i=1..K} (Precision@i · v_i) / (số chunk relevant trong top-K)
+    với v_i=1 nếu chunk ở hạng i relevant. Chuẩn hóa theo số relevant THỰC SỰ
+    lấy được (không chia cứng cho K) → không bị phạt oan khi |relevant| < K.
+    """
+    top = ranked[:k]
+    hits_rel = 0
+    weighted = 0.0
+    for i, cid in enumerate(top, start=1):
+        if cid in relevant:
+            hits_rel += 1
+            weighted += hits_rel / i          # Precision@i tại vị trí relevant
+    return weighted / hits_rel if hits_rel else 0.0
 
 
 def _judge_json(gen: Generator, prompt: str, retries: int = 2):
@@ -126,7 +145,8 @@ def run_judge(retriever: Retriever, golden: list, results_dir: Path, ts: str):
         contexts = "\n".join(f"[{h.source_idx}] ({h.chunk_id}) {h.text}" for h in hits)
         full = set(q["full_relevant_ids"])
         top5 = [h.chunk_id for h in hits]
-        ctx_prec = len(set(top5) & full) / len(top5)
+        ctx_prec = context_precision_at_k(top5, full, 5)          # RAGAS chuẩn (rank-aware)
+        ctx_prec_naive = len(set(top5) & full) / len(top5)        # bản thô (tham chiếu)
         ctx_rec = len(set(top5) & full) / len(full) if full else 0.0
 
         faith, n_claims, n_sup = judge_faithfulness(gen, contexts, answer)
@@ -142,6 +162,7 @@ def run_judge(retriever: Retriever, golden: list, results_dir: Path, ts: str):
             "answer_relevance": ans_rel,
             "coherence_1_5": coh, "fluency_1_5": flu,
             "context_precision@5": round(ctx_prec, 4),
+            "context_precision@5_naive": round(ctx_prec_naive, 4),
             "context_recall@5": round(ctx_rec, 4),
             "has_citation": bool(cited), "citation_valid": citation_valid,
             "confidence": round(conf, 3),
@@ -182,7 +203,8 @@ def run_judge(retriever: Retriever, golden: list, results_dir: Path, ts: str):
         "avg_answer_relevance": avg("answer_relevance"),
         "avg_coherence_1_5": avg("coherence_1_5"),
         "avg_fluency_1_5": avg("fluency_1_5"),
-        "avg_context_precision@5": avg("context_precision@5"),
+        "avg_context_precision@5": avg("context_precision@5"),          # RAGAS chuẩn
+        "avg_context_precision@5_naive": avg("context_precision@5_naive"),
         "avg_context_recall@5": avg("context_recall@5"),
         "citation_valid_rate": round(sum(r["citation_valid"] for r in rows) / len(rows), 4),
         "fallback_refusal_rate": round(sum(r["refused"] for r in fb_rows) / len(fb_rows), 4)

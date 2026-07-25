@@ -1,0 +1,39 @@
+\contentsline {table}{\numberline {1}{\ignorespaces Bảng ký hiệu và chữ viết tắt}}{}{table.0.1}%
+\contentsline {table}{\numberline {2}{\ignorespaces Bảng thuật ngữ Anh--Việt}}{}{table.0.2}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {1.1}{\ignorespaces Tổng hợp ưu, nhược điểm các hệ thống tiêu biểu}}{11}{table.caption.9}%
+\contentsline {table}{\numberline {1.2}{\ignorespaces So sánh hướng tiếp cận Fine-tuning và RAG}}{13}{table.caption.10}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces Ví dụ cấu trúc dữ liệu tác phẩm từ Wikipedia}}{18}{table.caption.11}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces Ví dụ cấu trúc dữ liệu thư mục từ Google Books}}{19}{table.caption.12}%
+\contentsline {table}{\numberline {2.3}{\ignorespaces Ví dụ cấu trúc dữ liệu toàn văn từ vnthuquan.net}}{20}{table.caption.13}%
+\contentsline {table}{\numberline {2.4}{\ignorespaces Tổng hợp ba nguồn dữ liệu của hệ thống}}{20}{table.caption.14}%
+\contentsline {table}{\numberline {2.5}{\ignorespaces Tham số cấu hình của hai module crawler}}{23}{table.caption.15}%
+\contentsline {table}{\numberline {2.6}{\ignorespaces Thẻ siêu dữ liệu chuẩn của một đầu sách}}{28}{table.caption.16}%
+\contentsline {table}{\numberline {2.7}{\ignorespaces Tỷ lệ điền đầy siêu dữ liệu trước và sau làm giàu}}{29}{table.caption.18}%
+\contentsline {table}{\numberline {2.8}{\ignorespaces So sánh kiến trúc Encoder-only và Decoder-only}}{32}{table.caption.19}%
+\contentsline {table}{\numberline {2.9}{\ignorespaces So sánh Word Embedding và Sentence Embedding}}{33}{table.caption.20}%
+\contentsline {table}{\numberline {2.10}{\ignorespaces So sánh hai CSDL vector Qdrant và Chroma}}{34}{table.caption.21}%
+\contentsline {table}{\numberline {2.11}{\ignorespaces Phân bố độ dài (số từ) của bản ghi theo nguồn}}{36}{table.caption.23}%
+\contentsline {table}{\numberline {2.12}{\ignorespaces Mười thể loại phổ biến nhất trên corpus}}{37}{table.caption.24}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces Yêu cầu chức năng của hệ thống}}{39}{table.caption.25}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces Yêu cầu phi chức năng của hệ thống}}{40}{table.caption.26}%
+\contentsline {table}{\numberline {3.3}{\ignorespaces Tham số cấu hình module tìm kiếm}}{43}{table.caption.30}%
+\contentsline {table}{\numberline {3.4}{\ignorespaces Đặc tả hàm RetrievalQA.ask}}{45}{table.caption.31}%
+\contentsline {table}{\numberline {3.5}{\ignorespaces Các ngưỡng điều khiển cơ chế chống ảo tưởng}}{46}{table.caption.32}%
+\contentsline {table}{\numberline {3.6}{\ignorespaces Tham số bộ nhớ hội thoại và ngân sách ngữ cảnh}}{49}{table.caption.34}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces Cấu trúc bộ truy vấn kiểm thử}}{55}{table.caption.39}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Kết quả truy hồi của các cấu hình}}{55}{table.caption.40}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Các độ đo nhạy thứ hạng của các cấu hình}}{56}{table.caption.41}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces Độ chính xác P@5 theo từng nhóm câu hỏi}}{57}{table.caption.42}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces Một số ca kiểm thử tiêu biểu và kết quả}}{60}{table.caption.43}%
+\contentsline {table}{\numberline {4.6}{\ignorespaces Ca kiểm thử bộ nhớ hội thoại đa lượt}}{61}{table.caption.44}%
+\contentsline {table}{\numberline {4.7}{\ignorespaces Phân bổ ngân sách ngữ cảnh (cấu hình vận hành)}}{62}{table.caption.45}%
+\contentsline {table}{\numberline {4.8}{\ignorespaces Số lượt giữ nguyên văn theo độ dài hội thoại}}{62}{table.caption.46}%
+\contentsline {table}{\numberline {4.9}{\ignorespaces Hai tầng bộ nhớ đệm của hệ thống}}{64}{table.caption.47}%
+\contentsline {table}{\numberline {4.10}{\ignorespaces Tác động của vòng tối ưu thứ hai}}{66}{table.caption.49}%
+\contentsline {table}{\numberline {4.11}{\ignorespaces Lớp siêu dữ liệu thương mại cho mỗi ấn bản}}{72}{table.caption.57}%
+\contentsline {table}{\numberline {C.1}{\ignorespaces Các tùy chọn trong bảng điều khiển}}{81}{table.caption.68}%
+\contentsfinish 

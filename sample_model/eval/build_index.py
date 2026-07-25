@@ -55,9 +55,10 @@ def main():
     np.save(IDX / "vectors.npy", vecs)
     print(f"Vector: {vecs.shape} -> {IDX/'vectors.npy'}")
 
-    # BM25
+    # BM25 — tách TỪ tiếng Việt bằng pyvi (khớp query trong retrieval.vi_tokenize)
     from rank_bm25 import BM25Okapi
-    corpus_tok = [d["text"].lower().split() for d in docs]
+    from sample_model.retrieval import vi_tokenize
+    corpus_tok = [vi_tokenize(d["text"]) for d in docs]
     bm25 = BM25Okapi(corpus_tok)
     with open(IDX / "bm25.pkl", "wb") as f:
         pickle.dump({"bm25": bm25, "tokens": corpus_tok}, f)

@@ -1,15 +1,24 @@
 """
-evaluator.py -- Đánh giá chất lượng retrieval với Precision@K, Recall@K, MRR.
+evaluator.py -- Đánh giá chất lượng retrieval với Precision@K, Recall@K, MRR,
+F1@K, nDCG@K, MAP và Hit Rate@K.
 
 Metrics:
     Precision@K = |relevant ∩ retrieved@K| / K
     Recall@K    = |relevant ∩ retrieved@K| / |relevant|
-    MRR         = mean(1 / first_relevant_rank)  (0 nếu không tìm thấy)
     F1@K        = 2 * P@K * R@K / (P@K + R@K)
+    MRR         = mean(1 / first_relevant_rank)  (0 nếu không tìm thấy)
+    Hit Rate@K  = mean(1 nếu có >= 1 relevant trong top-K, ngược lại 0)
+    nDCG@K      = DCG@K / IDCG@K,  DCG@K = Σ (2^rel_i - 1)/log2(i+1)
+    MAP@K       = mean(AP@K),  AP@K = (1/R) Σ_{k: rel_k=1} P@k
 
 Vì ground truth dùng keywords (không phải exact doc_id),
 ta dùng "keyword matching" để xác định relevant:
     doc được coi là relevant nếu text/metadata chứa >= 1 keyword.
+
+Lưu ý quy ước: do không có toàn bộ tập relevant của corpus (ground truth
+theo keyword), Recall@K được xấp xỉ bằng Precision@K; MAP và IDCG được
+chuẩn hoá theo số tài liệu relevant *truy hồi được* trong top-K thay vì
+theo tổng relevant thật. Đây là hạn chế đã nêu trong báo cáo.
 
 Cách dùng:
     from search.evaluator import Evaluator
@@ -24,6 +33,7 @@ from __future__ import annotations
 
 import json
 import logging
+import math
 import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -49,6 +59,36 @@ def _is_relevant(result, keywords: List[str]) -> bool:
     return any(kw.lower() in haystack for kw in keywords)
 
 
+def _dcg(flags: List[bool]) -> float:
+    """DCG với nhãn nhị phân: Σ (2^rel_i - 1)/log2(i+1) = Σ 1/log2(rank+1)."""
+    return sum(1.0 / math.log2(rank + 1) for rank, f in enumerate(flags, start=1) if f)
+
+
+def _ndcg_at_k(flags_k: List[bool], n_rel_total: int) -> float:
+    """
+    nDCG@K = DCG@K / IDCG@K.
+    IDCG dựa trên số relevant truy hồi được (n_rel_total), giới hạn bởi K.
+    """
+    dcg = _dcg(flags_k)
+    ideal_count = min(n_rel_total, len(flags_k))
+    idcg = sum(1.0 / math.log2(rank + 1) for rank in range(1, ideal_count + 1))
+    return dcg / idcg if idcg > 0 else 0.0
+
+
+def _ap_at_k(flags_k: List[bool]) -> float:
+    """
+    Average Precision@K = trung bình Precision tại mỗi vị trí relevant,
+    chuẩn hoá theo số relevant truy hồi được trong top-K.
+    """
+    num_rel = 0
+    cum_precision = 0.0
+    for rank, f in enumerate(flags_k, start=1):
+        if f:
+            num_rel += 1
+            cum_precision += num_rel / rank
+    return cum_precision / num_rel if num_rel > 0 else 0.0
+
+
 # ============================================================
 #  Metrics dataclass
 # ============================================================
@@ -62,6 +102,9 @@ class QueryMetrics:
     recall: float
     f1: float
     mrr: float
+    ndcg: float
+    ap: float
+    hit: float
     n_retrieved: int
     n_relevant_retrieved: int
     latency_ms: float
@@ -76,6 +119,9 @@ class EvaluationReport:
     avg_recall: Dict[int, float] = field(default_factory=dict)
     avg_f1: Dict[int, float] = field(default_factory=dict)
     avg_mrr: Dict[int, float] = field(default_factory=dict)
+    avg_ndcg: Dict[int, float] = field(default_factory=dict)
+    avg_map: Dict[int, float] = field(default_factory=dict)
+    avg_hit: Dict[int, float] = field(default_factory=dict)
     # Per-query breakdown
     per_query: List[QueryMetrics] = field(default_factory=list)
     # Per-type breakdown
@@ -139,6 +185,7 @@ class Evaluator:
 
             # Xác định relevant docs (keyword matching)
             relevant_flags = [_is_relevant(r, tq.relevant_keywords) for r in results]
+            n_rel_total = sum(relevant_flags)  # số relevant truy hồi được (trong top max_k)
 
             # Tính metrics cho từng K
             for k in ks:
@@ -163,6 +210,13 @@ class Evaluator:
                         mrr = 1.0 / rank_i
                         break
 
+                # Hit Rate@K: có ít nhất 1 relevant trong top-K
+                hit = 1.0 if n_relevant > 0 else 0.0
+
+                # nDCG@K và Average Precision@K
+                ndcg = _ndcg_at_k(flags_k, n_rel_total)
+                ap = _ap_at_k(flags_k)
+
                 all_metrics.append(QueryMetrics(
                     query_id=tq.query_id,
                     query=tq.query,
@@ -172,6 +226,9 @@ class Evaluator:
                     recall=recall,
                     f1=f1,
                     mrr=mrr,
+                    ndcg=ndcg,
+                    ap=ap,
+                    hit=hit,
                     n_retrieved=len(retrieved_k),
                     n_relevant_retrieved=n_relevant,
                     latency_ms=latency_ms,
@@ -207,6 +264,9 @@ class Evaluator:
             report.avg_recall[k] = sum(m.recall for m in k_metrics) / len(k_metrics)
             report.avg_f1[k] = sum(m.f1 for m in k_metrics) / len(k_metrics)
             report.avg_mrr[k] = sum(m.mrr for m in k_metrics) / len(k_metrics)
+            report.avg_ndcg[k] = sum(m.ndcg for m in k_metrics) / len(k_metrics)
+            report.avg_map[k] = sum(m.ap for m in k_metrics) / len(k_metrics)
+            report.avg_hit[k] = sum(m.hit for m in k_metrics) / len(k_metrics)
 
             # By type
             for qtype in ["FACTUAL", "AUTHOR", "SEMANTIC"]:
@@ -233,7 +293,7 @@ class Evaluator:
         print(f"{'='*70}")
 
         # Main table
-        headers = ["K", "Precision@K", "Recall@K", "F1@K", "MRR"]
+        headers = ["K", "Precision@K", "Recall@K", "F1@K", "MRR", "nDCG@K", "MAP@K", "HitRate@K"]
         rows = []
         for k in report.ks:
             rows.append([
@@ -242,6 +302,9 @@ class Evaluator:
                 f"{report.avg_recall.get(k, 0):.4f}",
                 f"{report.avg_f1.get(k, 0):.4f}",
                 f"{report.avg_mrr.get(k, 0):.4f}",
+                f"{report.avg_ndcg.get(k, 0):.4f}",
+                f"{report.avg_map.get(k, 0):.4f}",
+                f"{report.avg_hit.get(k, 0):.4f}",
             ])
 
         if tabulate:
@@ -280,6 +343,9 @@ class Evaluator:
             "avg_recall": report.avg_recall,
             "avg_f1": report.avg_f1,
             "avg_mrr": report.avg_mrr,
+            "avg_ndcg": report.avg_ndcg,
+            "avg_map": report.avg_map,
+            "avg_hit": report.avg_hit,
             "by_type": report.by_type,
             "per_query": [asdict(m) for m in report.per_query],
         }

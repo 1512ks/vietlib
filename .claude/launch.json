@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "sample-chatbot",
+      "runtimeExecutable": ".venv/Scripts/streamlit.exe",
+      "runtimeArgs": ["run", "sample_model/app.py", "--server.headless", "true", "--server.port", "8501", "--browser.gatherUsageStats", "false"],
+      "port": 8501
+    },
+    {
+      "name": "ui-preview-static",
+      "runtimeExecutable": ".venv/Scripts/python.exe",
+      "runtimeArgs": ["-m", "http.server", "8600", "--directory", "sample_model"],
+      "port": 8600
+    }
+  ]
+}

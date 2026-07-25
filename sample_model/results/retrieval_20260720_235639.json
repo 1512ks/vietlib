@@ -1,0 +1,417 @@
+{
+  "timestamp": "20260720_235639",
+  "n_queries": 44,
+  "ks": [
+    1,
+    3,
+    5,
+    10
+  ],
+  "confidence_min": 0.4,
+  "modes": {
+    "bm25": {
+      "1": {
+        "precision": 0.8182,
+        "recall": 0.2457,
+        "f1": 0.3533,
+        "mrr": 0.8182,
+        "ndcg": 0.6212,
+        "map": 0.8182,
+        "hit": 0.8182
+      },
+      "3": {
+        "precision": 0.7273,
+        "recall": 0.6203,
+        "f1": 0.6273,
+        "mrr": 0.9015,
+        "ndcg": 0.6782,
+        "map": 0.7292,
+        "hit": 1.0
+      },
+      "5": {
+        "precision": 0.5545,
+        "recall": 0.7186,
+        "f1": 0.5822,
+        "mrr": 0.9015,
+        "ndcg": 0.7096,
+        "map": 0.7122,
+        "hit": 1.0
+      },
+      "10": {
+        "precision": 0.3455,
+        "recall": 0.8294,
+        "f1": 0.4578,
+        "mrr": 0.9015,
+        "ndcg": 0.7424,
+        "map": 0.7106,
+        "hit": 1.0
+      }
+    },
+    "vector": {
+      "1": {
+        "precision": 0.9091,
+        "recall": 0.2709,
+        "f1": 0.3906,
+        "mrr": 0.9091,
+        "ndcg": 0.7879,
+        "map": 0.9091,
+        "hit": 0.9091
+      },
+      "3": {
+        "precision": 0.7576,
+        "recall": 0.6331,
+        "f1": 0.6422,
+        "mrr": 0.9318,
+        "ndcg": 0.741,
+        "map": 0.7955,
+        "hit": 0.9545
+      },
+      "5": {
+        "precision": 0.5682,
+        "recall": 0.7269,
+        "f1": 0.5917,
+        "mrr": 0.9364,
+        "ndcg": 0.7451,
+        "map": 0.7629,
+        "hit": 0.9773
+      },
+      "10": {
+        "precision": 0.3659,
+        "recall": 0.8578,
+        "f1": 0.4788,
+        "mrr": 0.9386,
+        "ndcg": 0.7993,
+        "map": 0.767,
+        "hit": 1.0
+      }
+    },
+    "hybrid": {
+      "1": {
+        "precision": 0.9318,
+        "recall": 0.2766,
+        "f1": 0.3997,
+        "mrr": 0.9318,
+        "ndcg": 0.7652,
+        "map": 0.9318,
+        "hit": 0.9318
+      },
+      "3": {
+        "precision": 0.7879,
+        "recall": 0.6428,
+        "f1": 0.6621,
+        "mrr": 0.9621,
+        "ndcg": 0.7463,
+        "map": 0.8182,
+        "hit": 1.0
+      },
+      "5": {
+        "precision": 0.6045,
+        "recall": 0.772,
+        "f1": 0.6307,
+        "mrr": 0.9621,
+        "ndcg": 0.7806,
+        "map": 0.7987,
+        "hit": 1.0
+      },
+      "10": {
+        "precision": 0.3727,
+        "recall": 0.8718,
+        "f1": 0.4878,
+        "mrr": 0.9621,
+        "ndcg": 0.8112,
+        "map": 0.7949,
+        "hit": 1.0
+      }
+    },
+    "hybrid_group": {
+      "1": {
+        "precision": 0.9318,
+        "recall": 0.2766,
+        "f1": 0.3997,
+        "mrr": 0.9318,
+        "ndcg": 0.7652,
+        "map": 0.9318,
+        "hit": 0.9318
+      },
+      "3": {
+        "precision": 0.8636,
+        "recall": 0.7095,
+        "f1": 0.7314,
+        "mrr": 0.9659,
+        "ndcg": 0.8159,
+        "map": 0.9003,
+        "hit": 1.0
+      },
+      "5": {
+        "precision": 0.6682,
+        "recall": 0.8403,
+        "f1": 0.6947,
+        "mrr": 0.9659,
+        "ndcg": 0.8423,
+        "map": 0.8869,
+        "hit": 1.0
+      },
+      "10": {
+        "precision": 0.4045,
+        "recall": 0.9303,
+        "f1": 0.5272,
+        "mrr": 0.9659,
+        "ndcg": 0.8713,
+        "map": 0.8799,
+        "hit": 1.0
+      }
+    }
+  },
+  "by_type": {
+    "FACTUAL": {
+      "precision": 0.5857,
+      "recall": 1.0,
+      "f1": 0.7273,
+      "mrr": 1.0,
+      "ndcg": 0.9479,
+      "map": 0.9821,
+      "hit": 1.0
+    },
+    "AUTHOR": {
+      "precision": 0.9636,
+      "recall": 0.6865,
+      "f1": 0.7844,
+      "mrr": 0.9545,
+      "ndcg": 0.7088,
+      "map": 0.9492,
+      "hit": 1.0
+    },
+    "SEMANTIC": {
+      "precision": 0.65,
+      "recall": 0.7018,
+      "f1": 0.6512,
+      "mrr": 1.0,
+      "ndcg": 0.8209,
+      "map": 0.7569,
+      "hit": 1.0
+    },
+    "MULTI_TURN": {
+      "precision": 0.4,
+      "recall": 1.0,
+      "f1": 0.5629,
+      "mrr": 0.8571,
+      "ndcg": 0.8772,
+      "map": 0.8214,
+      "hit": 1.0
+    }
+  },
+  "multi_turn_rewrites": [
+    "rewritten: Truyện Chí Phèo của Nam Cao kết thúc ra sao?",
+    "rewritten: Truyện Kiều của Nguyễn Du thuộc thể thơ gì và dài bao nhiêu câu?",
+    "rewritten: Bài thơ Sóng của Xuân Quỳnh được sáng tác năm nào, trong hoàn cảnh nào?",
+    "rewritten: Cuốn Mắt biếc của Nguyễn Nhật Ánh nói về điều gì?",
+    "rewritten: Cuốn Số đỏ của Vũ Trọng Phụng châm biếm điều gì?",
+    "rewritten: Bài thơ Tây Tiến do Quang Dũng sáng tác và viết về đoàn quân Tây Tiến.",
+    "rewritten: Cuốn Tôi thấy hoa vàng trên cỏ xanh của Nguyễn Nhật Ánh kể về điều gì?"
+  ],
+  "latency_ms": {
+    "bm25": {
+      "p50": 154.9,
+      "p95": 192.2
+    },
+    "vector": {
+      "p50": 151.1,
+      "p95": 206.8
+    },
+    "hybrid": {
+      "p50": 159.9,
+      "p95": 198.0
+    },
+    "hybrid_group": {
+      "p50": 161.3,
+      "p95": 183.6
+    }
+  },
+  "author_adaptive_k": {
+    "detail": [
+      {
+        "query_id": "q09",
+        "adaptive_k": 13,
+        "recall": 1.0
+      },
+      {
+        "query_id": "q10",
+        "adaptive_k": 13,
+        "recall": 1.0
+      },
+      {
+        "query_id": "q11",
+        "adaptive_k": 13,
+        "recall": 1.0
+      },
+      {
+        "query_id": "q12",
+        "adaptive_k": 13,
+        "recall": 1.0
+      },
+      {
+        "query_id": "q13",
+        "adaptive_k": 13,
+        "recall": 1.0
+      },
+      {
+        "query_id": "q14",
+        "adaptive_k": 13,
+        "recall": 1.0
+      },
+      {
+        "query_id": "q31",
+        "adaptive_k": 13,
+        "recall": 0.7692
+      },
+      {
+        "query_id": "q38",
+        "adaptive_k": 13,
+        "recall": 1.0
+      },
+      {
+        "query_id": "q39",
+        "adaptive_k": 13,
+        "recall": 1.0
+      },
+      {
+        "query_id": "q40",
+        "adaptive_k": 13,
+        "recall": 1.0
+      },
+      {
+        "query_id": "q41",
+        "adaptive_k": 13,
+        "recall": 1.0
+      }
+    ],
+    "avg_recall": 0.979
+  },
+  "fallback": {
+    "detail": [
+      {
+        "query_id": "q25",
+        "query": "Tóm tắt nội dung truyện Harry Potter và Hòn đá Phù thủy",
+        "confidence": 0.225,
+        "detected_out_of_corpus": true
+      },
+      {
+        "query_id": "q26",
+        "query": "Gợi ý sách self-help dạy quản lý thời gian hiệu quả",
+        "confidence": 0.254,
+        "detected_out_of_corpus": true
+      },
+      {
+        "query_id": "q27",
+        "query": "Định luật vạn vật hấp dẫn của Newton phát biểu thế nào?",
+        "confidence": 0.197,
+        "detected_out_of_corpus": true
+      },
+      {
+        "query_id": "q28",
+        "query": "Tiểu thuyết Vầng trăng máu của nhà văn Trần Văn Đô nói về điều gì?",
+        "confidence": 0.299,
+        "detected_out_of_corpus": true
+      },
+      {
+        "query_id": "q49",
+        "query": "Tóm tắt tiểu thuyết Trăm năm cô đơn của Gabriel García Márquez",
+        "confidence": 0.283,
+        "detected_out_of_corpus": true
+      },
+      {
+        "query_id": "q50",
+        "query": "Công thức tính diện tích hình tròn là gì?",
+        "confidence": 0.222,
+        "detected_out_of_corpus": true
+      }
+    ],
+    "accuracy": 1.0
+  },
+  "stability": {
+    "detail": [
+      {
+        "group": "lao_hac_death",
+        "jaccard_chunk_top5": 0.4286,
+        "jaccard_work_top5": 0.2,
+        "jaccard_card_top3": 0.2,
+        "same_top1_work": true
+      },
+      {
+        "group": "nam_cao_works",
+        "jaccard_chunk_top5": 0.4286,
+        "jaccard_work_top5": 0.3333,
+        "jaccard_card_top3": 0.3333,
+        "same_top1_work": true
+      },
+      {
+        "group": "phu_nu_phong_kien",
+        "jaccard_chunk_top5": 0.4286,
+        "jaccard_work_top5": 0.5,
+        "jaccard_card_top3": 0.5,
+        "same_top1_work": false
+      },
+      {
+        "group": "co_don_thien_nhien",
+        "jaccard_chunk_top5": 0.6667,
+        "jaccard_work_top5": 0.6667,
+        "jaccard_card_top3": 0.6667,
+        "same_top1_work": true
+      },
+      {
+        "group": "vu_trong_phung_works",
+        "jaccard_chunk_top5": 0.6667,
+        "jaccard_work_top5": 1.0,
+        "jaccard_card_top3": 1.0,
+        "same_top1_work": true
+      }
+    ],
+    "avg_jaccard_chunk_top5": 0.5238,
+    "avg_jaccard_work_top5": 0.54,
+    "avg_jaccard_card_top3": 0.54,
+    "same_top1_work_rate": 0.8
+  },
+  "stability_baseline_no_group": {
+    "detail": [
+      {
+        "group": "lao_hac_death",
+        "jaccard_chunk_top5": 0.4286,
+        "jaccard_work_top5": 0.2,
+        "jaccard_card_top3": 0.2,
+        "same_top1_work": true
+      },
+      {
+        "group": "nam_cao_works",
+        "jaccard_chunk_top5": 0.25,
+        "jaccard_work_top5": 0.75,
+        "jaccard_card_top3": 1.0,
+        "same_top1_work": true
+      },
+      {
+        "group": "phu_nu_phong_kien",
+        "jaccard_chunk_top5": 0.25,
+        "jaccard_work_top5": 0.2857,
+        "jaccard_card_top3": 0.5,
+        "same_top1_work": false
+      },
+      {
+        "group": "co_don_thien_nhien",
+        "jaccard_chunk_top5": 0.6667,
+        "jaccard_work_top5": 1.0,
+        "jaccard_card_top3": 1.0,
+        "same_top1_work": true
+      },
+      {
+        "group": "vu_trong_phung_works",
+        "jaccard_chunk_top5": 0.6667,
+        "jaccard_work_top5": 1.0,
+        "jaccard_card_top3": 1.0,
+        "same_top1_work": true
+      }
+    ],
+    "avg_jaccard_chunk_top5": 0.4524,
+    "avg_jaccard_work_top5": 0.6471,
+    "avg_jaccard_card_top3": 0.74,
+    "same_top1_work_rate": 0.8
+  }
+}

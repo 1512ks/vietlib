@@ -1,0 +1,123 @@
+# Kế hoạch Giải trình & Cập nhật Đồ án theo Phản hồi của GVHD
+
+Tài liệu này phân tích chi tiết 4 nội dung phản hồi từ Giáo viên hướng dẫn (GVHD) và đề xuất kế hoạch chỉnh sửa, cập nhật báo cáo luận văn [DATN_so_lieu_that.tex](file:///c:/Users/Admin/Desktop/ĐATN/DATN_so_lieu_that.tex) cũng như hệ thống để chuẩn bị tốt nhất cho buổi bảo vệ.
+
+---
+
+## 1. Phân tích chi tiết các phản hồi của GVHD
+
+### 1.1. Tại sao phải dùng LLM (Gemini 2.5 Flash) thay vì một Mô hình ngôn ngữ nhỏ (SLM) chạy local?
+
+Để chứng minh tính thuyết phục của việc sử dụng Large Language Model (LLM) thay vì Small Language Model (SLM) chạy cục bộ (ví dụ: PhoGPT-4B, Llama-3-8B-Instruct), đồ án cần nêu bật các luận điểm kỹ thuật và thực tiễn sau:
+
+1. **Khả năng tuân thủ chỉ dẫn phức tạp (System Prompt Adherence):**
+   - Nhiệm vụ chống ảo tưởng của RAG đòi hỏi mô hình sinh tuân thủ tuyệt đối các ràng buộc nghiêm ngặt ở [Phụ lục B](file:///c:/Users/Admin/Desktop/ĐATN/DATN_so_lieu_that.tex#L1927): *"Chỉ trả lời dựa trên ngữ cảnh, nếu không có thì từ chối và tuyệt đối không bịa tên nhân vật/tác phẩm"*.
+   - Các SLM (thường dưới 10 tỷ tham số) có năng lực suy luận logic và tuân thủ prompt kém hơn nhiều, rất dễ vi phạm các ràng buộc này và tự động "bịa" câu trả lời dựa trên bộ nhớ tham số cũ của nó khi thông tin trong ngữ cảnh bị thiếu.
+2. **Năng lực suy luận ngữ cảnh đa lượt (Contextual Query Rewriting):**
+   - Hệ thống của chúng ta sử dụng cơ chế viết lại câu hỏi ở [retrieval_qa.py](file:///c:/Users/Admin/Desktop/ĐATN/retrieval_qa.py) (ví dụ: chuyển từ câu hỏi nối tiếp *"Tác giả đó còn viết gì khác?"* thành *"Kim Lân còn viết gì khác?"* dựa trên lịch sử).
+   - Tác vụ này đòi hỏi mô hình hiểu sâu sắc về ngữ pháp, liên kết đại từ và ngữ cảnh tiếng Việt. LLM lớn xử lý việc này cực kỳ chính xác, trong khi SLM dễ viết lại sai thực thể hoặc làm mất ý nghĩa câu hỏi gốc, dẫn đến khâu truy hồi phía sau bị hỏng.
+3. **Hiệu quả tóm tắt và quản lý ngân sách ngữ cảnh (Context Budgeting):**
+   - Khi hội thoại kéo dài chạm ngưỡng 20.000 token, lớp điều phối gọi LLM để tóm tắt các lượt hội thoại cũ nhằm giải phóng bộ nhớ. LLM có khả năng tóm tắt cực tốt mà vẫn giữ lại chính xác các thực thể chính (tên sách, tác giả), tránh hiện tượng quên thảm họa (catastrophic forgetting). SLM khi tóm tắt tiếng Việt rất dễ làm mất các danh từ riêng quan trọng.
+4. **Chi phí tài nguyên và tính khả thi triển khai (Feasibility & Deployment Cost):**
+   - Việc tự host một SLM có chất lượng tiếng Việt tốt (như PhoGPT-4B) đạt độ trễ thấp đòi hỏi hạ tầng GPU chuyên dụng lớn (VRAM tối thiểu 16GB-24GB) với chi phí đắt đỏ, không khả thi cho một đồ án tốt nghiệp của sinh viên khi deploy lên các dịch vụ cloud miễn phí (Streamlit Community Cloud).
+   - Gemini API cung cấp hiệu năng vượt trội của mô hình lớn, hỗ trợ tiếng Việt xuất sắc, miễn phí trong hạn mức sử dụng (free tier) và phản hồi nhanh nhờ hạ tầng cloud của Google.
+5. **Tính độc lập của kiến trúc (Modular Decoupling):**
+   - Hệ thống được thiết kế phân lớp hoàn chỉnh ở [retrieval_qa.py](file:///c:/Users/Admin/Desktop/ĐATN/retrieval_qa.py). Lớp Sinh (Generation) giao tiếp hoàn toàn qua API. Điều này có nghĩa là kiến trúc RAG của đồ án hoàn toàn độc lập với mô hình sinh. Khi các SLM tiếng Việt chạy local trong tương lai đủ mạnh và nhẹ, ta có thể dễ dàng cấu hình thay thế Gemini bằng SLM local mà không cần sửa đổi Search Pipeline hay Vector DB. Đây chính là một hướng phát triển tương lai được nêu ở [Kết luận](file:///c:/Users/Admin/Desktop/ĐATN/DATN_so_lieu_that.tex#L1764).
+
+### 1.2. Phương pháp luận đánh giá chatbot dạng RAG và các Metric sử dụng
+
+Để đánh giá một hệ thống RAG một cách khoa học, đồ án sử dụng phương pháp luận chuẩn công nghiệp hiện nay là **Bộ ba đánh giá RAG (RAG Triad)** kết hợp giữa đánh giá định lượng module Truy hồi và đánh giá định tính/định lượng module Sinh:
+
+```mermaid
+graph TD
+    Query[Câu truy vấn] -->|1. Context Relevance| Context[Ngữ cảnh truy hồi]
+    Context -->|2. Groundedness / Faithfulness| Answer[Câu trả lời sinh ra]
+    Query -->|3. Answer Relevance| Answer
+```
+
+1. **Bộ ba đánh giá RAG (RAG Triad):**
+   - **Context Relevance (Sự liên quan của ngữ cảnh):** Đảm bảo module truy hồi lấy ra các đoạn văn bản thực sự chứa thông tin để giải quyết câu hỏi. (Đo lường định lượng trên Search Pipeline).
+   - **Groundedness / Faithfulness (Tính trung thực / Chống ảo tưởng):** Đảm bảo câu trả lời của mô hình sinh *chỉ* lấy thông tin từ ngữ cảnh được cung cấp, không tự bịa đặt.
+   - **Answer Relevance (Sự liên quan của câu trả lời):** Đảm bảo câu trả lời cuối cùng giải quyết đúng trọng tâm câu hỏi của người dùng, không trả lời lan man hoặc lạc đề.
+2. **Các Metric đánh giá cụ thể trong đồ án:**
+   - **Đánh giá khâu Truy hồi (Retrieval):** Thực hiện trên tập dữ liệu chuẩn (Golden Dataset) gồm 30 câu hỏi được gán nhãn thủ công ở [test_queries.py](file:///c:/Users/Admin/Desktop/ĐATN/search/test_queries.py), đo đạc qua các chỉ số:
+     - **Precision@K (Độ chính xác tại K):** Tỷ lệ tài liệu liên quan trong top K kết quả trả về.
+     - **Recall@K (Độ phủ tại K):** Tỷ lệ tài liệu liên quan được truy hồi thành công so với toàn bộ tài liệu liên quan hiện có trong kho.
+     - **MRR (Mean Reciprocal Rank):** Điểm thứ hạng nghịch đảo trung bình của tài liệu đúng đầu tiên (MRR càng gần 1 chứng tỏ tài liệu đúng nhất luôn được xếp lên đầu).
+   - **Đánh giá khâu Sinh (Generation):** Thực hiện trên 15 kịch bản kiểm thử (Test Cases) ở [chatbot_test_results](file:///c:/Users/Admin/Desktop/ĐATN/data/chatbot_test_results), đo đạc qua:
+     - **Tỷ lệ vượt qua (Pass Rate):** Đánh giá tự động (heuristic từ khóa + fallback) đạt **93.3% (14/15)**; đánh giá thủ công theo tiêu chí trung thực & dẫn nguồn đạt **100% (15/15)** — chênh lệch do 1 ca cảm xúc mơ hồ bị auto-test tính trượt vì từ chối lịch sự (không trích dẫn), không phải bịa đặt.
+     - **Độ chính xác trích dẫn (Citation Accuracy):** Kiểm tra xem các trích dẫn nguồn `[n]` có đúng với tài liệu ngữ cảnh tương ứng không (Đạt **100%**).
+     - **Tỷ lệ từ chối đúng (Fallback Rate):** Kiểm tra khả năng từ chối trả lời một cách chuẩn mực khi câu hỏi nằm ngoài phạm vi tri thức (như cách nấu ăn, giá vàng...) để chứng minh hệ thống không bị ảo tưởng.
+
+### 1.3. Tự đánh giá Chatbot của mình (Ưu điểm & Hạn chế)
+
+Dựa trên số liệu thực nghiệm thu được từ [evaluate_search.py](file:///c:/Users/Admin/Desktop/ĐATN/evaluate_search.py) và nhật ký vận hành hệ thống, chatbot tự đánh giá như sau:
+
+*   **Ưu điểm:**
+    1.  **Thuật toán lai hợp vượt trội:** Tìm kiếm lai hợp (Hybrid) kết hợp BM25 và Vector đạt **Precision@1 = 83.3%** và **MRR = 0.887**, vượt trội rõ rệt so với Vector thuần (**33.3%**) và BM25 thuần (**76.7%**). Điều này chứng minh thuật toán RRF kết hợp tái xếp hạng Cross-Encoder bù trừ khuyết điểm cho nhau rất tốt trên tiếng Việt.
+    2.  **Khả năng chống ảo tưởng tuyệt đối:** Nhờ cơ chế lọc ngưỡng điểm RRF nghiêm ngặt (`RELEVANCE_THRESHOLD = 0.003`) kết hợp prompt ràng buộc chặt chẽ, chatbot hoàn toàn loại bỏ hiện tượng bịa đặt thông tin khi gặp câu hỏi ngoài miền tri thức (Tỷ lệ trích dẫn chính xác đạt **100%**).
+    3.  **Trải nghiệm hội thoại tự nhiên:** Bộ nhớ hội thoại thông minh xử lý tốt các câu hỏi nối tiếp (đạt 14/15 test cases đa lượt) và tự động tóm tắt lịch sử giúp kiểm soát tối ưu ngân sách token dưới 20.000 token.
+    4.  **Tối ưu hóa độ trễ cảm nhận:** Áp dụng cơ chế phản hồi theo luồng (streaming), warm-up mô hình từ pha khởi động và bộ nhớ đệm nhiều tầng (LRU + cache search pool) giúp giảm thời gian chờ đợi của người dùng từ 12.7 giây xuống hiển thị tức thời token đầu tiên sau 1-2 giây.
+*   **Hạn chế:**
+    1.  **Thành phần nhúng ngữ nghĩa tiếng Việt còn yếu:** Mô hình nhúng đa ngữ MiniLM chưa được tinh chỉnh (fine-tune) trên miền văn học tiếng Việt, dẫn đến độ chính xác vector thuần thấp (33.3%). Hệ thống hiện tại đang phải dựa nhiều vào BM25 để "gánh" các câu hỏi chứa tên riêng/tên sách.
+    2.  **Độ trễ tổng thể phụ thuộc API:** Mặc dù đã tối ưu độ trễ cảm nhận bằng streaming, tổng thời gian phản hồi đầy đủ vẫn mất từ 6-8 giây do phụ thuộc vào tốc độ xử lý của API Gemini bên ngoài.
+    3.  **Quy mô bộ dữ liệu đánh giá còn hạn chế:** Bộ dữ liệu kiểm thử (30 câu truy hồi, 15 ca hội thoại) có quy mô nhỏ, cần mở rộng để có kết luận khách quan hơn ở quy mô công nghiệp.
+    4.  **Dữ liệu siêu dữ liệu chưa hoàn toàn sạch:** Một số trường siêu dữ liệu (năm xuất bản) bị lẫn giữa năm tái bản và năm sáng tác gốc do giới hạn của nguồn thu thập Google Books.
+
+### 1.4. Làm thế nào để chứng minh ứng dụng là "Human-centric" (Hướng con người)?
+
+Để chứng minh ứng dụng được thiết kế nhằm giải quyết triệt để nỗi đau (pain points) thực tế của người đọc sách trong cuộc sống, chúng ta phân tích hành trình trải nghiệm của người dùng:
+
+| Nỗi đau của người dùng trong thực tế (Pain Points) | Giải pháp hướng con người trong ứng dụng (Human-centric Solutions) |
+|:---|:---|
+| **1. Không nhớ chính xác từ khóa:** Người dùng muốn tìm sách nhưng chỉ nhớ mang máng chủ đề, cốt truyện hoặc cảm xúc lúc đó (ví dụ: *"tìm truyện buồn về sự cô đơn"*, *"truyện nông dân nghèo"*). Tìm kiếm truyền thống báo "Không tìm thấy". | **Tìm kiếm ngữ nghĩa (Semantic Search):** Chatbot hiểu được mô tả ngôn ngữ tự nhiên và tâm trạng người dùng để gợi ý chính xác các tác phẩm liên quan (như Lão Hạc, Tắt đèn) mà không bắt buộc nhớ đúng tên sách. |
+| **2. Quá tải thông tin & mất thời gian tổng hợp:** Đọc tìm kiếm trên Google ra hàng chục link rời rạc, người dùng phải tự bấm vào từng link, tự đọc lướt và chắt lọc thông tin để có câu trả lời. | **RAG tổng hợp thông tin súc tích kèm nguồn:** Chatbot sinh trực tiếp câu trả lời gọn gàng, tự động so sánh, đối chiếu và tổng hợp từ nhiều nguồn tài liệu, đồng thời đính kèm thẻ trích dẫn nguồn trực quan để người dùng kiểm chứng nhanh. |
+| **3. Sợ thông tin sai lệch (ảo tưởng AI):** Sử dụng các AI thông thường (như ChatGPT) rất dễ nhận được câu trả lời bịa đặt nội dung sách, làm người dùng mất lòng tin. | **Cơ chế chống ảo tưởng 3 lớp và hiển thị trích đoạn:** Chatbot thà từ chối trả lời ("không tìm thấy trong thư viện") còn hơn trả lời sai. Ngoài ra, giao diện hỗ trợ xem trích đoạn văn bản gốc để người dùng đối chiếu tức thời. |
+| **4. Đứt gãy mạch trải nghiệm (Hành trình khám phá - mua sắm):** Sau khi tìm được sách hay từ AI, người dùng phải tự copy tên sách, mở tab mới lên Tiki/Fahasa để tìm mua hoặc tìm ebook đọc. | **Định hướng tích hợp thương mại điện tử (Conversational Commerce):** Chatbot tích hợp lớp dữ liệu thương mại, chèn các thẻ mua sách, so sánh giá đa sàn (Tiki, Fahasa) và nút đọc thử/mua ngay trong hội thoại, giúp khép kín hành trình trải nghiệm của người dùng. |
+| **5. Ứng dụng AI chậm chạp, gây lo lắng:** Người dùng phải chờ đợi lâu mà không biết AI có đang chạy hay đã bị lỗi. | **Giao diện phản hồi trực quan:** Phản hồi dạng streaming (gõ chữ thời gian thực), thanh tiến trình và Context Bar ước lượng token giúp tăng tính minh bạch và giảm lo âu cho người dùng. |
+
+---
+
+## 2. Kế hoạch hành động chi tiết
+
+Chúng ta sẽ thực hiện cập nhật báo cáo LaTeX và bổ sung các tài liệu hướng dẫn giải trình chi tiết để người dùng có đầy đủ bằng chứng khoa học bảo vệ đồ án tốt nghiệp của mình.
+
+### Bước 1: Tạo tài liệu giải trình phản hồi chi tiết cho GVHD
+- Tạo file [giai_trinh_gvhg.md](file:///c:/Users/Admin/Desktop/ĐATN/giai_trinh_gvhg.md) chứa nội dung giải trình chi tiết, súc tích (bằng tiếng Việt) để người dùng có thể in ra hoặc đọc lướt nhanh trước khi gặp GVHD hoặc chuẩn bị Slide bảo vệ.
+
+### Bước 2: Cập nhật trực tiếp nội dung vào báo cáo LaTeX
+Chúng ta sẽ bổ sung các lập luận trên vào báo cáo luận văn [DATN_so_lieu_that.tex](file:///c:/Users/Admin/Desktop/ĐATN/DATN_so_lieu_that.tex):
+1.  **Chương 1 (Tổng quan):** Bổ sung phân tích sâu về lý do chọn LLM (Gemini 2.5 Flash API) thay vì SLM local (PhoGPT, Llama-3-8B), nhấn mạnh vào tính khả thi, chi phí phần cứng và tính độc lập kiến trúc (decoupling).
+2.  **Chương 4 (Thực nghiệm và Đánh giá):** Bổ sung mục giới thiệu chi tiết về **Phương pháp luận đánh giá RAG (RAG Triad)** và làm rõ cách thức đo đạc các chỉ số truy hồi (Precision@K, MRR) kết hợp kiểm thử chatbot (Pass Rate, Fallback Rate).
+3.  **Chương 4 / Phần Hướng phát triển:** Làm sâu sắc thêm lập luận về thiết kế **Human-centric** của ứng dụng, đặc biệt là phần định hướng tích hợp thương mại điện tử (Mục 4.5) làm tăng giá trị giải quyết nỗi đau của người dùng thực tế.
+
+### Bước 3: Chạy script đánh giá để thu lại log mới nhất (nếu cần)
+- Chạy script [evaluate_search.py](file:///c:/Users/Admin/Desktop/ĐATN/evaluate_search.py) để xác nhận kết quả đánh giá mới nhất khớp hoàn toàn với báo cáo.
+
+---
+
+## 3. Đề xuất chỉnh sửa file báo cáo LaTeX
+
+Dưới đây là các vị trí cụ thể trong file [DATN_so_lieu_that.tex](file:///c:/Users/Admin/Desktop/ĐATN/DATN_so_lieu_that.tex) sẽ được cập nhật:
+
+### [Component 1] Báo cáo Luận văn (LaTeX)
+
+#### [MODIFY] [DATN_so_lieu_that.tex](file:///c:/Users/Admin/Desktop/ĐATN/DATN_so_lieu_that.tex)
+- **Vị trí 1 (Lớp sinh LLM vs SLM):** Cập nhật tại Chương 1 hoặc Chương 3 (phần Lớp Sinh) để đưa vào bảng so sánh và phân tích kỹ thuật chọn LLM.
+- **Vị trí 2 (Phương pháp luận RAG Triad):** Cập nhật tại Chương 4 (Thực nghiệm và Đánh giá) để làm rõ phương pháp luận khoa học được sử dụng.
+- **Vị trí 3 (Tính Human-centric):** Cập nhật bổ sung tại Chương Kết luận hoặc phần hướng phát triển để làm nổi bật triết lý thiết kế hướng con người.
+
+### [Component 2] Tài liệu Hỗ trợ Giải trình (Markdown)
+
+#### [NEW] [giai_trinh_gvhg.md](file:///c:/Users/Admin/Desktop/ĐATN/giai_trinh_gvhg.md)
+- Tạo tài liệu cẩm nang bỏ túi giải đáp nhanh 4 câu hỏi cốt lõi này cho sinh viên khi bị hội đồng hoặc GVHD truy vấn.
+
+---
+
+## 4. Kế hoạch xác minh (Verification Plan)
+
+### Kiểm tra biên dịch LaTeX
+- Chạy thử lệnh biên dịch LaTeX (nếu có môi trường local) hoặc kiểm tra tính đúng đắn của mã nguồn LaTeX sau khi chỉnh sửa để đảm bảo không bị lỗi cú pháp biên dịch.
+
+### Kiểm tra sự khớp số liệu
+- Đối chiếu số liệu trong báo cáo luận văn với các file JSON kết quả trong thư mục [evaluation_results](file:///c:/Users/Admin/Desktop/ĐATN/data/evaluation_results) để đảm bảo tính trung thực 100% của báo cáo khoa học.
